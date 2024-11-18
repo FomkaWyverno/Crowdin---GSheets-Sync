@@ -14,6 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
 
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootApplication
 public class App implements ApplicationRunner {
 
@@ -32,11 +35,22 @@ public class App implements ApplicationRunner {
         this.projectID = configLoader.getConfig().getProjectID();
     }
 
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-        logger.info(writer.writeValueAsString(this.crowdinService.listAllRootDirectoriesFromProject(this.projectID)));
+        logger.info("----------------------LIST DIRECTORIES----------------------------------");
+        logger.info(toJSON(this.crowdinService.listAllDirectories(this.projectID)));
+        logger.info("----------------------LIST FILES----------------------------------");
+        logger.info(toJSON(this.crowdinService.listAllFiles(this.projectID)));
+        logger.info("----------------------FIND DIRECTORY----------------------------------");
+        logger.info(toJSON(this.crowdinService.findDirectories(this.projectID, List.of("in-in-testick", "test2", "tes3"))));
+        logger.info("----------------------FIND FILES----------------------------------");
+        logger.info(toJSON((this.crowdinService.findFiles(this.projectID, List.of("interface.csv", "test.csv")))));
+    }
+
+    public String toJSON(Object obj) throws JsonProcessingException {
+        return this.writer.writeValueAsString(obj);
     }
 }
