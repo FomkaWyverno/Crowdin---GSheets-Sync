@@ -40,7 +40,12 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        logger.info(toJSON(this.crowdinService.findFiles(this.projectID, file -> file.getPath().equals("/test.csv"),1)));
+        logger.info(toJSON(this.crowdinService
+                .files()
+                .list(this.projectID)
+                .filterApi("test")
+                .maxResults(2)
+                .execute()));
     }
 
     public String toJSON(Object obj) throws JsonProcessingException {
