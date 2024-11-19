@@ -40,14 +40,7 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        logger.info("----------------------LIST DIRECTORIES----------------------------------");
-        logger.info(toJSON(this.crowdinService.listAllDirectories(this.projectID)));
-        logger.info("----------------------LIST FILES----------------------------------");
-        logger.info(toJSON(this.crowdinService.listAllFiles(this.projectID)));
-        logger.info("----------------------FIND DIRECTORY----------------------------------");
-        logger.info(toJSON(this.crowdinService.findDirectories(this.projectID, List.of("in-in-testick", "test2", "tes3"))));
-        logger.info("----------------------FIND FILES----------------------------------");
-        logger.info(toJSON((this.crowdinService.findFiles(this.projectID, List.of("interface.csv", "test.csv")))));
+        logger.info(toJSON(this.crowdinService.findFiles(this.projectID, file -> file.getPath().equals("/test.csv"),1)));
     }
 
     public String toJSON(Object obj) throws JsonProcessingException {

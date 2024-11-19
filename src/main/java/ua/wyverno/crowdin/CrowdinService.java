@@ -9,6 +9,7 @@ import ua.wyverno.crowdin.api.source.files.DirectoriesAPI;
 import ua.wyverno.crowdin.api.source.files.FilesAPI;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesService {
@@ -37,18 +38,43 @@ public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesSe
     }
 
     @Override
-    public List<Directory> findDirectories(long projectID, @NonNull List<String> filesNames) {
-        return this.directoriesAPI.findDirectories(projectID, 100, null, false, filesNames);
+    public List<Directory> findDirectories(long projectID, @NonNull Predicate<Directory> filter) {
+        return this.directoriesAPI.findDirectories(projectID, 100, null, false, filter, null);
     }
 
     @Override
-    public List<Directory> findDirectories(long projectID, Long directoryID, @NonNull List<String> filesNames) {
-        return this.directoriesAPI.findDirectories(projectID, 100,directoryID, false, filesNames);
+    public List<Directory> findDirectories(long projectID, Long directoryID, @NonNull Predicate<Directory> filter) {
+        return this.directoriesAPI.findDirectories(projectID, 100,directoryID, false, filter, null);
     }
 
     @Override
-    public List<Directory> findDirectories(long projectID, Long directoryID, boolean isRecursive, @NonNull List<String> directoriesNames) {
-        return this.directoriesAPI.findDirectories(projectID, 100, directoryID, isRecursive, directoriesNames);
+    public List<Directory> findDirectories(long projectID, Long directoryID, boolean isRecursive, @NonNull Predicate<Directory> filter) {
+        return this.directoriesAPI.findDirectories(projectID, 100, directoryID, isRecursive, filter, null);
+    }
+
+    @Override
+    public List<Directory> findDirectories(long projectID, Predicate<Directory> filter, Integer maxResult) {
+        return this.directoriesAPI.findDirectories(projectID, 100, null, false, filter, maxResult);
+    }
+
+    @Override
+    public List<Directory> findDirectories(long projectID, Long directoryID, @NonNull Predicate<Directory> filter, Integer maxResult) {
+        return this.directoriesAPI.findDirectories(projectID, 100, directoryID, false, filter, maxResult);
+    }
+
+    @Override
+    public List<Directory> findDirectories(long projectID, Long directoryID, boolean isRecursive, @NonNull Predicate<Directory> filter, Integer maxResult) {
+        return this.directoriesAPI.findDirectories(projectID, 100, directoryID, isRecursive, filter, maxResult);
+    }
+
+    @Override
+    public Directory createDirectory(long projectID, String directoryName) {
+        return this.directoriesAPI.createDirectory(projectID, directoryName, null);
+    }
+
+    @Override
+    public Directory createDirectory(long projectID, String directoryName, Long directoryID) {
+        return this.directoriesAPI.createDirectory(projectID, directoryName, directoryID);
     }
 
     @Override
@@ -62,12 +88,22 @@ public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesSe
     }
 
     @Override
-    public List<FileInfo> findFiles(long projectID, @NonNull List<String> filesNames) {
-        return this.filesAPI.findFiles(projectID, 100, null, filesNames);
+    public List<FileInfo> findFiles(long projectID, @NonNull Predicate<FileInfo> filter) {
+        return this.filesAPI.findFiles(projectID, 100, null, filter, null);
     }
 
     @Override
-    public List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull List<String> filesNames) {
-        return this.filesAPI.findFiles(projectID, 100, directoryID, filesNames);
+    public List<FileInfo> findFiles(long projectID, Predicate<FileInfo> filter, Integer maxResults) {
+        return this.filesAPI.findFiles(projectID, 100, null, filter, maxResults);
+    }
+
+    @Override
+    public List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull Predicate<FileInfo> filter) {
+        return this.filesAPI.findFiles(projectID, 100, directoryID, filter, null);
+    }
+
+    @Override
+    public List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull Predicate<FileInfo> filter, Integer maxResults) {
+        return this.filesAPI.findFiles(projectID, 100, directoryID, filter, maxResults);
     }
 }

@@ -1,10 +1,10 @@
 package ua.wyverno.crowdin;
 
-import com.crowdin.client.sourcefiles.model.Directory;
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface CrowdinFilesService {
     /**
@@ -24,16 +24,33 @@ public interface CrowdinFilesService {
     /**
      * Шукає певні файли за назвами файлів
      * @param projectID айді проєкта де потрібно шукати файли
-     * @param filesNames список імен файли які потрібно знайти за один пошук
+     * @param filter фільтр для пошуку
      * @return {@link List}<{@link com.crowdin.client.sourcefiles.model.FileInfo}> всі знайдені файли. Список буде порожнім, якщо не було знайдено жодного файлу
      */
-    List<FileInfo> findFiles(long projectID, @NonNull List<String> filesNames);
+    List<FileInfo> findFiles(long projectID, @NonNull Predicate<FileInfo> filter);
+    /**
+     * Шукає певні файли за назвами файлів
+     * @param projectID айді проєкта де потрібно шукати файли
+     * @param filter фільтр для пошуку
+     * @param maxResults кількість файлів скільки потрібно знайти
+     * @return {@link List}<{@link com.crowdin.client.sourcefiles.model.FileInfo}> всі знайдені файли. Список буде порожнім, якщо не було знайдено жодного файлу
+     */
+    List<FileInfo> findFiles(long projectID, @NonNull Predicate<FileInfo> filter, Integer maxResults);
     /**
      * Шукає певні файли за назвами файлів
      * @param projectID айді проєкта де потрібно шукати файли
      * @param directoryID айді директорії де потрібно шукати файли
-     * @param filesNames список імен файлів які потрібно знайти за один пошук
+     * @param filter фільтр для пошуку
      * @return {@link List}<{@link com.crowdin.client.sourcefiles.model.FileInfo}> всі знайдені файли. Список буде порожнім, якщо не було знайдено жодного файлу
      */
-    List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull List<String> filesNames);
+    List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull Predicate<FileInfo> filter);
+    /**
+     * Шукає певні файли за назвами файлів
+     * @param projectID айді проєкта де потрібно шукати файли
+     * @param directoryID айді директорії де потрібно шукати файли
+     * @param filter фільтр для пошуку
+     * @param maxResults кількість файлів яких потрібно знайти
+     * @return {@link List}<{@link com.crowdin.client.sourcefiles.model.FileInfo}> всі знайдені файли. Список буде порожнім, якщо не було знайдено жодного файлу
+     */
+    List<FileInfo> findFiles(long projectID, Long directoryID, @NonNull Predicate<FileInfo> filter, Integer maxResults);
 }
