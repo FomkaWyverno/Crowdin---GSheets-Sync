@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin;
+package ua.wyverno.crowdin.service;
 
 import ua.wyverno.crowdin.api.sourcefiles.directories.DirectoryAPI;
 

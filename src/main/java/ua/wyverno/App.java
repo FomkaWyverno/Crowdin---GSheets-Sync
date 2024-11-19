@@ -42,9 +42,7 @@ public class App implements ApplicationRunner {
         logger.info("Run");
         logger.info(toJSON(this.crowdinService
                 .files()
-                .list(this.projectID)
-                .filterApi("test")
-                .maxResults(2)
+                .create(this.projectID, 2274084025L, "test-java.csv")
                 .execute()));
     }
 

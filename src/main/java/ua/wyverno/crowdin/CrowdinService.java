@@ -1,25 +1,25 @@
 package ua.wyverno.crowdin;
 
-import com.crowdin.client.sourcefiles.model.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ua.wyverno.crowdin.api.sourcefiles.directories.DirectoryAPI;
 import ua.wyverno.crowdin.api.sourcefiles.files.FilesAPI;
-import ua.wyverno.crowdin.api.sourcefiles.files.FilesApiImpl;
-
-import java.util.List;
-import java.util.function.Predicate;
+import ua.wyverno.crowdin.api.storage.StorageAPI;
+import ua.wyverno.crowdin.service.CrowdinDirectoriesService;
+import ua.wyverno.crowdin.service.CrowdinFilesService;
+import ua.wyverno.crowdin.service.CrowdinStorageService;
 
 @Service
-public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesService {
+public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesService, CrowdinStorageService {
     private final DirectoryAPI directoriesAPI;
     private final FilesAPI filesAPI;
+    private final StorageAPI storageAPI;
 
     @Autowired
-    public CrowdinService(DirectoryAPI directoriesAPI, FilesAPI filesAPI) {
+    public CrowdinService(DirectoryAPI directoriesAPI, FilesAPI filesAPI, StorageAPI storageAPI) {
         this.directoriesAPI = directoriesAPI;
         this.filesAPI = filesAPI;
+        this.storageAPI = storageAPI;
     }
 
     @Override
@@ -28,4 +28,9 @@ public class CrowdinService implements CrowdinDirectoriesService, CrowdinFilesSe
     }
     @Override
     public FilesAPI files() {return this.filesAPI;}
+
+    @Override
+    public StorageAPI storages() {
+        return this.storageAPI;
+    }
 }

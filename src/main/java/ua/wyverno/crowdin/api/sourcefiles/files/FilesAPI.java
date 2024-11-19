@@ -9,4 +9,13 @@ public interface FilesAPI {
      * @return {@link FilesListQuery}
      */
     FilesListQuery list(long projectID);
+
+    /**
+     * Створює файл у проєкті
+     * @param projectID айді проєкта де потрібно створити файл
+     * @param storageID айді вміста
+     * @param name назва файлу
+     * @return {@link FilesListQuery}
+     */
+    FilesCreateQuery create(long projectID, long storageID, String name);
 }

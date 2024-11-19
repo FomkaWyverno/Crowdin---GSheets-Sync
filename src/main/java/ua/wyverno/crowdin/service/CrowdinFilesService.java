@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin;
+package ua.wyverno.crowdin.service;
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import org.springframework.lang.NonNull;
