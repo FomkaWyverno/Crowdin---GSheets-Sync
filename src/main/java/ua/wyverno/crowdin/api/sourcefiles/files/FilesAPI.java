@@ -17,28 +17,31 @@ public interface FilesAPI {
 
     /**
      * Створює запит до Crowdin API - Add Files<br/>
-     * Після успішного запиту створює файл на проєкті
+     * Після успішного запиту створює файл на проєкті<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesCreateQuery#storageID(long storageID)}<br/>
+     * {@link FilesCreateQuery#name(String name)}<br/><br/>
      * @param projectID айді проєкта де потрібно створити файл
-     * @param storageID айді вміста
-     * @param name назва файлу
      * @return {@link FilesListQuery}
      */
-    FilesCreateQuery create(long projectID, long storageID, String name);
+    FilesCreateQuery create(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Edit File
-     * Редагує файл
+     * Створює запит до Crowdin API - Edit File<br/>
+     * Редагує файл<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesEditQuery#fileID(long fileID)}<br/><br/>
      * @param projectID айді проєкта де знаходиться файл
-     * @param fileID файл айді потрібно редагувати
      * @return {@link FilesEditQuery}
      */
-    FilesEditQuery edit(long projectID, long fileID);
+    FilesEditQuery edit(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Delete File Видаляє гру
+     * Створює запит до Crowdin API - Delete File Видаляє гру<br/><br/>
+      * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesEditQuery#fileID(long fileID)}<br/><br/>
      * @param projectID айді проєкта де знаходиться файл
-     * @param fileID айді файла який потрібно видалити
      * @return {@link FilesDeleteQuery}
      */
-    FilesDeleteQuery delete(long projectID, long fileID);
+    FilesDeleteQuery delete(long projectID);
 }

@@ -24,17 +24,17 @@ public class DirectoriesApiImpl implements DirectoryAPI {
         return new DirectoryListQuery(this.sourceFilesApi, projectID);
     }
 
-    public DirectoryCreateQuery createDirectory(long projectID, String name) {
-        return new DirectoryCreateQuery(this.sourceFilesApi, projectID, name);
+    public DirectoryCreateQuery createDirectory(long projectID) {
+        return new DirectoryCreateQuery(this.sourceFilesApi, projectID);
     }
 
     @Override
-    public DirectoryEditQuery editDirectory(long projectID, long directoryID) {
-        return new DirectoryEditQuery(this.sourceFilesApi, projectID, directoryID);
+    public DirectoryEditQuery editDirectory(long projectID) {
+        return new DirectoryEditQuery(this.sourceFilesApi, projectID);
     }
 
     @Override
-    public DirectoryDeleteQuery deleteDirectory(long projectID, long directoryID) {
-        return new DirectoryDeleteQuery(this.sourceFilesApi, projectID, directoryID);
+    public DirectoryDeleteQuery deleteDirectory(long projectID) {
+        return new DirectoryDeleteQuery(this.sourceFilesApi, projectID);
     }
 }

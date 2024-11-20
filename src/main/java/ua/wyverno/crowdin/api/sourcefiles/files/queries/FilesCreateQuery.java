@@ -12,8 +12,8 @@ import java.util.List;
 public class FilesCreateQuery implements Query<FileInfo> {
     private final SourceFilesApi sourceFilesApi;
     private final long projectID;
-    private final long storageID;
-    private final String name;
+    private long storageID;
+    private String name;
     private Long directoryId;
     private String title;
     private String context;
@@ -23,11 +23,27 @@ public class FilesCreateQuery implements Query<FileInfo> {
     private ExportOptions exportOptions;
     private List<String> excludedTargetLanguages;
     private List<Long> attachLabelIds;
-    public FilesCreateQuery(SourceFilesApi sourceFilesApi, long projectID, long storageID, String name) {
+    public FilesCreateQuery(SourceFilesApi sourceFilesApi, long projectID) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
+    }
+
+    /**
+     * @param storageID айді створеного сховища (тимчасового файла) на Crowdin
+     * @return {@link FilesCreateQuery}
+     */
+    public FilesCreateQuery storageID(long storageID) {
         this.storageID = storageID;
+        return this;
+    }
+
+    /**
+     * @param name назва файлу
+     * @return {@link FilesCreateQuery}
+     */
+    public FilesCreateQuery name(String name) {
         this.name = name;
+        return this;
     }
 
     /**

@@ -7,12 +7,20 @@ import ua.wyverno.crowdin.api.Query;
 public class FilesDeleteQuery implements Query<Boolean> {
     private final SourceFilesApi sourceFilesApi;
     private final long projectID;
-    private final long fileID;
+    private long fileID;
 
-    public FilesDeleteQuery(SourceFilesApi sourceFilesApi, long projectID, long fileID) {
+    public FilesDeleteQuery(SourceFilesApi sourceFilesApi, long projectID) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
+    }
+
+    /**
+     * @param fileID айді файла який потрібно видалити
+     * @return {@link FilesDeleteQuery}
+     */
+    public FilesDeleteQuery fileID(long fileID) {
         this.fileID = fileID;
+        return this;
     }
 
     /**

@@ -12,14 +12,22 @@ import java.util.List;
 public class FilesEditQuery implements Query<FileInfo> {
     private final SourceFilesApi sourceFilesApi;
     private final long projectID;
-    private final long fileID;
+    private long fileID;
     private final List<PatchRequest> requestList;
 
-    public FilesEditQuery(SourceFilesApi sourceFilesApi, long projectID, long fileID) {
+    public FilesEditQuery(SourceFilesApi sourceFilesApi, long projectID) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
-        this.fileID = fileID;
         this.requestList = new ArrayList<>();
+    }
+
+    /**
+     * @param fileID файл айді потрібно редагувати
+     * @return {@link FilesEditQuery}
+     */
+    public FilesEditQuery fileID(long fileID) {
+        this.fileID = fileID;
+        return this;
     }
 
     public FilesEditQuery addPatchRequest(PatchFileRequestBuilder patchFileRequest) {

@@ -6,18 +6,12 @@ import java.io.InputStream;
 
 public interface StorageAPI {
     /**
-     * Створює запит до Crowdin API - Add Storage
-     * @param fileName назва файлу
-     * @param content вміст файлу
+     * Створює запит до Crowdin API - Add Storage<br/><br/>
+     * Обовязкові параметри при створенні запиту -<br/>
+     * {@link StorageAddQuery#fileName(String fileName)} - назва файлу<br/>
+     * {@link StorageAddQuery#content(String content)} - вміст файлу<br/><br/>
      * @return {@link StorageAddQuery}
      */
-    StorageAddQuery add(String fileName, String content);
-    /**
-     * Створює запит до Crowdin API - Add Storage
-     * @param fileName назва файлу
-     * @param content вміст файлу
-     * @return {@link StorageAddQuery}
-     */
-    StorageAddQuery add(String fileName, InputStream content);
+    StorageAddQuery add();
 
 }

@@ -9,21 +9,38 @@ import java.io.InputStream;
 public class StorageAddQuery implements Query<Storage> {
 
     private final StorageApi storageApi;
-    private final String fileName;
-    private final String contentStr;
-    private final InputStream contentInput;
-    public StorageAddQuery(StorageApi storageApi, String fileName, String content) {
+    private String fileName;
+    private String contentStr;
+    private InputStream contentInput;
+    public StorageAddQuery(StorageApi storageApi) {
         this.storageApi = storageApi;
-        this.fileName = fileName;
-        this.contentStr = content;
-        this.contentInput = null;
     }
 
-    public StorageAddQuery(StorageApi storageApi, String fileName, InputStream content) {
-        this.storageApi = storageApi;
+    /**
+     * @param fileName назва файлу
+     * @return {@link StorageAddQuery}
+     */
+    public StorageAddQuery fileName(String fileName) {
         this.fileName = fileName;
+        return this;
+    }
+
+    /**
+     * @param content вміст файлу
+     * @return {@link StorageAddQuery}
+     */
+    public StorageAddQuery content(String content) {
+        this.contentStr = content;
+        return this;
+    }
+
+    /**
+     * @param content вміст файлу
+     * @return {@link StorageAddQuery}
+     */
+    public StorageAddQuery content(InputStream content) {
         this.contentInput = content;
-        this.contentStr = null;
+        return this;
     }
 
     @Override

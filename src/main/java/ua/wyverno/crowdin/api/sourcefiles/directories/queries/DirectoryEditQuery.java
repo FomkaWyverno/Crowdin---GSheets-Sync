@@ -12,15 +12,27 @@ import java.util.List;
 public class DirectoryEditQuery implements Query<Directory> {
     private final SourceFilesApi sourceFilesApi;
     private final long projectID;
-    private final long directoryID;
+    private long directoryID;
     private final List<PatchRequest> requestList;
-    public DirectoryEditQuery(SourceFilesApi sourceFilesApi, long projectID, long directoryID) {
+    public DirectoryEditQuery(SourceFilesApi sourceFilesApi, long projectID) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
-        this.directoryID = directoryID;
         this.requestList = new ArrayList<>();
     }
 
+    /**
+     * @param directoryID айді директорії яку потрібно змінити
+     * @return {@link DirectoryEditQuery}
+     */
+    public DirectoryEditQuery directoryID(long directoryID) {
+        this.directoryID = directoryID;
+        return this;
+    }
+
+    /**
+     * @param patchRequest інструкція що саме потрібно змінити в директорії
+     * @return {@link DirectoryEditQuery}
+     */
     public DirectoryEditQuery addPatchRequest(PatchDirRequestBuilder patchRequest) {
         this.requestList.add(patchRequest.build());
         return this;

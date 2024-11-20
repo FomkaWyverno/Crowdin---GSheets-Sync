@@ -24,17 +24,17 @@ public class FilesApiImpl implements FilesAPI {
     }
 
     @Override
-    public FilesCreateQuery create(long projectID, long storageID, String name) {
-        return new FilesCreateQuery(this.sourceFilesApi, projectID, storageID, name);
+    public FilesCreateQuery create(long projectID) {
+        return new FilesCreateQuery(this.sourceFilesApi, projectID);
     }
 
     @Override
-    public FilesEditQuery edit(long projectID, long fileID) {
-        return new FilesEditQuery(this.sourceFilesApi, projectID, fileID);
+    public FilesEditQuery edit(long projectID) {
+        return new FilesEditQuery(this.sourceFilesApi, projectID);
     }
 
     @Override
-    public FilesDeleteQuery delete(long projectID, long fileID) {
-        return new FilesDeleteQuery(this.sourceFilesApi, projectID, fileID);
+    public FilesDeleteQuery delete(long projectID) {
+        return new FilesDeleteQuery(this.sourceFilesApi, projectID);
     }
 }

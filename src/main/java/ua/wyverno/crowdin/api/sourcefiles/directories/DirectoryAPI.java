@@ -16,27 +16,29 @@ public interface DirectoryAPI {
     DirectoryListQuery list(long projectID);
     /**
      * Створює запит до Crowdin API - Add Directory<br/>
-     * Щоб виконати запит викличте метод execute()<br/>
-     * Ці параметри необхідні для запиту, тому вони мають бути вказані у цьому методі
+     * Щоб виконати запит викличте метод execute()<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link DirectoryCreateQuery#name(String name)}<br/><br/>
      * @param projectID айді проєкта де потрібно створити директорію
-     * @param name назва для створеної директорії
      * @return {@link DirectoryCreateQuery}
      */
-    DirectoryCreateQuery createDirectory(long projectID, String name);
+    DirectoryCreateQuery createDirectory(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Edit Directory
+     * Створює запит до Crowdin API - Edit Directory<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link DirectoryEditQuery#directoryID(long directoryID)} - айді директорії яку потрібно змінити<br/><br/>
      * @param projectID айді проєкта де знаходиться директорія
-     * @param directoryID айді директорії яку потрібно змінити
      * @return {@link DirectoryEditQuery}
      */
-    DirectoryEditQuery editDirectory(long projectID, long directoryID);
+    DirectoryEditQuery editDirectory(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Delete Directories
+     * Створює запит до Crowdin API - Delete Directories<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link DirectoryDeleteQuery#directoryID(long directoryID)} айді директорії яку потрібно видалити<br/><br/>
      * @param projectID айді проєкта де потрібно видалити директорію
-     * @param directoryID айді директорії яку потрібно видалити
      * @return {@link  DirectoryDeleteQuery}
      */
-    DirectoryDeleteQuery deleteDirectory(long projectID, long directoryID);
+    DirectoryDeleteQuery deleteDirectory(long projectID);
 }

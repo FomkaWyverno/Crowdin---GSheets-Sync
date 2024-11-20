@@ -9,18 +9,26 @@ import ua.wyverno.crowdin.api.Query;
 public class DirectoryCreateQuery implements Query<Directory> {
     private final SourceFilesApi sourceFilesApi;
     private final Long projectID;
-    private final String name;
+    private String name;
     private Long directoryID = null;
     private String title = null;
     private String exportPattern = null;
     private Priority priority;
 
-    public DirectoryCreateQuery(SourceFilesApi sourceFilesApi, Long projectID, String name) {
+    public DirectoryCreateQuery(SourceFilesApi sourceFilesApi, Long projectID) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
-        this.name = name;
     }
 
+    /**
+     * Ім'я створеної директорії
+     * @param name імя
+     * @return {@link DirectoryCreateQuery}
+     */
+    public DirectoryCreateQuery name(String name) {
+        this.name = name;
+        return this;
+    }
     /**
      * Parent Directory Identifier. Get via List Directories
      *<br/><br/>
