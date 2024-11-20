@@ -47,8 +47,18 @@ public class App implements ApplicationRunner {
 //                .filterApi("Java-Directory-Edit")
 //                .execute().get(0);
 //        logger.info(toJSON(directory));
-        logger.info(toJSON(this.crowdinService.files()
-                .delete(this.projectID, 284L)
+        FileInfo file = this.crowdinService.files()
+                .list(this.projectID)
+                .maxResults(1)
+                .filterApi("test-java.csv")
+                .execute().get(0);
+        logger.info(toJSON(file));
+        logger.info(toJSON(this.crowdinService.sourceStrings()
+                .add(this.projectID)
+                .fileID(file.getId())
+                .text("it is text from Crowdin API")
+                .context("Java context test")
+                .identifier("java-id-test")
                 .execute()));
     }
 
