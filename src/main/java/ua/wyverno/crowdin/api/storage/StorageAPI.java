@@ -1,5 +1,7 @@
 package ua.wyverno.crowdin.api.storage;
 
+import ua.wyverno.crowdin.api.storage.queries.StorageAddQuery;
+
 import java.io.InputStream;
 
 public interface StorageAPI {

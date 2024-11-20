@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.storage;
+package ua.wyverno.crowdin.api.storage.queries;
 
 import com.crowdin.client.storage.StorageApi;
 import com.crowdin.client.storage.model.Storage;
