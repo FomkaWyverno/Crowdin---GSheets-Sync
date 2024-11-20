@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.sourcefiles.directories;
+package ua.wyverno.crowdin.api.sourcefiles.directories.queries;
 
 import com.crowdin.client.core.model.ResponseList;
 import com.crowdin.client.core.model.ResponseObject;
@@ -9,7 +9,7 @@ import ua.wyverno.crowdin.api.sourcefiles.ListQuery;
 import java.util.List;
 
 public class DirectoryListQuery extends ListQuery<Directory> {
-    protected DirectoryListQuery(SourceFilesApi sourceFilesApi, long projectID) {
+    public DirectoryListQuery(SourceFilesApi sourceFilesApi, long projectID) {
         super(sourceFilesApi, projectID);
     }
     /**

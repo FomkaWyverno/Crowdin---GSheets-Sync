@@ -1,8 +1,7 @@
 package ua.wyverno;
 
 
-import com.crowdin.client.core.model.PatchOperation;
-import com.crowdin.client.sourcefiles.model.Directory;
+import com.crowdin.client.sourcefiles.model.FileInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -15,12 +14,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
-import ua.wyverno.crowdin.api.sourcefiles.directories.edit.EditPath;
-import ua.wyverno.crowdin.api.sourcefiles.directories.edit.PatchRequestBuilder;
-
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.List;
+import ua.wyverno.crowdin.api.sourcefiles.PatchSourceFilesOperation;
+import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.EditFilePath;
+import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.PatchFileRequestBuilder;
 
 @SpringBootApplication
 public class App implements ApplicationRunner {
@@ -51,8 +47,8 @@ public class App implements ApplicationRunner {
 //                .filterApi("Java-Directory-Edit")
 //                .execute().get(0);
 //        logger.info(toJSON(directory));
-        logger.info(toJSON(this.crowdinService.directories()
-                .deleteDirectory(this.projectID, 279)
+        logger.info(toJSON(this.crowdinService.files()
+                .delete(this.projectID, 284L)
                 .execute()));
     }
 

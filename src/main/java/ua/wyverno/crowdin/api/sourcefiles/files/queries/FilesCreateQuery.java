@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.sourcefiles.files;
+package ua.wyverno.crowdin.api.sourcefiles.files.queries;
 
 import com.crowdin.client.sourcefiles.SourceFilesApi;
 import com.crowdin.client.sourcefiles.model.AddFileRequest;

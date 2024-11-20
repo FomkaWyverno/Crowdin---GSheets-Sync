@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.sourcefiles.directories;
+package ua.wyverno.crowdin.api.sourcefiles.directories.queries;
 
 import com.crowdin.client.core.model.Priority;
 import com.crowdin.client.sourcefiles.SourceFilesApi;
@@ -15,7 +15,7 @@ public class DirectoryCreateQuery implements Query<Directory> {
     private String exportPattern = null;
     private Priority priority;
 
-    protected DirectoryCreateQuery(SourceFilesApi sourceFilesApi, Long projectID, String name) {
+    public DirectoryCreateQuery(SourceFilesApi sourceFilesApi, Long projectID, String name) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectID = projectID;
         this.name = name;

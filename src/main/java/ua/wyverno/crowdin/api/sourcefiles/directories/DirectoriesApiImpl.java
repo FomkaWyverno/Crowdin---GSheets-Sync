@@ -4,6 +4,10 @@ import com.crowdin.client.sourcefiles.SourceFilesApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryCreateQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryDeleteQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryEditQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryListQuery;
 
 @Component
 public class DirectoriesApiImpl implements DirectoryAPI {

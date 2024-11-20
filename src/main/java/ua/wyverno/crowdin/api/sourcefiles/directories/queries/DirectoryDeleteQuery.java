@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.sourcefiles.directories;
+package ua.wyverno.crowdin.api.sourcefiles.directories.queries;
 
 import com.crowdin.client.core.http.exceptions.HttpException;
 import com.crowdin.client.sourcefiles.SourceFilesApi;

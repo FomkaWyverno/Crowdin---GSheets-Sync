@@ -1,28 +1,29 @@
-package ua.wyverno.crowdin.api.sourcefiles.directories.edit;
+package ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit;
 
 import com.crowdin.client.core.model.PatchOperation;
 import com.crowdin.client.core.model.PatchRequest;
+import ua.wyverno.crowdin.api.sourcefiles.PatchSourceFilesOperation;
 
-public class PatchRequestBuilder {
+public class PatchDirRequestBuilder {
     private PatchOperation op;
-    private EditPath path;
+    private EditDirPath path;
     private Object value;
 
-    public PatchRequestBuilder op(PatchOperation op) {
-        this.op = op;
+    public PatchDirRequestBuilder op(PatchSourceFilesOperation patchDirOperation) {
+        this.op = patchDirOperation.getOp();
         return this;
     }
 
-    public PatchRequestBuilder path(EditPath path) {
+    public PatchDirRequestBuilder path(EditDirPath path) {
         this.path = path;
         return this;
     }
 
-    public PatchRequestBuilder value(String value) {
+    public PatchDirRequestBuilder value(String value) {
         this.value = value;
         return this;
     }
-    public PatchRequestBuilder value(Integer value) {
+    public PatchDirRequestBuilder value(Integer value) {
         this.value = value;
         return this;
     }

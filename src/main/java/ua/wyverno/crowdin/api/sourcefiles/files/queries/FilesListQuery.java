@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.sourcefiles.files;
+package ua.wyverno.crowdin.api.sourcefiles.files.queries;
 
 import com.crowdin.client.core.model.ResponseObject;
 import com.crowdin.client.sourcefiles.SourceFilesApi;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class FilesListQuery extends ListQuery<FileInfo> {
 
-    protected FilesListQuery(SourceFilesApi sourceFilesApi, long projectID) {
+    public FilesListQuery(SourceFilesApi sourceFilesApi, long projectID) {
         super(sourceFilesApi, projectID);
     }
 

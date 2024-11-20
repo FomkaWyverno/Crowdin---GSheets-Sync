@@ -1,5 +1,10 @@
 package ua.wyverno.crowdin.api.sourcefiles.directories;
 
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryCreateQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryDeleteQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryEditQuery;
+import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryListQuery;
+
 public interface DirectoryAPI {
     /**
      * Створює запит до Crowdin API - List Directories<br/>
