@@ -23,4 +23,14 @@ public class DirectoriesApiImpl implements DirectoryAPI {
     public DirectoryCreateQuery createDirectory(long projectID, String name) {
         return new DirectoryCreateQuery(this.sourceFilesApi, projectID, name);
     }
+
+    @Override
+    public DirectoryEditQuery editDirectory(long projectID, long directoryID) {
+        return new DirectoryEditQuery(this.sourceFilesApi, projectID, directoryID);
+    }
+
+    @Override
+    public DirectoryDeleteQuery deleteDirectory(long projectID, long directoryID) {
+        return new DirectoryDeleteQuery(this.sourceFilesApi, projectID, directoryID);
+    }
 }
