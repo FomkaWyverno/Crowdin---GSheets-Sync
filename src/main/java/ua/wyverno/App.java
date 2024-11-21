@@ -2,6 +2,7 @@ package ua.wyverno;
 
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
+import com.crowdin.client.sourcestrings.model.SourceString;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -14,9 +15,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
-import ua.wyverno.crowdin.api.sourcefiles.PatchSourceFilesOperation;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.EditFilePath;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.PatchFileRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsAddPatch;
+import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
+
+import java.util.List;
 
 @SpringBootApplication
 public class App implements ApplicationRunner {
@@ -41,25 +44,25 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-//        Directory directory = this.crowdinService.directories()
-//                .list(this.projectID)
-//                .maxResults(1)
-//                .filterApi("Java-Directory-Edit")
-//                .execute().get(0);
-//        logger.info(toJSON(directory));
         FileInfo file = this.crowdinService.files()
                 .list(this.projectID)
+                .filterApi("java.json")
                 .maxResults(1)
-                .filterApi("test-java.csv")
                 .execute().get(0);
-        logger.info(toJSON(file));
-        logger.info(toJSON(this.crowdinService.sourceStrings()
-                .add(this.projectID)
-                .fileID(file.getId())
-                .text("it is text from Crowdin API")
-                .context("Java context test")
-                .identifier("java-id-test")
-                .execute()));
+        StringsBatchQuery query = this.crowdinService.sourceStrings()
+                .batch(this.projectID);
+
+        for (int i = 0; i < 1500; i++) {
+            AddStringRequestBuilder request = new AddStringRequestBuilder();
+            request.text("Very big patch java test #1")
+                    .fileID(file.getId())
+                    .identifier("big.patch.id#"+i)
+                    .context("Big patch context#"+i);
+
+            query.addPatch(request);
+        }
+
+        logger.info(toJSON(query.execute()));
     }
 
     public String toJSON(Object obj) throws JsonProcessingException {

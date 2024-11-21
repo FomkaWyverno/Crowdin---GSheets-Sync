@@ -1,10 +1,10 @@
-package ua.wyverno.crowdin.api.sourcestrings.queries.batch;
+package ua.wyverno.crowdin.api.sourcestrings.queries.builders;
 
 import com.crowdin.client.sourcestrings.model.AddSourceStringRequest;
 
 import java.util.List;
 
-public class AddSourceStringRequestBuilder {
+public class AddStringRequestBuilder {
     private String text;
     private long fileID;
     private String identifier;
@@ -13,37 +13,37 @@ public class AddSourceStringRequestBuilder {
     private Integer maxLength;
     private List<Long> labelIds;
 
-    public AddSourceStringRequestBuilder text(String text) {
+    public AddStringRequestBuilder text(String text) {
         this.text = text;
         return this;
     }
 
-    public AddSourceStringRequestBuilder fileID(long fileID) {
+    public AddStringRequestBuilder fileID(long fileID) {
         this.fileID = fileID;
         return this;
     }
 
-    public AddSourceStringRequestBuilder identifier(String identifier) {
+    public AddStringRequestBuilder identifier(String identifier) {
         this.identifier = identifier;
         return this;
     }
 
-    public AddSourceStringRequestBuilder context(String context) {
+    public AddStringRequestBuilder context(String context) {
         this.context = context;
         return this;
     }
 
-    public AddSourceStringRequestBuilder hidden(Boolean hidden) {
+    public AddStringRequestBuilder hidden(Boolean hidden) {
         isHidden = hidden;
         return this;
     }
 
-    public AddSourceStringRequestBuilder maxLength(Integer maxLength) {
+    public AddStringRequestBuilder maxLength(Integer maxLength) {
         this.maxLength = maxLength;
         return this;
     }
 
-    public AddSourceStringRequestBuilder labelIds(List<Long> labelIds) {
+    public AddStringRequestBuilder labelIds(List<Long> labelIds) {
         this.labelIds = labelIds;
         return this;
     }
