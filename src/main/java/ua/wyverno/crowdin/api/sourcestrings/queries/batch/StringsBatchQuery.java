@@ -9,6 +9,7 @@ import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBui
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Абстракція запиту до <a href="https://support.crowdin.com/developer/api/v2/#tag/Source-Strings/operation/api.projects.strings.batchPatch">Crowdin API String Batch Operations</a>
@@ -33,7 +34,7 @@ public class StringsBatchQuery implements Query<List<SourceString>> {
      * @throws IllegalArgumentException у випадку якщо addStringRequest переданий як null
      */
     public StringsBatchQuery addPatch(AddStringRequestBuilder addStringRequest) {
-        if (addStringRequest == null) {throw new IllegalArgumentException("addStringRequest cannot be null");}
+        Objects.requireNonNull(addStringRequest,"addStringRequest cannot be null");
         this.requestList.add(new StringsAddPatch(addStringRequest).getPatchRequest());
         return this;
     }

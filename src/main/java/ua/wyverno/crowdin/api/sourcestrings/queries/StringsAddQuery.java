@@ -6,6 +6,8 @@ import com.crowdin.client.sourcestrings.model.SourceString;
 import ua.wyverno.crowdin.api.Query;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
 
+import java.util.Objects;
+
 public class StringsAddQuery implements Query<SourceString> {
     private final SourceStringsApi sourceStringsApi;
     private final long projectID;
@@ -16,6 +18,7 @@ public class StringsAddQuery implements Query<SourceString> {
     }
 
     public StringsAddQuery request(AddStringRequestBuilder addStringRequestBuilder) {
+        Objects.requireNonNull(addStringRequestBuilder, "addStringRequest cannot be null");
         this.requestBuilder = addStringRequestBuilder;
         return this;
     }

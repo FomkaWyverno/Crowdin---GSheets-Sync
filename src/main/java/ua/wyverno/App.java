@@ -44,25 +44,7 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        FileInfo file = this.crowdinService.files()
-                .list(this.projectID)
-                .filterApi("java.json")
-                .maxResults(1)
-                .execute().get(0);
-        StringsBatchQuery query = this.crowdinService.sourceStrings()
-                .batch(this.projectID);
 
-        for (int i = 0; i < 1500; i++) {
-            AddStringRequestBuilder request = new AddStringRequestBuilder();
-            request.text("Very big patch java test #1")
-                    .fileID(file.getId())
-                    .identifier("big.patch.id#"+i)
-                    .context("Big patch context#"+i);
-
-            query.addPatch(request);
-        }
-
-        logger.info(toJSON(query.execute()));
     }
 
     public String toJSON(Object obj) throws JsonProcessingException {
