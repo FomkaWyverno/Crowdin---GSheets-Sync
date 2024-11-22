@@ -4,6 +4,7 @@ import com.crowdin.client.sourcestrings.SourceStringsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
+import ua.wyverno.crowdin.api.sourcestrings.queries.StringsEditQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsGetQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
@@ -31,6 +32,11 @@ public class StringsApiImpl implements StringsAPI {
     @Override
     public StringsListQuery list(long projectID) {
         return new StringsListQuery(this.sourceStringsApi, projectID);
+    }
+
+    @Override
+    public StringsEditQuery edit(long projectID) {
+        return new StringsEditQuery(this.sourceStringsApi, projectID);
     }
 
     @Override

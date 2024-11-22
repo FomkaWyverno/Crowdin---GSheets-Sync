@@ -126,8 +126,8 @@ public abstract class ListQuery<T, Q extends ListQuery<T, Q>> implements Query<L
     protected abstract List<T> fetchFromAPI(int limitAPI, int offset);
     protected boolean shouldContinue(List<T> responseElements, List<T> resultElement) {
         boolean hasMore = responseElements.size() == this.getLimitApi();// Чи є ще елементи які можна отримати з API
-        boolean isNotMaxResults = this.getMaxResults() == null || resultElement.size() >= this.getMaxResults(); // Якщо вказано максимальну кількість елементів, то перевіряємо чи досягли цього
-        return hasMore && isNotMaxResults;
+        boolean isMaxResults = this.getMaxResults() != null && resultElement.size() >= this.getMaxResults(); // Якщо вказано максимальну кількість елементів, то перевіряємо чи досягли цього
+        return hasMore && !isMaxResults;
     }
 
     @SuppressWarnings("uncheked")

@@ -30,6 +30,8 @@ public class StringsListQuery extends ListStringsQuery<SourceString, StringsList
                 .croql(this.getCroQL())
                 .filter(this.getFilterAPI())
                 .scope(this.getScope())
+                .limit(limitAPI)
+                .offset(offset)
                 .build();
         return this.getSourceStringsApi().listSourceStrings(this.getProjectID(), params).getData()
                 .stream()

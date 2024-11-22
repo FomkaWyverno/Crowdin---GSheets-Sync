@@ -1,12 +1,12 @@
-package ua.wyverno.crowdin.api.sourcefiles;
+package ua.wyverno.crowdin.api.util.edit;
 
 import com.crowdin.client.core.model.PatchOperation;
 
-public enum PatchSourceFilesOperation {
+public enum PatchEditOperation {
     REPLACE(PatchOperation.REPLACE), TEST(PatchOperation.TEST);
     private final PatchOperation op;
 
-    PatchSourceFilesOperation(PatchOperation op) {
+    PatchEditOperation(PatchOperation op) {
         this.op = op;
     }
 

@@ -3,6 +3,8 @@ package ua.wyverno.crowdin.api.sourcestrings;
 import com.crowdin.client.sourcestrings.SourceStringsApi;
 import ua.wyverno.crowdin.api.ListQuery;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,7 +109,7 @@ public abstract class ListStringsQuery<T, Q extends ListStringsQuery<T,Q>> exten
      * @return {@link Q}
      */
     public Q filterAPI(String filterAPI) {
-        this.filterAPI = filterAPI;
+        this.filterAPI = URLEncoder.encode(filterAPI, StandardCharsets.UTF_8);
         return this.self();
     }
 

@@ -1,16 +1,16 @@
 package ua.wyverno.crowdin.api.sourcefiles.files.queries.edit;
 
 import com.crowdin.client.core.model.PatchRequest;
-import ua.wyverno.crowdin.api.sourcefiles.PatchSourceFilesOperation;
+import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 
 import java.util.List;
 
 public class PatchFileRequestBuilder {
-    private PatchSourceFilesOperation op;
+    private PatchEditOperation op;
     private EditFilePath path;
     private Object value;
 
-    public PatchFileRequestBuilder op(PatchSourceFilesOperation op) {
+    public PatchFileRequestBuilder op(PatchEditOperation op) {
         this.op = op;
         return this;
     }

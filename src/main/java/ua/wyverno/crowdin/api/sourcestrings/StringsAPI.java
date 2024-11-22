@@ -1,9 +1,11 @@
 package ua.wyverno.crowdin.api.sourcestrings;
 
+import ua.wyverno.crowdin.api.sourcestrings.queries.StringsEditQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsGetQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsAddQuery;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditStringRequestBuilder;
 
 public interface StringsAPI {
 
@@ -32,6 +34,17 @@ public interface StringsAPI {
      * @return {@link StringsListQuery}
      */
     StringsListQuery list(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Edit String<br/><br/>
+     *
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link StringsEditQuery#putEditStringRequest(EditStringRequestBuilder)} - мінімум хоча б один запит на зміну має бути для виконання цього запиту<br/>
+     * {@link StringsEditQuery#stringID(Long stringID)} айді рядка котрий потрібно якось змінити
+     * @param projectID айді проєкта, у якому знаходиться рядок, якрий потрібно змінити.
+     * @return {@link StringsEditQuery}
+     */
+    StringsEditQuery edit(long projectID);
 
     /**
      * Створює запит до Crowdin API - String Batch Operations<br/><br/>

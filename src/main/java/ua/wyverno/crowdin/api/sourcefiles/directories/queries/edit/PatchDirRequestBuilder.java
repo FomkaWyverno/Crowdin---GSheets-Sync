@@ -2,14 +2,14 @@ package ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit;
 
 import com.crowdin.client.core.model.PatchOperation;
 import com.crowdin.client.core.model.PatchRequest;
-import ua.wyverno.crowdin.api.sourcefiles.PatchSourceFilesOperation;
+import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 
 public class PatchDirRequestBuilder {
     private PatchOperation op;
     private EditDirPath path;
     private Object value;
 
-    public PatchDirRequestBuilder op(PatchSourceFilesOperation patchDirOperation) {
+    public PatchDirRequestBuilder op(PatchEditOperation patchDirOperation) {
         this.op = patchDirOperation.getOp();
         return this;
     }

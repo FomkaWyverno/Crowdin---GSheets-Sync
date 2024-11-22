@@ -15,6 +15,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditStringRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
+import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 
 import java.util.List;
 
@@ -43,8 +46,20 @@ public class App implements ApplicationRunner {
         logger.info("Run");
         List<SourceString> list = this.crowdinService.sourceStrings()
                 .list(this.projectID)
+                .limitAPI(1)
+                .filterAPI("This is new replaced text from JAVA API")
+                .scope("text")
+                .maxResults(1)
                 .execute();
         logger.info(toJSON(list));
+        logger.info(toJSON(this.crowdinService.sourceStrings()
+                .edit(this.projectID)
+                .stringID(list.get(0).getId())
+                .putEditStringRequest(new EditStringRequestBuilder()
+                        .op(PatchEditOperation.REPLACE)
+                        .path(PathEditString.TEXT)
+                        .value("JAVA DEBUG API Code"))
+                .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {
         return this.writer.writeValueAsString(obj);
