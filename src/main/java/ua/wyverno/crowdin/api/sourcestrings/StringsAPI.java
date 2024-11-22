@@ -1,6 +1,7 @@
 package ua.wyverno.crowdin.api.sourcestrings;
 
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsGetQuery;
+import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsAddQuery;
 
@@ -19,10 +20,18 @@ public interface StringsAPI {
     /**
      * Створює запит до Crowdin API - Get String<br/><br/>
      * Обовязкові параметри при створенні запиту -<br/>
+     * {@link StringsGetQuery#stringID(long stringID)}
      * @param projectID айді проєкту де знаходиться вихідний рядок
      * @return {@link StringsGetQuery}
      */
     StringsGetQuery get(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - List Strings<br/><br/>
+     * @param projectID айді проєкта, з якого потрібно взяти весь список вихідних рядків
+     * @return {@link StringsListQuery}
+     */
+    StringsListQuery list(long projectID);
 
     /**
      * Створює запит до Crowdin API - String Batch Operations<br/><br/>

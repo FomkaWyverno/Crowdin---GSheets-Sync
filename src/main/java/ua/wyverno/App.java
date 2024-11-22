@@ -1,7 +1,7 @@
 package ua.wyverno;
 
 
-import com.crowdin.client.sourcefiles.model.FileInfo;
+import com.crowdin.client.sourcefiles.model.Directory;
 import com.crowdin.client.sourcestrings.model.SourceString;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +15,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
-import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsAddPatch;
-import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
 
 import java.util.List;
 
@@ -44,9 +41,11 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-
+        List<SourceString> list = this.crowdinService.sourceStrings()
+                .list(this.projectID)
+                .execute();
+        logger.info(toJSON(list));
     }
-
     public String toJSON(Object obj) throws JsonProcessingException {
         return this.writer.writeValueAsString(obj);
     }

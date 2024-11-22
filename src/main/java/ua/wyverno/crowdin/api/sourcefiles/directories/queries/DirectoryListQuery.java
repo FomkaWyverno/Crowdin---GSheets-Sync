@@ -4,11 +4,11 @@ import com.crowdin.client.core.model.ResponseList;
 import com.crowdin.client.core.model.ResponseObject;
 import com.crowdin.client.sourcefiles.SourceFilesApi;
 import com.crowdin.client.sourcefiles.model.Directory;
-import ua.wyverno.crowdin.api.sourcefiles.ListQuery;
+import ua.wyverno.crowdin.api.sourcefiles.ListSourceFilesQuery;
 
 import java.util.List;
 
-public class DirectoryListQuery extends ListQuery<Directory> {
+public class DirectoryListQuery extends ListSourceFilesQuery<Directory, DirectoryListQuery> {
     public DirectoryListQuery(SourceFilesApi sourceFilesApi, long projectID) {
         super(sourceFilesApi, projectID);
     }
@@ -18,13 +18,12 @@ public class DirectoryListQuery extends ListQuery<Directory> {
      */
     @Override
     public List<Directory> execute() {
-        return this.listWithPagination(this.getProjectID());
+        return this.listWithPagination();
     }
     @Override
-    protected List<Directory> fetchFromAPI(long projectID, Long branchID, Long directoryID,
-                                           String filter, boolean isRecursion, int limit, int offset) {
+    protected List<Directory> fetchFromAPI(int limitAPI, int offset) {
         ResponseList<Directory> response = this.getSourceFilesApi()
-                .listDirectories(projectID, branchID, directoryID, filter, isRecursion ? new Object() : null, limit, offset);
+                .listDirectories(this.getProjectID(), null, this.getDirectoryID(), this.getFilterApi(), this.isRecursive() ? new Object() : null, limitAPI, offset);
         // Конвертуємо відповідь у лист з даними про директорії
         return response.getData()
                 .stream()
