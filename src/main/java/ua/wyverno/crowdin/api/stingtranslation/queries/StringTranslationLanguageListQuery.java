@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Note: For instant translation delivery to your mobile, web, server, or desktop apps, it is recommended to use <a href="https://support.crowdin.com/content-delivery/">OTA</a>.
+ */
 public class StringTranslationLanguageListQuery extends ListQuery<LanguageTranslations, StringTranslationLanguageListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;

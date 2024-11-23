@@ -1,6 +1,7 @@
 package ua.wyverno;
 
 
+import com.crowdin.client.sourcefiles.model.FileInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -37,10 +38,16 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
+        FileInfo fileInfo = this.crowdinService.files().list(this.projectID)
+                .filterApi("test-java.csv")
+                .limitAPI(1)
+                .maxResults(1)
+                .execute().get(0);
+        logger.info(toJSON(fileInfo));
         logger.info(toJSON(this.crowdinService.string_translations()
-                .listLanguageTranslations(this.projectID)
+                .listTranslationApprovals(this.projectID)
+                .fileId(fileInfo.getId())
                 .languageId("uk")
-                .croql("count of approvals = 0")
                 .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {

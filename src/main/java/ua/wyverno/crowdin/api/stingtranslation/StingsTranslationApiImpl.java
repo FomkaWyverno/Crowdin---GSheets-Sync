@@ -5,6 +5,7 @@ import com.crowdin.client.stringtranslations.StringTranslationsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
+import ua.wyverno.crowdin.api.stingtranslation.queries.StringTranslationApprovalsListQuery;
 import ua.wyverno.crowdin.api.stingtranslation.queries.StringTranslationLanguageListQuery;
 
 import java.lang.reflect.Field;
@@ -47,5 +48,10 @@ public class StingsTranslationApiImpl implements StringTranslationAPI {
     @Override
     public StringTranslationLanguageListQuery listLanguageTranslations(long projectID) {
         return new StringTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    }
+
+    @Override
+    public StringTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
+        return new StringTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 }
