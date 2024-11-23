@@ -38,7 +38,10 @@ public class App implements ApplicationRunner {
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
         logger.info(toJSON(this.crowdinService.string_translations()
-                .listLanguageTranslations(this.projectID).execute()));
+                .listLanguageTranslations(this.projectID)
+                .languageId("uk")
+                .croql("count of approvals = 0")
+                .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {
         return this.writer.writeValueAsString(obj);
