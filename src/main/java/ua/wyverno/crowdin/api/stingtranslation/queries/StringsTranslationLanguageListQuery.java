@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Note: For instant translation delivery to your mobile, web, server, or desktop apps, it is recommended to use <a href="https://support.crowdin.com/content-delivery/">OTA</a>.
  */
-public class StringTranslationLanguageListQuery extends ListQuery<LanguageTranslations, StringTranslationLanguageListQuery> {
+public class StringsTranslationLanguageListQuery extends ListQuery<LanguageTranslations, StringsTranslationLanguageListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
     private final long projectID;
@@ -30,7 +30,7 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     private Integer approvedOnly;
     private String croql;
     private Integer denormalizePlaceholders;
-    public StringTranslationLanguageListQuery(HttpClient crowdinHttpClient, String crowdinBastApiURL, long projectID) {
+    public StringsTranslationLanguageListQuery(HttpClient crowdinHttpClient, String crowdinBastApiURL, long projectID) {
         this.crowdinHttpClient = crowdinHttpClient;
         this.crowdinBaseApiURL = crowdinBastApiURL;
         this.projectID = projectID;
@@ -38,9 +38,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
 
     /**
      * @param languageId Language Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.get">Project Target Languages</a>
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery languageId(String languageId) {
+    public StringsTranslationLanguageListQuery languageId(String languageId) {
         this.languageId = languageId;
         return this;
     }
@@ -50,9 +50,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
      * Enum: "text" "stringId" "translationId" "createdAt"<br/>
      * Example: orderBy=createdAt desc,text<br/>
      * Read more about <a href="https://support.crowdin.com/developer/api/v2/#section/Introduction/Sorting">sorting rules<a/>
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery orderBy(String orderBy) {
+    public StringsTranslationLanguageListQuery orderBy(String orderBy) {
         this.orderBy = orderBy;
         return this;
     }
@@ -60,9 +60,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     /**
      * @param stringIds Example: stringIds=1,2,3,4,5<br/>
      * Filter translations by stringIds. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.strings.getMany">List Strings</a>
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery stringIds(String stringIds) {
+    public StringsTranslationLanguageListQuery stringIds(String stringIds) {
         this.stringIds = stringIds;
         return this;
     }
@@ -70,9 +70,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     /**
      * @param labelIds Example: labelIds=1,2,3,4,5<br/>
      * Filter translations by labelIds. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.labels.getMany">List Labels</a>
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery labelIds(String labelIds) {
+    public StringsTranslationLanguageListQuery labelIds(String labelIds) {
         this.labelIds = labelIds;
         return this;
     }
@@ -81,9 +81,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
      * @param fileId Filter translations by fileId. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.files.getMany">List Files</a><br/>
      * <br/>
      * Note: Can't be used with branchId or directoryId in the same request
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery fileId(Long fileId) {
+    public StringsTranslationLanguageListQuery fileId(Long fileId) {
         this.fileId = fileId;
         return this;
     }
@@ -91,9 +91,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     /**
      * @param branchId Branch Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.branches.getMany">List Branches<a/><br/>
      * Note: Can't be used with fileId or directoryId in the same request<br/>
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery branchId(Long branchId) {
+    public StringsTranslationLanguageListQuery branchId(Long branchId) {
         this.branchId = branchId;
         return this;
     }
@@ -102,9 +102,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
      * @param directoryId Directory Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.directories.getMany">List Directories</a><br/>
      * <br/>
      * Note: Can't be used with fileId or branchId in same request
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery directoryId(Long directoryId) {
+    public StringsTranslationLanguageListQuery directoryId(Long directoryId) {
         this.directoryId = directoryId;
         return this;
     }
@@ -112,9 +112,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     /**
      * @param approvedOnly Default: false<br/>
      * Only approved translations
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery approvedOnly(Boolean approvedOnly) {
+    public StringsTranslationLanguageListQuery approvedOnly(Boolean approvedOnly) {
         if (approvedOnly == null) {
             this.approvedOnly = null;
             return this;
@@ -127,9 +127,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
      * @param croql Filter translations by <a href="https://developer.crowdin.com/croql/">CroQL<a/><br/>
      * <br/>
      * Note: Can't be used with stringIds, labelIds, fileId or approvedOnly in same request
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery croql(String croql) {
+    public StringsTranslationLanguageListQuery croql(String croql) {
         this.croql = URLEncoder.encode(croql, StandardCharsets.UTF_8);
         return this;
     }
@@ -137,9 +137,9 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
     /**
      * @param denormalizePlaceholders Default: false<br/>
      * Enable denormalize placeholders
-     * @return {@link StringTranslationLanguageListQuery}
+     * @return {@link StringsTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery denormalizePlaceholders(Boolean denormalizePlaceholders) {
+    public StringsTranslationLanguageListQuery denormalizePlaceholders(Boolean denormalizePlaceholders) {
         if (denormalizePlaceholders == null) {
             this.denormalizePlaceholders = null;
             return this;

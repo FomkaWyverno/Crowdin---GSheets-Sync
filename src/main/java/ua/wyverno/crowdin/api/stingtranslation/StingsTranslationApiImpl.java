@@ -5,8 +5,9 @@ import com.crowdin.client.stringtranslations.StringTranslationsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringTranslationApprovalsListQuery;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringTranslationLanguageListQuery;
+import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationApprovalsListQuery;
+import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationLanguageListQuery;
+import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationListQuery;
 
 import java.lang.reflect.Field;
 
@@ -46,12 +47,17 @@ public class StingsTranslationApiImpl implements StringTranslationAPI {
     }
 
     @Override
-    public StringTranslationLanguageListQuery listLanguageTranslations(long projectID) {
-        return new StringTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringsTranslationLanguageListQuery listLanguageTranslations(long projectID) {
+        return new StringsTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 
     @Override
-    public StringTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
-        return new StringTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringsTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
+        return new StringsTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    }
+
+    @Override
+    public StringsTranslationListQuery listTranslation(long projectID) {
+        return new StringsTranslationListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 }

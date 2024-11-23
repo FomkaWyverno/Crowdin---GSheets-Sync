@@ -2,6 +2,7 @@ package ua.wyverno;
 
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
+import com.crowdin.client.sourcestrings.model.SourceString;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -14,6 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
+
+import java.util.List;
 
 @SpringBootApplication
 public class App implements ApplicationRunner {
@@ -38,17 +41,22 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        FileInfo fileInfo = this.crowdinService.files().list(this.projectID)
-                .filterApi("test-java.csv")
-                .limitAPI(1)
-                .maxResults(1)
-                .execute().get(0);
-        logger.info(toJSON(fileInfo));
-        logger.info(toJSON(this.crowdinService.string_translations()
-                .listTranslationApprovals(this.projectID)
-                .fileId(fileInfo.getId())
-                .languageId("uk")
-                .execute()));
+        List<SourceString> listStrings = this.crowdinService.sourceStrings()
+                .list(this.projectID)
+                .execute();
+        logger.info(toJSON(listStrings));
+        listStrings.forEach(string -> {
+            try {
+                logger.info(toJSON(this.crowdinService.string_translations()
+                        .listTranslation(this.projectID)
+                        .stringId(string.getId())
+                        .languageId("uk")
+                        .execute()));
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage());
+            }
+        });
+
     }
     public String toJSON(Object obj) throws JsonProcessingException {
         return this.writer.writeValueAsString(obj);

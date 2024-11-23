@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Note: Either translationId OR fileId OR labelIds OR excludeLabelIds with languageId OR stringId with languageId are required
  */
-public class StringTranslationApprovalsListQuery extends ListQuery<Approval, StringTranslationApprovalsListQuery> {
+public class StringsTranslationApprovalsListQuery extends ListQuery<Approval, StringsTranslationApprovalsListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
     private final long projectID;
@@ -25,7 +25,7 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
     private Long translationId;
     private String labelIds;
     private String excludeLabelIds;
-    public StringTranslationApprovalsListQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL, long projectID) {
+    public StringsTranslationApprovalsListQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL, long projectID) {
         this.crowdinHttpClient = crowdinHttpClient;
         this.crowdinBaseApiURL = crowdinBaseApiURL;
         this.projectID = projectID;
@@ -36,9 +36,9 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
      * Enum: "id" "createdAt"<br/>
      * Example: orderBy=createdAt desc,id<br/>
      * Read more about <a href="https://support.crowdin.com/developer/api/v2/#section/Introduction/Sorting">sorting rules<a/>
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery orderBy(String orderBy) {
+    public StringsTranslationApprovalsListQuery orderBy(String orderBy) {
         this.orderBy = orderBy;
         return this;
     }
@@ -46,9 +46,9 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
     /**
      * @param fileId File Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.files.getMany">List Files</a><br/>
      * Note: Must be used together with languageId
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery fileId(Long fileId) {
+    public StringsTranslationApprovalsListQuery fileId(Long fileId) {
         this.fileId = fileId;
         return this;
     }
@@ -56,18 +56,18 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
     /**
      * @param labelIds Example: labelIds=1,2,3,4,5<br/>
      * Label Identifiers. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.labels.getMany">List Labels</a>
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery labelIds(String labelIds) {
+    public StringsTranslationApprovalsListQuery labelIds(String labelIds) {
         this.labelIds = labelIds;
         return this;
     }
 
     /**
      * @param excludeLabelIds Label Identifiers. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.labels.getMany">List Labels</a>
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery excludeLabelIds(String excludeLabelIds) {
+    public StringsTranslationApprovalsListQuery excludeLabelIds(String excludeLabelIds) {
         this.excludeLabelIds = excludeLabelIds;
         return this;
     }
@@ -76,9 +76,9 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
      * @param stringId String Identifier. Get via
      * <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.strings.getMany">List Strings<a/><br/>
      * Note: Must be used together with languageId
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery stringId(Long stringId) {
+    public StringsTranslationApprovalsListQuery stringId(Long stringId) {
         this.stringId = stringId;
         return this;
     }
@@ -86,9 +86,9 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
     /**
      * @param languageId Language Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.get">Project Target Languages<a/><br/>
      * Note: Must be used together with stringId or fileId
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery languageId(String languageId) {
+    public StringsTranslationApprovalsListQuery languageId(String languageId) {
         this.languageId = languageId;
         return this;
     }
@@ -96,9 +96,9 @@ public class StringTranslationApprovalsListQuery extends ListQuery<Approval, Str
     /**
      * @param translationId Translation Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.translations.getMany">List String Translations</a><br/>
      * Note: If specified, fileId, stringId and languageId are ignored
-     * @return {@link StringTranslationApprovalsListQuery}
+     * @return {@link StringsTranslationApprovalsListQuery}
      */
-    public StringTranslationApprovalsListQuery translationId(Long translationId) {
+    public StringsTranslationApprovalsListQuery translationId(Long translationId) {
         this.translationId = translationId;
         return this;
     }
