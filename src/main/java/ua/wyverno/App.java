@@ -15,8 +15,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
+import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditStringRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.RemoveBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 
@@ -47,23 +49,15 @@ public class App implements ApplicationRunner {
         logger.info("Run");
         List<SourceString> list = this.crowdinService.sourceStrings()
                 .list(this.projectID)
-                .limitAPI(1)
-                .filterAPI("JAVA DEBUG API Code")
-                .scope("text")
-                .maxResults(1)
+                .limitAPI(3)
+                .maxResults(3)
                 .execute();
         logger.info(toJSON(list));
-        logger.info(toJSON(this.crowdinService.sourceStrings()
-                .batch(this.projectID)
-                .replacePatch(new EditBatchStringRequestBuilder()
-                        .stringID(list.get(0).getId())
-                        .path(PathEditString.CONTEXT)
-                        .value("New Context from Java Api"))
-                .replacePatch(new EditBatchStringRequestBuilder()
-                        .stringID(list.get(0).getId())
-                        .path(PathEditString.IDENTIFIER)
-                        .value("new.key.java.api"))
-                .execute()));
+
+        StringsBatchQuery batchQuery = this.crowdinService.sourceStrings()
+                .batch(this.projectID);
+        list.forEach(string -> batchQuery.removePatch(new RemoveBatchStringRequestBuilder().stringID(string.getId())));
+        logger.info(toJSON(batchQuery.execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {
         return this.writer.writeValueAsString(obj);

@@ -4,11 +4,8 @@ import com.crowdin.client.sourcestrings.SourceStringsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsEditQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsGetQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
+import ua.wyverno.crowdin.api.sourcestrings.queries.*;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsAddQuery;
 
 @Component
 public class StringsApiImpl implements StringsAPI {
@@ -37,6 +34,11 @@ public class StringsApiImpl implements StringsAPI {
     @Override
     public StringsEditQuery edit(long projectID) {
         return new StringsEditQuery(this.sourceStringsApi, projectID);
+    }
+
+    @Override
+    public StringsDeleteQuery delete(long projectID) {
+        return new StringsDeleteQuery(this.sourceStringsApi, projectID);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.crowdin.client.sourcestrings.model.SourceString;
 import ua.wyverno.crowdin.api.Query;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditBatchStringRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.RemoveBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
 
 import java.util.ArrayList;
@@ -57,12 +58,28 @@ public class StringsBatchQuery implements Query<List<SourceString>> {
         return this;
     }
 
+    /**
+     * Створює операцію remove
+     * @param removeBatchStringRequest тіло запиту видалення рядка<br/><br/>
+     *                                 Обов'язкові параметри -<br/>
+     *                                 {@link RemoveBatchStringRequestBuilder#stringID(Long)}
+     * @return {@link StringsBatchQuery}
+     */
+    public StringsBatchQuery removePatch(RemoveBatchStringRequestBuilder removeBatchStringRequest) {
+        Objects.requireNonNull(removeBatchStringRequest, "removeBatchStringRequest cannot be null");
+        this.requestList.add(removeBatchStringRequest.build());
+        return this;
+    }
+
     @Override
     public List<SourceString> execute() {
-        return this.sourceStringsApi.stringBatchOperations(this.projectID, this.requestList)
-                .getData()
-                .stream()
-                .map(ResponseObject::getData)
-                .toList();
+        if (!this.requestList.isEmpty()) {
+            return this.sourceStringsApi.stringBatchOperations(this.projectID, this.requestList)
+                    .getData()
+                    .stream()
+                    .map(ResponseObject::getData)
+                    .toList();
+        }
+        throw new IllegalArgumentException("Request list is empty!");
     }
 }

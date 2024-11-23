@@ -1,10 +1,7 @@
 package ua.wyverno.crowdin.api.sourcestrings;
 
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsEditQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsGetQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
+import ua.wyverno.crowdin.api.sourcestrings.queries.*;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
-import ua.wyverno.crowdin.api.sourcestrings.queries.StringsAddQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditStringRequestBuilder;
 
 public interface StringsAPI {
@@ -46,6 +43,15 @@ public interface StringsAPI {
      */
     StringsEditQuery edit(long projectID);
 
+    /**
+     * Створює запит до Crowdin API - Delete String<br/><br/>
+     *
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link StringsDeleteQuery#stringID(long)} - айді рядка який потрібно видалити
+     * @param projectID айді проєкта де знаходиться цей рядок.
+     * @return {@link StringsDeleteQuery}
+     */
+    StringsDeleteQuery delete(long projectID);
     /**
      * Створює запит до Crowdin API - String Batch Operations<br/><br/>
      *
