@@ -5,7 +5,6 @@ import ua.wyverno.crowdin.api.ListQuery;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class ListStringsQuery<T, Q extends ListStringsQuery<T,Q>> extends ListQuery<T, Q> {

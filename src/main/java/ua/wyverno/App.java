@@ -53,12 +53,8 @@ public class App implements ApplicationRunner {
                 .execute();
         logger.info(toJSON(list));
         logger.info(toJSON(this.crowdinService.sourceStrings()
-                .edit(this.projectID)
-                .stringID(list.get(0).getId())
-                .putEditStringRequest(new EditStringRequestBuilder()
-                        .op(PatchEditOperation.REPLACE)
-                        .path(PathEditString.TEXT)
-                        .value("JAVA DEBUG API Code"))
+                .batch(this.projectID)
+                .replacePatch()
                 .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {

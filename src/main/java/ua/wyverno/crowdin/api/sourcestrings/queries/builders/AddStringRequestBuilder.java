@@ -13,36 +13,64 @@ public class AddStringRequestBuilder {
     private Integer maxLength;
     private List<Long> labelIds;
 
+    /**
+     * @param text текст вихідного рядка
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder text(String text) {
         this.text = text;
         return this;
     }
 
+    /**
+     * @param fileID айді файла де має бути цей вихідний рядок
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder fileID(long fileID) {
         this.fileID = fileID;
         return this;
     }
 
+    /**
+     * @param identifier айді рядка
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder identifier(String identifier) {
         this.identifier = identifier;
         return this;
     }
 
+    /**
+     * @param context контекст рядка
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder context(String context) {
         this.context = context;
         return this;
     }
 
+    /**
+     * @param hidden чи має бути він прихованим?
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder hidden(Boolean hidden) {
         isHidden = hidden;
         return this;
     }
 
+    /**
+     * @param maxLength максимальна довжина рядка
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder maxLength(Integer maxLength) {
         this.maxLength = maxLength;
         return this;
     }
 
+    /**
+     * @param labelIds айді лейблов
+     * @return {@link AddStringRequestBuilder}
+     */
     public AddStringRequestBuilder labelIds(List<Long> labelIds) {
         this.labelIds = labelIds;
         return this;
