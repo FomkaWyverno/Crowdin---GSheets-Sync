@@ -2,6 +2,7 @@ package ua.wyverno.crowdin.api.stingtranslation;
 
 import ua.wyverno.crowdin.api.sourcestrings.queries.StringsListQuery;
 import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationApprovalsListQuery;
+import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationGetQuery;
 import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationLanguageListQuery;
 import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationListQuery;
 
@@ -36,4 +37,11 @@ public interface StringTranslationAPI {
      * @return {@link StringsTranslationListQuery}
      */
     StringsTranslationListQuery listTranslation(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Get Translation
+     * @param projectID айді проєкта де потрібно взяти цей переклад
+     * @return {@link StringsTranslationGetQuery}
+     */
+    StringsTranslationGetQuery getTranslation(long projectID);
 }

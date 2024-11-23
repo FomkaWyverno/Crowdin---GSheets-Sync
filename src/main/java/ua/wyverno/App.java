@@ -41,21 +41,10 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        List<SourceString> listStrings = this.crowdinService.sourceStrings()
-                .list(this.projectID)
-                .execute();
-        logger.info(toJSON(listStrings));
-        listStrings.forEach(string -> {
-            try {
-                logger.info(toJSON(this.crowdinService.string_translations()
-                        .listTranslation(this.projectID)
-                        .stringId(string.getId())
-                        .languageId("uk")
-                        .execute()));
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage());
-            }
-        });
+        logger.info(toJSON(this.crowdinService.string_translations()
+                .getTranslation(this.projectID)
+                .translationId(19212L)
+                .execute()));
 
     }
     public String toJSON(Object obj) throws JsonProcessingException {
