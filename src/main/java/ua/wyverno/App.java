@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
@@ -47,14 +48,21 @@ public class App implements ApplicationRunner {
         List<SourceString> list = this.crowdinService.sourceStrings()
                 .list(this.projectID)
                 .limitAPI(1)
-                .filterAPI("This is new replaced text from JAVA API")
+                .filterAPI("JAVA DEBUG API Code")
                 .scope("text")
                 .maxResults(1)
                 .execute();
         logger.info(toJSON(list));
         logger.info(toJSON(this.crowdinService.sourceStrings()
                 .batch(this.projectID)
-                .replacePatch()
+                .replacePatch(new EditBatchStringRequestBuilder()
+                        .stringID(list.get(0).getId())
+                        .path(PathEditString.CONTEXT)
+                        .value("New Context from Java Api"))
+                .replacePatch(new EditBatchStringRequestBuilder()
+                        .stringID(list.get(0).getId())
+                        .path(PathEditString.IDENTIFIER)
+                        .value("new.key.java.api"))
                 .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {

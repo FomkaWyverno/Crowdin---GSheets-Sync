@@ -40,7 +40,7 @@ public class EditBatchStringRequestBuilder {
     public PatchRequest build() {
         PatchRequest patchRequest = new PatchRequest();
         patchRequest.setOp(PatchOperation.REPLACE);
-        patchRequest.setPath(this.stringID + this.path);
+        patchRequest.setPath("/"+this.stringID + this.path);
         patchRequest.setValue(this.value);
         return patchRequest;
     }
