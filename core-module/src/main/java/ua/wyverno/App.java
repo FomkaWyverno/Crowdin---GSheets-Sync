@@ -1,12 +1,8 @@
 package ua.wyverno;
 
 
-import com.crowdin.client.sourcefiles.model.FileInfo;
-import com.crowdin.client.sourcestrings.model.SourceString;
-import com.crowdin.client.stringtranslations.model.Approval;
 import com.crowdin.client.stringtranslations.model.LanguageTranslations;
 import com.crowdin.client.stringtranslations.model.PlainLanguageTranslations;
-import com.crowdin.client.stringtranslations.model.StringTranslation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
