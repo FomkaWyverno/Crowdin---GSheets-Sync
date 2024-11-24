@@ -107,4 +107,15 @@ public interface StringTranslationAPI {
      * @return {@link StringTranslationDeleteStringTranslationsQuery}
      */
     StringTranslationDeleteStringTranslationsQuery deleteStringTranslations(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Delete Translation<br/>
+     * Видаляє певний переклад у рядка<br/><br/>
+     *
+     * Обов'язкові параметри -<br/>
+     * {@link StringTranslationDeleteTranslationQuery#translationId(Long)}
+     * @param projectID айді проєкта, де знаходиться переклад
+     * @return {@link StringTranslationDeleteTranslationQuery}
+     */
+    StringTranslationDeleteTranslationQuery deleteTranslation(long projectID);
 }

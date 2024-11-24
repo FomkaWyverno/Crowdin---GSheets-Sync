@@ -93,4 +93,9 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
     public StringTranslationDeleteStringTranslationsQuery deleteStringTranslations(long projectID) {
         return new StringTranslationDeleteStringTranslationsQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
+
+    @Override
+    public StringTranslationDeleteTranslationQuery deleteTranslation(long projectID) {
+        return new StringTranslationDeleteTranslationQuery(this.stringTranslationsApi, projectID);
+    }
 }

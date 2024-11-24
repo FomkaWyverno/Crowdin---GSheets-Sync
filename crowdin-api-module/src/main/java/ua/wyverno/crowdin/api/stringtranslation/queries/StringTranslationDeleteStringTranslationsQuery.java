@@ -2,7 +2,6 @@ package ua.wyverno.crowdin.api.stringtranslation.queries;
 
 import com.crowdin.client.core.http.HttpClient;
 import com.crowdin.client.core.http.HttpRequestConfig;
-import com.crowdin.client.stringtranslations.StringTranslationsApi;
 import ua.wyverno.crowdin.api.Query;
 
 import java.util.Map;

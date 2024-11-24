@@ -45,10 +45,9 @@ public class App implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         logger.info("Run");
         logger.info(toJSON(this.crowdinService.string_translations()
-                .deleteStringTranslations(this.projectID)
-                .stringID(441444L)
-                .languageID("uk")
-                .execute()));
+                .listLanguageTranslations(this.projectID)
+                .languageId("uk").execute()));
+        logger.info(toJSON(this.crowdinService.string_translations().deleteTranslation(this.projectID).translationId(19208L).execute()));
     }
     public String toJSON(Object obj) {
         try {
