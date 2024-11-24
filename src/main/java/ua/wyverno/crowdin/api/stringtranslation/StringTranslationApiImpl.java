@@ -68,4 +68,9 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
     public StringTranslationGetApprovalQuery getApproval(long projectID) {
         return new StringTranslationGetApprovalQuery(this.stringTranslationsApi, projectID);
     }
+
+    @Override
+    public StringTranslationAddQuery addTranslation(long projectID) {
+        return new StringTranslationAddQuery(this.stringTranslationsApi, projectID);
+    }
 }

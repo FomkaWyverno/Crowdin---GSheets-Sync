@@ -42,32 +42,20 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        FileInfo file = this.crowdinService.files()
+        SourceString sourceString = this.crowdinService.sourceStrings()
                 .list(this.projectID)
+                .filterAPI("Text batch test java crowdin - 2")
+                .scope("text")
                 .limitAPI(1)
-                .filterApi("test-java.csv")
                 .maxResults(1)
                 .execute().get(0);
-        logger.info("---File---");
-        logger.info(toJSON(file));
-        List<Approval> approvals = this.crowdinService.string_translations()
-                .listTranslationApprovals(this.projectID)
-                .fileId(file.getId())
+        logger.info(toJSON(sourceString));
+        logger.info(toJSON(this.crowdinService.string_translations()
+                .addTranslation(this.projectID)
                 .languageId("uk")
-                .execute();
-        logger.info("---Approvals---");
-        logger.info(toJSON(approvals));
-        logger.info("---Get-Approvals");
-        approvals.forEach(approval -> {
-            try {
-                logger.info(toJSON(this.crowdinService.string_translations()
-                        .getApproval(this.projectID)
-                        .approvalId(approval.getId())
-                        .execute()));
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage());
-            }
-        });
+                .stringId(sourceString.getId())
+                .text("Цей переклад був доданий через Java Crowdin SDK API Library!")
+                .execute()));
 
     }
     public String toJSON(Object obj) throws JsonProcessingException {

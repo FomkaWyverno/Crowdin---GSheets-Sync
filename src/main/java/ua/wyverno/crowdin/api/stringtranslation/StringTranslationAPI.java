@@ -45,9 +45,22 @@ public interface StringTranslationAPI {
     StringTranslationGetQuery getTranslation(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Get Approval
+     * Створює запит до Crowdin API - Get Approval<br/><br/>
+     * Обов'язкові параметри -<br/>
+     * {@link StringTranslationGetApprovalQuery#approvalId(Long)}
      * @param projectID айді проєкта, де потрібно отримати затверджений переклад
      * @return {@link StringTranslationGetApprovalQuery}
      */
     StringTranslationGetApprovalQuery getApproval(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Add Translation<br/><br/>
+     * Обов'язкові параметри -<br/>
+     * {@link StringTranslationAddQuery#stringId(Long)}<br/>
+     * {@link StringTranslationAddQuery#languageId(String)}<br/>
+     * {@link StringTranslationAddQuery#text(String)}
+     * @param projectID айді проєкта, де потрібно додати переклад
+     * @return {@link StringTranslationAddQuery}
+     */
+    StringTranslationAddQuery addTranslation(long projectID);
 }
