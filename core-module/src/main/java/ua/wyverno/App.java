@@ -42,16 +42,11 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        List<LanguageTranslations> translations = this.crowdinService.string_translations()
-                .listLanguageTranslations(this.projectID)
-                .languageId("uk")
-                .maxResults(3)
-                .execute();
-        PlainLanguageTranslations pTranslation = LanguageTranslationUtils.getAllTypes(translations, PlainLanguageTranslations.class).get(1);
-        logger.info(toJSON(pTranslation));
+        logger.info(toJSON(this.crowdinService.sourceStrings()
+                .list(this.projectID).execute()));
         logger.info(toJSON(this.crowdinService.string_translations()
-                .addApproval(this.projectID)
-                .translationId(pTranslation.getTranslationId())
+                .removeStringApproval(this.projectID)
+                .stringId(43843422)
                 .execute()));
     }
     public String toJSON(Object obj) throws JsonProcessingException {

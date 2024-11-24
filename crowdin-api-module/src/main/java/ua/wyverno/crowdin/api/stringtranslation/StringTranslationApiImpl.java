@@ -25,7 +25,7 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
      * Цей метод не має такого поля як "approvedOnly" та "orderBy", щоб це виправити, запити будуть отримувати {@link HttpClient} та самостійно виконувати тіло метода, але окрім цього, вони ще будуть додавати ці параметри
      */
     private final HttpClient crowdinHttpClient;
-    private final String crowdinBastApiURL;
+    private final String crowdinBaseApiURL;
     @Autowired
     public StringTranslationApiImpl(CrowdinApiClient crowdinApiClient) throws NoSuchFieldException, IllegalAccessException {
         this.stringTranslationsApi = crowdinApiClient.getCrowdinClient().getStringTranslationsApi();
@@ -41,27 +41,27 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
         httpClientField.setAccessible(true);
         urlField.setAccessible(true);
         this.crowdinHttpClient = (HttpClient) httpClientField.get(this.stringTranslationsApi);
-        this.crowdinBastApiURL = (String) urlField.get(this.stringTranslationsApi);
+        this.crowdinBaseApiURL = (String) urlField.get(this.stringTranslationsApi);
     }
 
     @Override
     public StringTranslationLanguageListQuery listLanguageTranslations(long projectID) {
-        return new StringTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+        return new StringTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
 
     @Override
     public StringTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
-        return new StringTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+        return new StringTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
 
     @Override
     public StringTranslationListQuery listTranslation(long projectID) {
-        return new StringTranslationListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+        return new StringTranslationListQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
 
     @Override
     public StringTranslationGetQuery getTranslation(long projectID) {
-        return new StringTranslationGetQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+        return new StringTranslationGetQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
 
     @Override
@@ -77,5 +77,10 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
     @Override
     public StringTranslationAddApprovalQuery addApproval(long projectID) {
         return new StringTranslationAddApprovalQuery(this.stringTranslationsApi, projectID);
+    }
+
+    @Override
+    public StringTranslationRemoveStringApprovalsQuery removeStringApproval(long projectID) {
+        return new StringTranslationRemoveStringApprovalsQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
     }
 }

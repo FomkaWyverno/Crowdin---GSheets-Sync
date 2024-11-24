@@ -73,4 +73,14 @@ public interface StringTranslationAPI {
      * @return {@link StringTranslationAddApprovalQuery}
      */
     StringTranslationAddApprovalQuery addApproval(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Remove String Approvals<br/><br/>
+     *
+     * Обов'язкові параметри -<br/>
+     * {@link StringTranslationRemoveStringApprovalsQuery#stringId(Integer)}
+     * @param projectID айді проєкта де потрібно прибрати затвердження
+     * @return {@link StringTranslationRemoveStringApprovalsQuery}
+     */
+    StringTranslationRemoveStringApprovalsQuery removeStringApproval(long projectID);
 }
