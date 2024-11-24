@@ -75,12 +75,25 @@ public interface StringTranslationAPI {
     StringTranslationAddApprovalQuery addApproval(long projectID);
 
     /**
-     * Створює запит до Crowdin API - Remove String Approvals<br/><br/>
+     * Створює запит до Crowdin API - Remove String Approvals<br/>
+     * Видаляє у певного вихідного рядка (Source String) затверджений переклад, якщо є такий.<br/><br/>
+     *
      *
      * Обов'язкові параметри -<br/>
-     * {@link StringTranslationRemoveStringApprovalsQuery#stringId(Integer)}
+     * {@link StringTranslationRemoveApprovalsByStringIDQuery#stringId(Integer)}
      * @param projectID айді проєкта де потрібно прибрати затвердження
-     * @return {@link StringTranslationRemoveStringApprovalsQuery}
+     * @return {@link StringTranslationRemoveApprovalsByStringIDQuery}
      */
-    StringTranslationRemoveStringApprovalsQuery removeStringApproval(long projectID);
+    StringTranslationRemoveApprovalsByStringIDQuery removeApprovalBySourceStringID(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Remove Approval<br/>
+     * Видаляє певний затверджений переклад.<br/><br/>
+     *
+     * Обов'язкові параметри -<br/>
+     * {@link StringTranslationRemoveApprovalQuery#approvalId(Long)}
+     * @param projectID айді проєкта де потрібно прибрати затвердження
+     * @return {@link StringTranslationRemoveApprovalQuery}
+     */
+    StringTranslationRemoveApprovalQuery removeApproval(long projectID);
 }

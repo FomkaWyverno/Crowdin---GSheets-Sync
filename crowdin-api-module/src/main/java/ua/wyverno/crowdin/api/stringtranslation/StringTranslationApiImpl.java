@@ -80,7 +80,12 @@ public class StringTranslationApiImpl implements StringTranslationAPI {
     }
 
     @Override
-    public StringTranslationRemoveStringApprovalsQuery removeStringApproval(long projectID) {
-        return new StringTranslationRemoveStringApprovalsQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
+    public StringTranslationRemoveApprovalsByStringIDQuery removeApprovalBySourceStringID(long projectID) {
+        return new StringTranslationRemoveApprovalsByStringIDQuery(this.crowdinHttpClient, this.crowdinBaseApiURL, projectID);
+    }
+
+    @Override
+    public StringTranslationRemoveApprovalQuery removeApproval(long projectID) {
+        return new StringTranslationRemoveApprovalQuery(this.stringTranslationsApi, projectID);
     }
 }

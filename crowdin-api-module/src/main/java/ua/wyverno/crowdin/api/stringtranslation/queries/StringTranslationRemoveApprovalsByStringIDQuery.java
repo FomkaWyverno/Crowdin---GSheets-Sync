@@ -2,23 +2,18 @@ package ua.wyverno.crowdin.api.stringtranslation.queries;
 
 import com.crowdin.client.core.http.HttpClient;
 import com.crowdin.client.core.http.HttpRequestConfig;
-import com.crowdin.client.core.http.exceptions.HttpBadRequestException;
-import com.crowdin.client.core.http.exceptions.HttpException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ua.wyverno.crowdin.api.Query;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class StringTranslationRemoveStringApprovalsQuery implements Query<Void> {
+public class StringTranslationRemoveApprovalsByStringIDQuery implements Query<Void> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
     private final long projectID;
     private Integer stringId;
 
-    public StringTranslationRemoveStringApprovalsQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL,  long projectID) {
+    public StringTranslationRemoveApprovalsByStringIDQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL, long projectID) {
         this.crowdinHttpClient = crowdinHttpClient;
         this.crowdinBaseApiURL = crowdinBaseApiURL;
         this.projectID = projectID;
@@ -26,10 +21,11 @@ public class StringTranslationRemoveStringApprovalsQuery implements Query<Void> 
 
     /**
      * @param stringId Example: stringId=2<br/>
-     * String Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.strings.getMany">List Strings</a>
-     * @return {@link StringTranslationRemoveStringApprovalsQuery}
+     * String Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.strings.getMany">List Strings</a><br/>
+     *                 Айді вихідного рядка (Source String)
+     * @return {@link StringTranslationRemoveApprovalsByStringIDQuery}
      */
-    public StringTranslationRemoveStringApprovalsQuery stringId(Integer stringId) {
+    public StringTranslationRemoveApprovalsByStringIDQuery stringId(Integer stringId) {
         this.stringId = stringId;
         return this;
     }
