@@ -1,4 +1,4 @@
-package ua.wyverno.crowdin.api.stingtranslation.queries;
+package ua.wyverno.crowdin.api.stringtranslation.queries;
 
 import com.crowdin.client.core.http.HttpClient;
 import com.crowdin.client.core.http.HttpRequestConfig;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class StringsTranslationListQuery extends ListQuery<StringTranslation, StringsTranslationListQuery> {
+public class StringTranslationListQuery extends ListQuery<StringTranslation, StringTranslationListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
 
@@ -20,7 +20,7 @@ public class StringsTranslationListQuery extends ListQuery<StringTranslation, St
     private String languageId;
     private String orderBy;
     private Integer denormalizePlaceholders;
-    public StringsTranslationListQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL, long projectID) {
+    public StringTranslationListQuery(HttpClient crowdinHttpClient, String crowdinBaseApiURL, long projectID) {
         this.crowdinHttpClient = crowdinHttpClient;
         this.crowdinBaseApiURL = crowdinBaseApiURL;
         this.projectID = projectID;
@@ -28,18 +28,18 @@ public class StringsTranslationListQuery extends ListQuery<StringTranslation, St
 
     /**
      * @param stringId String Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.strings.getMany">List Strings<a/>
-     * @return {@link StringsTranslationListQuery}
+     * @return {@link StringTranslationListQuery}
      */
-    public StringsTranslationListQuery stringId(Long stringId) {
+    public StringTranslationListQuery stringId(Long stringId) {
         this.stringId = stringId;
         return this;
     }
 
     /**
      * @param languageId Language Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.get">Project Target Languages<a/>
-     * @return {@link StringsTranslationListQuery}
+     * @return {@link StringTranslationListQuery}
      */
-    public StringsTranslationListQuery languageId(String languageId) {
+    public StringTranslationListQuery languageId(String languageId) {
         this.languageId = languageId;
         return this;
     }
@@ -49,9 +49,9 @@ public class StringsTranslationListQuery extends ListQuery<StringTranslation, St
      * Enum: "id" "text" "rating" "createdAt"<br/>
      * Example: orderBy=createdAt desc,name,priority<br/>
      * Read more about <a href="https://support.crowdin.com/developer/api/v2/#section/Introduction/Sorting">sorting rules<a/>
-     * @return {@link StringsTranslationListQuery}
+     * @return {@link StringTranslationListQuery}
      */
-    public StringsTranslationListQuery orderBy(String orderBy) {
+    public StringTranslationListQuery orderBy(String orderBy) {
         this.orderBy = orderBy;
         return this;
     }
@@ -59,9 +59,9 @@ public class StringsTranslationListQuery extends ListQuery<StringTranslation, St
     /**
      * @param denormalizePlaceholders Default: false<br/>
      * Enable denormalize placeholders
-     * @return {@link StringsTranslationListQuery}
+     * @return {@link StringTranslationListQuery}
      */
-    public StringsTranslationListQuery denormalizePlaceholders(Boolean denormalizePlaceholders) {
+    public StringTranslationListQuery denormalizePlaceholders(Boolean denormalizePlaceholders) {
         if (denormalizePlaceholders == null) {
             this.denormalizePlaceholders = null;
             return this;

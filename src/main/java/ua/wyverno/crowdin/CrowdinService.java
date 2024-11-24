@@ -6,7 +6,7 @@ import ua.wyverno.crowdin.api.projects.ProjectsAPI;
 import ua.wyverno.crowdin.api.sourcefiles.directories.DirectoryAPI;
 import ua.wyverno.crowdin.api.sourcefiles.files.FilesAPI;
 import ua.wyverno.crowdin.api.sourcestrings.StringsAPI;
-import ua.wyverno.crowdin.api.stingtranslation.StringTranslationAPI;
+import ua.wyverno.crowdin.api.stringtranslation.StringTranslationAPI;
 import ua.wyverno.crowdin.api.storage.StorageAPI;
 import ua.wyverno.crowdin.service.*;
 

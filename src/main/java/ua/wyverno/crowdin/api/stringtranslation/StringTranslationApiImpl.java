@@ -1,20 +1,17 @@
-package ua.wyverno.crowdin.api.stingtranslation;
+package ua.wyverno.crowdin.api.stringtranslation;
 
 import com.crowdin.client.core.http.HttpClient;
 import com.crowdin.client.stringtranslations.StringTranslationsApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationApprovalsListQuery;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationGetQuery;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationLanguageListQuery;
-import ua.wyverno.crowdin.api.stingtranslation.queries.StringsTranslationListQuery;
+import ua.wyverno.crowdin.api.stringtranslation.queries.*;
 
 import java.lang.reflect.Field;
 
 
 @Component
-public class StingsTranslationApiImpl implements StringTranslationAPI {
+public class StringTranslationApiImpl implements StringTranslationAPI {
     private final StringTranslationsApi stringTranslationsApi;
 
     /**
@@ -30,7 +27,7 @@ public class StingsTranslationApiImpl implements StringTranslationAPI {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBastApiURL;
     @Autowired
-    public StingsTranslationApiImpl(CrowdinApiClient crowdinApiClient) throws NoSuchFieldException, IllegalAccessException {
+    public StringTranslationApiImpl(CrowdinApiClient crowdinApiClient) throws NoSuchFieldException, IllegalAccessException {
         this.stringTranslationsApi = crowdinApiClient.getCrowdinClient().getStringTranslationsApi();
 
         // Дістаємо HttpClient Кроудіна та URL для запитів
@@ -48,22 +45,27 @@ public class StingsTranslationApiImpl implements StringTranslationAPI {
     }
 
     @Override
-    public StringsTranslationLanguageListQuery listLanguageTranslations(long projectID) {
-        return new StringsTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringTranslationLanguageListQuery listLanguageTranslations(long projectID) {
+        return new StringTranslationLanguageListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 
     @Override
-    public StringsTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
-        return new StringsTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringTranslationApprovalsListQuery listTranslationApprovals(long projectID) {
+        return new StringTranslationApprovalsListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 
     @Override
-    public StringsTranslationListQuery listTranslation(long projectID) {
-        return new StringsTranslationListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringTranslationListQuery listTranslation(long projectID) {
+        return new StringTranslationListQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
     }
 
     @Override
-    public StringsTranslationGetQuery getTranslation(long projectID) {
-        return new StringsTranslationGetQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    public StringTranslationGetQuery getTranslation(long projectID) {
+        return new StringTranslationGetQuery(this.crowdinHttpClient, this.crowdinBastApiURL, projectID);
+    }
+
+    @Override
+    public StringTranslationGetApprovalQuery getApproval(long projectID) {
+        return new StringTranslationGetApprovalQuery(this.stringTranslationsApi, projectID);
     }
 }

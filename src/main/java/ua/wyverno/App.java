@@ -3,6 +3,7 @@ package ua.wyverno;
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import com.crowdin.client.sourcestrings.model.SourceString;
+import com.crowdin.client.stringtranslations.model.Approval;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -41,10 +42,32 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws JsonProcessingException {
         logger.info("Run");
-        logger.info(toJSON(this.crowdinService.string_translations()
-                .getTranslation(this.projectID)
-                .translationId(19212L)
-                .execute()));
+        FileInfo file = this.crowdinService.files()
+                .list(this.projectID)
+                .limitAPI(1)
+                .filterApi("test-java.csv")
+                .maxResults(1)
+                .execute().get(0);
+        logger.info("---File---");
+        logger.info(toJSON(file));
+        List<Approval> approvals = this.crowdinService.string_translations()
+                .listTranslationApprovals(this.projectID)
+                .fileId(file.getId())
+                .languageId("uk")
+                .execute();
+        logger.info("---Approvals---");
+        logger.info(toJSON(approvals));
+        logger.info("---Get-Approvals");
+        approvals.forEach(approval -> {
+            try {
+                logger.info(toJSON(this.crowdinService.string_translations()
+                        .getApproval(this.projectID)
+                        .approvalId(approval.getId())
+                        .execute()));
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage());
+            }
+        });
 
     }
     public String toJSON(Object obj) throws JsonProcessingException {
