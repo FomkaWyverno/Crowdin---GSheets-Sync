@@ -32,6 +32,12 @@ build/
 ### Mac OS ###
 .DS_Store
 
+### google-sheets ###
+core-module/src/main/resources/credentials.json
+core-module/src/test/resources/credentials.json
+/tokens
+tokens/*
+
 config.properties
 logs/*
 /logs

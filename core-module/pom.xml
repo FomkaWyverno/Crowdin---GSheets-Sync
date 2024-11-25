@@ -49,6 +49,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-sheets</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>ua.wyverno</groupId>
             <artifactId>crowdin-api-module</artifactId>
             <version>1.0-SNAPSHOT</version>
