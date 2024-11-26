@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class App implements ApplicationRunner {
     @Autowired
     public App(CrowdinService crowdinService, GoogleSheetsService googleSheetsService, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
-        this.googleSheets = googleSheetsService.getService();
+        this.googleSheets = googleSheetsService.getApi();
         this.projectID = configLoader.getConfig().getProjectID();
         this.spreadsheetID = configLoader.getConfig().getSpreadsheetID();
     }
@@ -45,6 +46,8 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws IOException {
         logger.info("Run");
+        Spreadsheet spreadsheet = this.googleSheets.spreadsheets().get(this.spreadsheetID).execute();
+        logger.info(toJSON(spreadsheet));
     }
     public String toJSON(Object obj) {
         try {
