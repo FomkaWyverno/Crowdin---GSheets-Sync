@@ -9,6 +9,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Component
 public class GoogleSheetsAuth {
+    private static final String APPLICATION_NAME = "Google Sheets API Java Crowdin-Sync";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     /**
@@ -31,10 +33,16 @@ public class GoogleSheetsAuth {
      */
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private final Sheets service;
 
 
     @Autowired
-    public GoogleSheetsAuth() {}
+    public GoogleSheetsAuth() throws GeneralSecurityException, IOException {
+        Credential credential = this.authorize();
+        this.service = new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
 
     /**
      * Creates an authorized Credential object.
@@ -60,5 +68,9 @@ public class GoogleSheetsAuth {
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+    }
+
+    public Sheets getService() {
+        return service;
     }
 }

@@ -22,4 +22,8 @@ public class GoogleRow {
     public GoogleCell getCell(int index) {
         return this.cells.get(index);
     }
+
+    public boolean isEmpty() {
+        return this.getCells().stream().allMatch(GoogleCell::isEmpty);
+    }
 }

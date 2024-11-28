@@ -2,6 +2,8 @@ package ua.wyverno.google.sheets.parsers;
 
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
@@ -12,9 +14,11 @@ import java.util.Map;
 
 @Component
 public class GoogleSpreadsheetParser {
+    private final static Logger logger = LoggerFactory.getLogger(GoogleSpreadsheetParser.class);
     @Autowired
     private GoogleSheetParser sheetParser;
     public GoogleSpreadsheet parse(String spreadsheetID, String title, Map<Sheet, ValueRange> sheetsDataMap) {
+        logger.trace("Start parsing spreadsheet...");
         List<GoogleSheet> sheets = sheetsDataMap.entrySet().stream()
                 .map(entry -> {
                     Sheet sheet = entry.getKey();

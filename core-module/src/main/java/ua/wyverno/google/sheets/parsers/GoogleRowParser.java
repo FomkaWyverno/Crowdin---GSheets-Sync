@@ -16,7 +16,7 @@ public class GoogleRowParser {
     public GoogleRow parse(List<Object> row, int indexRow) {
         List<GoogleCell> cells = new ArrayList<>(row.size());
         for (int i = 0; i < row.size(); i++) {
-            GoogleCell cell = this.cellParser.parse(row.get(0), i);
+            GoogleCell cell = this.cellParser.parse(row.get(i), i);
             cells.add(cell);
         }
         return new GoogleRow(cells, indexRow);

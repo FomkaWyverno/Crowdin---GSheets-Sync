@@ -19,4 +19,13 @@ public class SheetA1NotationUtil {
     public static String toA1Notation(int rowIndex, int columnIndex) {
         return columnToLetter(columnIndex)+rowToNumber(rowIndex);
     }
+
+    public static String rangeToA1Notation(String sheetName, int startRowIndex, int startColumnIndex, int endRowIndex, int endColumnIndex) {
+        StringBuilder rangeA1NotationBuilder = new StringBuilder();
+        rangeA1NotationBuilder.append("'").append(sheetName).append("'!")
+                .append(toA1Notation(startRowIndex, startColumnIndex))
+                .append(":")
+                .append(toA1Notation(endRowIndex, endColumnIndex));
+        return rangeA1NotationBuilder.toString();
+    }
 }

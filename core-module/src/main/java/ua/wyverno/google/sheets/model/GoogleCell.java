@@ -24,6 +24,10 @@ public class GoogleCell {
         return Long.parseLong(this.value);
     }
 
+    public boolean isEmpty() {
+        return this.value.isEmpty();
+    }
+
     @Override
     public String toString() {
         return this.value;
