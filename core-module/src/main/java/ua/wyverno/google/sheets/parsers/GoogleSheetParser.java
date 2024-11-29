@@ -12,12 +12,12 @@ import java.util.List;
 public class GoogleSheetParser {
     @Autowired
     private GoogleRowParser rowParser;
-    public GoogleSheet parse(Integer sheetId, String sheetName, List<List<Object>> values) {
+    public GoogleSheet parse(Integer sheetId, String sheetName, List<List<Object>> values, int rowCount, int columnCount) {
         List<GoogleRow> rows = new ArrayList<>(values.size());
         for (int i = 0; i < values.size(); i++) {
-            GoogleRow row = this.rowParser.parse(values.get(i), i);
+            GoogleRow row = this.rowParser.parse(values.get(i), i, columnCount);
             rows.add(row);
         }
-        return new GoogleSheet(sheetId, sheetName, rows);
+        return new GoogleSheet(sheetId, sheetName, rows, rowCount, columnCount);
     }
 }

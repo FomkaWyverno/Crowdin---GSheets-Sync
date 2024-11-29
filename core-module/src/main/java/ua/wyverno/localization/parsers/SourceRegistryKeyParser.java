@@ -34,8 +34,8 @@ public class SourceRegistryKeyParser {
     private String contextFormattedToolURL;
 
 
-    public Map<String, SourceRegistryKey> parse(GoogleSpreadsheet spreadsheet) {
-        Map<String, SourceRegistryKey> keysBySheetName = new TreeMap<>();
+    public Map<String, List<SourceRegistryKey>> parse(GoogleSpreadsheet spreadsheet) {
+        Map<String, List<SourceRegistryKey>> keysBySheetName = new TreeMap<>();
         logger.debug("Start parsing spreadsheet to List<SourceRegistryKey>");
 
         List<GoogleSheet> sheets = spreadsheet.getSheets();
@@ -46,51 +46,58 @@ public class SourceRegistryKeyParser {
             logger.debug("Sheet-name: {}", sheetName);
             logger.debug(line);
 
+            List<SourceRegistryKey> keys = new ArrayList<>();
             List<GoogleRow> rows = sheet.getRows();
             GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
             int startKeyIndex = -1;
-            String currentContainerId = "";
+            Integer currentContainerId = null;
             String currentKey = "";
             String currentContext = "";
             StringBuilder currentSourceText = new StringBuilder();
-
-            for (int i = 1; i < rows.size(); i++) { // TODO: 28.11.2024 Виправити баг, який IndexOutOfBoundsException при парсингу таблиці
+            StringBuilder currentTranslateText = new StringBuilder();
+            boolean isCurrentFormatted = false;
+            boolean isApprove = false;
+            // TODO: 30.11.2024 Додати переклад з аркуша до ключа перекладу
+            for (int i = 1; i < rows.size(); i++) {
                 GoogleRow row = rows.get(i);
                 if (row.isEmpty()) continue; // Якщо порожній рядок скіпаємо
-                String containerId = sheetHeader.getValue(row, "Container-ID");
-                String key = sheetHeader.getValue(row, "Key-Translate");
-                String actor = sheetHeader.getValueIfExists(row, "Актор");
-                String sourceText = sheetHeader.getValue(row, "Original-Text");
-                String context = sheetHeader.getValue(row, "Context");
-                String timing = sheetHeader.getValue(row, "Timing");
-                String voice = sheetHeader.getValueIfExists(row, "Voice");
-                String dub = sheetHeader.getValueIfExists(row, "Dub");
-                String formattedText = sheetHeader.getValueIfExists(row, "Formatted-Text");
+                // Беремо значення з таблиці
+                RowDataExtractor rowExtractor = new RowDataExtractor(sheetHeader, row);
 
-                this.logRowDetails(containerId, key, actor, sourceText, context, timing, voice, dub, formattedText);
+                this.logRowDetails(rowExtractor.getContainerId(), rowExtractor.getKey(), rowExtractor.getActor(), rowExtractor.getOriginalText(),
+                        rowExtractor.getContext(), rowExtractor.getTiming(), rowExtractor.getVoice(), rowExtractor.getDub(), rowExtractor.getFormattedText());
 
-                if (!containerId.isEmpty() && !key.isEmpty()) { // Якщо ключ та контейнер не порожній, означає ми попали на початок нового ключа
-                    if (!currentKey.isEmpty() && !currentContainerId.isEmpty()) { // Якщо вже записується поточний ключ, то зберігаємо його
-                        TranslationIdentifier identifier = new TranslationIdentifier(Integer.parseInt(containerId), currentKey);
-                        String locationA1 = SheetA1NotationUtil.rangeToA1Notation(sheetName, startKeyIndex, 0, row.getIndex(), row.getCells().size());
-                        SourceRegistryKey sourceRegistryKey =
-                                new SourceRegistryKey(identifier,
-                                        currentSourceText.deleteCharAt(currentSourceText.length()-1).toString(),
-                                        currentContext, locationA1);
-                        keysBySheetName.put(sheetName, sourceRegistryKey);
+                if (!rowExtractor.getContainerId().isEmpty() && !rowExtractor.getKey().isEmpty()) { // Якщо ключ та контейнер не порожній, означає ми попали на початок нового ключа
+                    if (!currentKey.isEmpty() && currentContainerId != null) { // Якщо вже записується поточний ключ, то зберігаємо його
+                        keys.add(this.buildKey(currentContainerId, currentKey, currentSourceText.toString(), currentContext,
+                                sheetName, startKeyIndex, row.getIndex()-1, sheet.getColumnCount()-1));
                     }
                     // Оновлюємо інформацію про поточного ключа
                     startKeyIndex = row.getIndex();
-                    currentContainerId = containerId;
-                    currentKey = key;
+                    currentContainerId = Integer.parseInt(rowExtractor.getContainerId());
+                    currentKey = rowExtractor.getKey();
 
-                    currentContext = this.buildContext(actor, context, timing, voice, dub, formattedText != null);
+
                     currentSourceText = new StringBuilder();
-                }
+                    isCurrentFormatted = rowExtractor.getFormattedText() != null;
+                    currentContext = this.buildContext(rowExtractor.getActor(), rowExtractor.getContext(), rowExtractor.getTiming(), rowExtractor.getVoice(),
+                            rowExtractor.getDub(), isCurrentFormatted);
 
-                currentSourceText.append(sourceText).append("\n");
+                    if (isCurrentFormatted) { // Якщо існує колонка з Formatted-Text тоді як вихідний рядок буде, ігровий текст з гри, з тегами
+                        currentSourceText.append(rowExtractor.getGameText());
+                    }
+                }
+                if (!isCurrentFormatted) currentSourceText.append(rowExtractor.getOriginalText()).append("\n"); // Якщо в аркуші немає колонки Formatted-Text, то додаємо беремо текст з Original-Text без тегів
             }
+
+            if (!currentKey.isEmpty() && currentContainerId != null) { // Якщо вже записується поточний ключ, то зберігаємо його
+                keys.add(this.buildKey(currentContainerId, currentKey, currentSourceText.toString(), currentContext,
+                        sheetName, startKeyIndex, sheet.getLastRowIndexWithContent(), sheet.getColumnCount()-1));
+            }
+            // Кладемо лист з ключами перекладу де ключ це назва аркуша, а значення це лист з ключами перекладу
+            keysBySheetName.put(sheetName, keys);
         }
+
         return keysBySheetName;
     }
 
@@ -119,6 +126,13 @@ public class SourceRegistryKeyParser {
         }
 
         return contextBuilder.deleteCharAt(contextBuilder.length()-1).toString();
+    }
+
+    private SourceRegistryKey buildKey(Integer containerId, String key, String sourceText, String context,
+                                       String sheetName, int startKeyRowIndex, int endKeyRowIndex, int endKeyColumnIndex) {
+        TranslationIdentifier identifier = new TranslationIdentifier(containerId, key);
+        String locationA1 = SheetA1NotationUtil.rangeToA1Notation(sheetName, startKeyRowIndex, 0, endKeyRowIndex, endKeyColumnIndex);
+        return new SourceRegistryKey(identifier, sourceText.replaceAll("\\n$", ""), context, locationA1);
     }
 
     private void logRowDetails(String containerId, String key, String actor,

@@ -17,11 +17,11 @@ public class GoogleCell {
     }
 
     public int getValueAsInteger() {
-        return Integer.parseInt(this.value);
+        return Integer.parseInt(this.getValue());
     }
 
     public long getValueAsLong() {
-        return Long.parseLong(this.value);
+        return Long.parseLong(this.getValue());
     }
 
     public boolean isEmpty() {

@@ -25,8 +25,10 @@ public class GoogleSpreadsheetParser {
                     ValueRange value = entry.getValue();
                     Integer sheetID = sheet.getProperties().getSheetId();
                     String sheetName = sheet.getProperties().getTitle();
+                    int maxRowCount = sheet.getProperties().getGridProperties().getRowCount();
+                    int maxColumnCount = sheet.getProperties().getGridProperties().getColumnCount();
                     List<List<Object>> values = value.getValues();
-                    return this.sheetParser.parse(sheetID, sheetName, values);
+                    return this.sheetParser.parse(sheetID, sheetName, values, maxRowCount, maxColumnCount);
                 }).toList();
         return new GoogleSpreadsheet(spreadsheetID, title, sheets);
     }

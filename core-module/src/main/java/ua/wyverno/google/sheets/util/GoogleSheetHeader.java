@@ -42,11 +42,11 @@ public class GoogleSheetHeader {
     }
 
     public int getValueAsInteger(GoogleRow row, String headerName) {
-        return Integer.parseInt(row.getCell(this.getColumnIndex(headerName)).getValue());
+        return row.getCell(this.getColumnIndex(headerName)).getValueAsInteger();
     }
 
     public long getValueAsLong(GoogleRow row, String headerName) {
-        return Long.parseLong(row.getCell(this.getColumnIndex(headerName)).getValue());
+        return row.getCell(this.getColumnIndex(headerName)).getValueAsLong();
     }
 
     public String getValueIfExists(GoogleRow row, String headerName) {

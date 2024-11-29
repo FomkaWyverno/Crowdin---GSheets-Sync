@@ -13,12 +13,12 @@ public class GoogleRowParser {
 
     @Autowired
     private GoogleCellParser cellParser;
-    public GoogleRow parse(List<Object> row, int indexRow) {
+    public GoogleRow parse(List<Object> row, int indexRow, int columnCount) {
         List<GoogleCell> cells = new ArrayList<>(row.size());
         for (int i = 0; i < row.size(); i++) {
             GoogleCell cell = this.cellParser.parse(row.get(i), i);
             cells.add(cell);
         }
-        return new GoogleRow(cells, indexRow);
+        return new GoogleRow(cells, indexRow, columnCount);
     }
 }
