@@ -27,8 +27,8 @@ public class TranslateRegistryKeyParser {
 
     /**
      * Парсить таблицю у мапу
-     * @param spreadsheet
-     * @return
+     * @param spreadsheet електронна таблиця
+     * @return {@link Map}<{@link GoogleSheet}, {@link List}<{@link TranslateRegistryKey}>> - ключ - аркуш, значення - лист з усіма ключами перекладу у цьому аркуші
      */
     public Map<GoogleSheet, List<TranslateRegistryKey>> parse(GoogleSpreadsheet spreadsheet) {
         Map<GoogleSheet, List<TranslateRegistryKey>> keysBySheetName = new HashMap<>();
@@ -77,8 +77,7 @@ public class TranslateRegistryKeyParser {
                 if (hasFormattedColumn) { // Якщо існує колонка з Formatted-Text тоді як вихідний рядок буде, ігровий текст з гри, з тегами, а не текст з Original-Text
                     keyBuilder.appendOriginalText(rowExtractor.getGameText()); // Додаємо ігровий текст як оригінальний текст
                     if (rowExtractor.getFormattedText() != null && !rowExtractor.getFormattedText().isEmpty()) { // Якщо у колонці Formatted-Text існує та не порожній
-                        keyBuilder.appendTranslateText(rowExtractor.getFormattedText()) // Додаємо як переклад
-                                  .setIsTranslate(true); // Встановлюємо що є переклад
+                        keyBuilder.appendTranslateText(rowExtractor.getFormattedText()); // Додаємо як переклад
                     }
                 }
             }
@@ -131,12 +130,9 @@ public class TranslateRegistryKeyParser {
     private void appendTranslationForKey(TranslateRegistryKeyBuilder keyBuilder, RowDataExtractor extractor) {
         if (Objects.nonNull(extractor.getEditText()) && !extractor.getEditText().isEmpty()) {
             keyBuilder.appendTranslateText(extractor.getEditText())
-                      .setIsTranslate(true)
                       .setIsApprove(true);
         } else if (Objects.nonNull(extractor.getTranslateText()) && !extractor.getTranslateText().isEmpty()) {
-            keyBuilder.appendTranslateText(extractor.getTranslateText())
-                      .setIsTranslate(true);
-
+            keyBuilder.appendTranslateText(extractor.getTranslateText());
         }
     }
     /**

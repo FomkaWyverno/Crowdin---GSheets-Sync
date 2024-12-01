@@ -9,7 +9,6 @@ public class TranslateRegistryKeyBuilder {
     private final StringBuilder originalText = new StringBuilder();
     private final StringBuilder translateText = new StringBuilder();
     private String context = "";
-    private boolean isTranslate = false;
     private boolean isApprove = false;
     private String locationA1;
 
@@ -35,11 +34,6 @@ public class TranslateRegistryKeyBuilder {
 
     public TranslateRegistryKeyBuilder context(String context) {
         this.context = context;
-        return this;
-    }
-
-    public TranslateRegistryKeyBuilder setIsTranslate(boolean isTranslate) {
-        this.isTranslate = isTranslate;
         return this;
     }
 
@@ -73,10 +67,6 @@ public class TranslateRegistryKeyBuilder {
         return context;
     }
 
-    public boolean isTranslate() {
-        return isTranslate;
-    }
-
     public boolean isApprove() {
         return isApprove;
     }
@@ -91,7 +81,6 @@ public class TranslateRegistryKeyBuilder {
                 this.originalText.toString().replaceAll("\\n$", ""),
                 this.translateText.toString().replaceAll("\\n$",""),
                 this.context.replaceAll("\\n$",""),
-                this.isTranslate,
                 this.isApprove,
                 this.locationA1);
     }
