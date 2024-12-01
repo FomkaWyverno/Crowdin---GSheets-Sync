@@ -41,4 +41,24 @@ public class GoogleSpreadsheet {
     public String toString() {
         return this.title;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GoogleSpreadsheet that = (GoogleSpreadsheet) o;
+
+        if (!spreadsheetId.equals(that.spreadsheetId)) return false;
+        if (!title.equals(that.title)) return false;
+        return sheets.equals(that.sheets);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = spreadsheetId.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + sheets.hashCode();
+        return result;
+    }
 }

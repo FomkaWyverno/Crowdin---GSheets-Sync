@@ -38,12 +38,12 @@ public class TranslateRegistryKeyBuilder {
         return this;
     }
 
-    public TranslateRegistryKeyBuilder setTranslateText(boolean isTranslate) {
+    public TranslateRegistryKeyBuilder setIsTranslate(boolean isTranslate) {
         this.isTranslate = isTranslate;
         return this;
     }
 
-    public TranslateRegistryKeyBuilder setApprove(boolean isApprove) {
+    public TranslateRegistryKeyBuilder setIsApprove(boolean isApprove) {
         this.isApprove = isApprove;
         return this;
     }

@@ -63,6 +63,30 @@ public class GoogleSheet {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GoogleSheet sheet = (GoogleSheet) o;
+
+        if (rowCount != sheet.rowCount) return false;
+        if (columnCount != sheet.columnCount) return false;
+        if (!sheetId.equals(sheet.sheetId)) return false;
+        if (!sheetName.equals(sheet.sheetName)) return false;
+        return rows.equals(sheet.rows);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sheetId.hashCode();
+        result = 31 * result + sheetName.hashCode();
+        result = 31 * result + rows.hashCode();
+        result = 31 * result + rowCount;
+        result = 31 * result + columnCount;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return this.sheetName;
     }

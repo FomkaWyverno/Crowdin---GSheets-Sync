@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
 import ua.wyverno.google.sheets.GoogleSheetsService;
+import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.localization.model.TranslateRegistryKey;
 import ua.wyverno.localization.parsers.TranslateRegistryKeyParser;
@@ -60,7 +61,7 @@ public class App implements ApplicationRunner {
                 .filter(sheet -> !sheet.getProperties().getTitle().equals("Глосарій"))
                 .toList();
         GoogleSpreadsheet googleSpreadsheet = this.googleSheets.getSpreadsheetData(spreadsheet, sheets);
-        Map<String, List<TranslateRegistryKey>> keyMap = this.parser.parse(googleSpreadsheet);
+        Map<GoogleSheet, List<TranslateRegistryKey>> keyMap = this.parser.parse(googleSpreadsheet);
         logger.info("End");
     }
     public String toJSON(Object obj) {
