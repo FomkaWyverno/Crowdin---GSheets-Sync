@@ -17,8 +17,8 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.localization.model.SourceRegistryKey;
-import ua.wyverno.localization.parsers.SourceRegistryKeyParser;
+import ua.wyverno.localization.model.TranslateRegistryKey;
+import ua.wyverno.localization.parsers.TranslateRegistryKeyParser;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,12 +35,12 @@ public class App implements ApplicationRunner {
 
     private final CrowdinService crowdinService;
     private final GoogleSheetsService googleSheets;
-    private final SourceRegistryKeyParser parser;
+    private final TranslateRegistryKeyParser parser;
     private final String spreadsheetID;
     private final long projectID;
 
     @Autowired
-    public App(CrowdinService crowdinService, GoogleSheetsService googleSheetsService, SourceRegistryKeyParser parser, ConfigLoader configLoader) {
+    public App(CrowdinService crowdinService, GoogleSheetsService googleSheetsService, TranslateRegistryKeyParser parser, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
         this.googleSheets = googleSheetsService;
         this.parser = parser;
@@ -60,7 +60,7 @@ public class App implements ApplicationRunner {
                 .filter(sheet -> !sheet.getProperties().getTitle().equals("Глосарій"))
                 .toList();
         GoogleSpreadsheet googleSpreadsheet = this.googleSheets.getSpreadsheetData(spreadsheet, sheets);
-        Map<String, SourceRegistryKey> keyMap = this.parser.parse(googleSpreadsheet);
+        Map<String, List<TranslateRegistryKey>> keyMap = this.parser.parse(googleSpreadsheet);
         logger.info("End");
     }
     public String toJSON(Object obj) {

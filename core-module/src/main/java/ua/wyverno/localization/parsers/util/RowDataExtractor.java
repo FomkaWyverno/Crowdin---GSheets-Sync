@@ -1,4 +1,4 @@
-package ua.wyverno.localization.parsers;
+package ua.wyverno.localization.parsers.util;
 
 import org.springframework.lang.Nullable;
 import ua.wyverno.google.sheets.model.GoogleRow;
