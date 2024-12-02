@@ -1,49 +1,49 @@
 package ua.wyverno.localization.model.builders;
 
-import ua.wyverno.localization.model.TranslateRegistryKey;
+import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslationIdentifier;
 
-public class TranslateRegistryKeyBuilder {
+public class GSheetTranslateRegistryKeyBuilder {
     private String containerId;
     private String key = "";
     private final StringBuilder originalText = new StringBuilder();
     private final StringBuilder translateText = new StringBuilder();
     private String context = "";
     private boolean isApprove = false;
-    private String locationA1;
+    private String sheetLocationA1;
 
-    public TranslateRegistryKeyBuilder containerId(String containerId) {
+    public GSheetTranslateRegistryKeyBuilder containerId(String containerId) {
         this.containerId = containerId;
         return this;
     }
 
-    public TranslateRegistryKeyBuilder key(String key) {
+    public GSheetTranslateRegistryKeyBuilder key(String key) {
         this.key = key;
         return this;
     }
 
-    public TranslateRegistryKeyBuilder appendOriginalText(String originalText) {
+    public GSheetTranslateRegistryKeyBuilder appendOriginalText(String originalText) {
         this.originalText.append(originalText).append("\n");
         return this;
     }
 
-    public TranslateRegistryKeyBuilder appendTranslateText(String translateText) {
+    public GSheetTranslateRegistryKeyBuilder appendTranslateText(String translateText) {
         this.translateText.append(translateText).append("\n");
         return this;
     }
 
-    public TranslateRegistryKeyBuilder context(String context) {
+    public GSheetTranslateRegistryKeyBuilder context(String context) {
         this.context = context;
         return this;
     }
 
-    public TranslateRegistryKeyBuilder setIsApprove(boolean isApprove) {
+    public GSheetTranslateRegistryKeyBuilder setIsApprove(boolean isApprove) {
         this.isApprove = isApprove;
         return this;
     }
 
-    public TranslateRegistryKeyBuilder locationA1(String locationA1) {
-        this.locationA1 = locationA1;
+    public GSheetTranslateRegistryKeyBuilder sheetLocationA1(String sheetLocationA1) {
+        this.sheetLocationA1 = this.sheetLocationA1;
         return this;
     }
 
@@ -71,17 +71,17 @@ public class TranslateRegistryKeyBuilder {
         return isApprove;
     }
 
-    public String getLocationA1() {
-        return locationA1;
+    public String getSheetLocationA1() {
+        return sheetLocationA1;
     }
 
-    public TranslateRegistryKey build() {
+    public GSheetTranslateRegistryKey build() {
         TranslationIdentifier identifier = new TranslationIdentifier(Integer.parseInt(this.containerId), this.key);
-        return new TranslateRegistryKey(identifier,
+        return new GSheetTranslateRegistryKey(identifier,
                 this.originalText.toString().replaceAll("\\n$", ""),
-                this.translateText.toString().replaceAll("\\n$",""),
-                this.context.replaceAll("\\n$",""),
+                this.translateText.toString().replaceAll("\\n$", ""),
+                this.context.replaceAll("\\n$", ""),
                 this.isApprove,
-                this.locationA1);
+                this.sheetLocationA1);
     }
 }

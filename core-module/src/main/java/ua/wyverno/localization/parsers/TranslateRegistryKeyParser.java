@@ -10,7 +10,7 @@ import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 import ua.wyverno.localization.model.TranslateRegistryKey;
 import ua.wyverno.localization.model.builders.LocationA1KeyBuilder;
-import ua.wyverno.localization.model.builders.TranslateRegistryKeyBuilder;
+import ua.wyverno.localization.model.builders.GSheetTranslateRegistryKeyBuilder;
 import ua.wyverno.localization.parsers.util.KeyContextBuilder;
 import ua.wyverno.localization.parsers.util.KeyContextConfig;
 import ua.wyverno.localization.parsers.util.RowDataExtractor;
@@ -56,7 +56,7 @@ public class TranslateRegistryKeyParser {
         GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
 
         LocationA1KeyBuilder locationA1Builder = new LocationA1KeyBuilder();
-        TranslateRegistryKeyBuilder keyBuilder = new TranslateRegistryKeyBuilder();
+        GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder();
         // Чи є колонка FormattedText
         boolean hasFormattedColumn = hasFormattedColumn(sheet, sheetHeader);
 
@@ -100,8 +100,8 @@ public class TranslateRegistryKeyParser {
      * @param hasFormattedColumn чи має аркуш колонку Formatted-Text
      * @return новий білдер Ключа перекладу
      */
-    private TranslateRegistryKeyBuilder initializeNewKey(RowDataExtractor extractor, boolean hasFormattedColumn) {
-        TranslateRegistryKeyBuilder keyBuilder = new TranslateRegistryKeyBuilder() // Створюємо нового білдера для ключа перекладу
+    private GSheetTranslateRegistryKeyBuilder initializeNewKey(RowDataExtractor extractor, boolean hasFormattedColumn) {
+        GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder() // Створюємо нового білдера для ключа перекладу
                 .containerId(extractor.getContainerId()) // Встановлюємо контейнер айді
                 .key(extractor.getKey()); // Встановлюємо ключ перекладу
 
@@ -127,7 +127,7 @@ public class TranslateRegistryKeyParser {
      * @param keyBuilder білдер ключа перекладу
      * @param extractor екстрактор рядка
      */
-    private void appendTranslationForKey(TranslateRegistryKeyBuilder keyBuilder, RowDataExtractor extractor) {
+    private void appendTranslationForKey(GSheetTranslateRegistryKeyBuilder keyBuilder, RowDataExtractor extractor) {
         if (Objects.nonNull(extractor.getEditText()) && !extractor.getEditText().isEmpty()) {
             keyBuilder.appendTranslateText(extractor.getEditText())
                       .setIsApprove(true);
@@ -143,9 +143,9 @@ public class TranslateRegistryKeyParser {
      * @param endColumnIndex індекс кінцевої колонки де знаходиться
      * @param keys лист з ключами перекладу
      */
-    private void saveKeyTranslate(TranslateRegistryKeyBuilder keyBuilder, LocationA1KeyBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<TranslateRegistryKey> keys) {
+    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, LocationA1KeyBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<TranslateRegistryKey> keys) {
         if (this.isValidKeyTranslate(keyBuilder.getKey(), keyBuilder.getContainerId())) { // Якщо KeyBuilder має ключ та контейнер айді зберігаємо це як ключ перекладу
-            keyBuilder.locationA1(locationA1Builder // Встановлюємо локацію у таблиці
+            keyBuilder.sheetLocationA1(locationA1Builder // Встановлюємо локацію у таблиці
                     .endRowIndex(endRowIndex) // Встановлюємо індекс попереднього рядка як останній рядок де знаходиться ключ перекладу
                     .endColumnIndex(endColumnIndex) // Встановлюємо останню колонку
                     .build());
