@@ -3,8 +3,6 @@ package ua.wyverno.console;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import ua.wyverno.console.commands.Command;
-import ua.wyverno.console.commands.ConsoleCommand;
 
 import java.util.Collections;
 import java.util.Map;

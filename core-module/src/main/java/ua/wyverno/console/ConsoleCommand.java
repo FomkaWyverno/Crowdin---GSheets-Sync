@@ -1,4 +1,4 @@
-package ua.wyverno.console.commands;
+package ua.wyverno.console;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

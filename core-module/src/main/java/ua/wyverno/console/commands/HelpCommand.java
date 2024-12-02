@@ -3,7 +3,9 @@ package ua.wyverno.console.commands;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import ua.wyverno.console.Command;
 import ua.wyverno.console.CommandCollector;
+import ua.wyverno.console.ConsoleCommand;
 
 @ConsoleCommand(command = "/help", description = "Print all commands with description")
 @Component

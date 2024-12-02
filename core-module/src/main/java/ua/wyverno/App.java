@@ -12,11 +12,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationEventPublisher;
-import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.console.ConsoleCommandEvent;
-import ua.wyverno.crowdin.CrowdinService;
-import ua.wyverno.google.sheets.GoogleSheetsService;
-import ua.wyverno.localization.parsers.TranslateRegistryKeyParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,20 +28,11 @@ public class App implements ApplicationRunner {
     }
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final CrowdinService crowdinService;
-    private final GoogleSheetsService googleSheets;
-    private final TranslateRegistryKeyParser parser;
-    private final String spreadsheetID;
-    private final long projectID;
-
+    private final AppState appState;
     @Autowired
-    public App(ApplicationEventPublisher applicationEventPublisher, CrowdinService crowdinService, GoogleSheetsService googleSheetsService, TranslateRegistryKeyParser parser, ConfigLoader configLoader) {
+    public App(ApplicationEventPublisher applicationEventPublisher, AppState appState) {
         this.applicationEventPublisher = applicationEventPublisher;
-        this.crowdinService = crowdinService;
-        this.googleSheets = googleSheetsService;
-        this.parser = parser;
-        this.projectID = configLoader.getConfig().getProjectID();
-        this.spreadsheetID = configLoader.getConfig().getSpreadsheetID();
+        this.appState = appState;
     }
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -56,13 +43,9 @@ public class App implements ApplicationRunner {
 
         System.out.println("Console application started. Type /help for the list of commands.");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            while (true) {
+            while (this.appState.isRunning()) {
                 System.out.print("> ");
                 String input = reader.readLine();
-                if (input.equalsIgnoreCase("/exit")) {
-                    System.out.println("Exiting application...");
-                    break;
-                }
                 this.applicationEventPublisher.publishEvent(new ConsoleCommandEvent(input));
             }
         }
