@@ -46,7 +46,11 @@ public class App implements ApplicationRunner {
             while (this.appState.isRunning()) {
                 System.out.print("> ");
                 String input = reader.readLine();
-                this.applicationEventPublisher.publishEvent(new ConsoleCommandEvent(input));
+                if (input.isEmpty()) {
+                    System.out.println("Command string can't be empty!");
+                } else {
+                    this.applicationEventPublisher.publishEvent(new ConsoleCommandEvent(input));
+                }
             }
         }
 

@@ -38,6 +38,7 @@ core-module/src/test/resources/credentials.json
 /tokens
 tokens/*
 
-config.properties
+core-config.properties
+sync-config.properties
 logs/*
 /logs

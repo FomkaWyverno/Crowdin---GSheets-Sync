@@ -7,6 +7,8 @@ import ua.wyverno.console.Command;
 import ua.wyverno.console.CommandCollector;
 import ua.wyverno.console.ConsoleCommand;
 
+import java.util.*;
+
 @ConsoleCommand(command = "/help", description = "Print all commands with description")
 @Component
 public class HelpCommand implements Command {
@@ -22,13 +24,51 @@ public class HelpCommand implements Command {
                 .max()
                 .orElse(1);
 
+        int maxLineLength = 0;
+        List<String> formattedCommands = new ArrayList<>();
+        // Обробляємо кожну команду з описом
+        for (Map.Entry<String, String> entry : this.commandCollector.getCommandDescription().entrySet()) {
+            String command = entry.getKey();
+            String description = entry.getValue();
 
-        StringBuilder messageBuilder = new StringBuilder("List commands -\n");
-        this.commandCollector.getCommandDescription().forEach((command, description) -> {
             String paddedCommand = String.format("%-"+maxCommandLength+"s", command);
-            messageBuilder.append(paddedCommand).append(" - ").append(description).append("\n");
-        });
+            StringBuilder formattedCommand = new StringBuilder(paddedCommand).append(" - ");
 
-        System.out.println(messageBuilder.deleteCharAt(messageBuilder.length() - 1));
+            // Обробляємо багаторядковий опис
+            String[] descriptionLines = description.split("\n");
+            for (int i = 0; i < descriptionLines.length; i++) {
+                if (i > 0) {
+                    // Вирівнюємо після першого рядка опису, під довжину команди
+                    formattedCommand.append(" ".repeat(maxCommandLength+3));
+                }
+                formattedCommand.append(descriptionLines[i]).append("\n");
+            }
+            String fullCommandWithDescription = formattedCommand.toString();
+            formattedCommands.add(fullCommandWithDescription);
+
+            // Оновлюємо максимальну довжину рядка
+            maxLineLength = Math.max(maxLineLength, fullCommandWithDescription.lines()
+                    .mapToInt(String::length)
+                    .max()
+                    .orElse(0));
+        }
+        // Заголовок листа з командами
+        String titleList = this.createCenteredTitle("List Commands", maxLineLength);
+        // Лінія розмежування між командами
+        String line = "-".repeat(maxLineLength) + "\n";
+
+        StringBuilder messageBuilder = new StringBuilder(titleList);
+        Collections.sort(formattedCommands);
+        for (String formatedCommand : formattedCommands) {
+            messageBuilder.append(formatedCommand).append(line);
+        }
+
+        System.out.println(messageBuilder);
+    }
+
+    private String createCenteredTitle(String title, int maxLineLength) {
+        int leftSideLength = (maxLineLength - title.length()) / 2;
+        int rightSideLength = maxLineLength - title.length() - leftSideLength;
+        return "-".repeat(leftSideLength) + title + "-".repeat(rightSideLength) + "\n";
     }
 }
