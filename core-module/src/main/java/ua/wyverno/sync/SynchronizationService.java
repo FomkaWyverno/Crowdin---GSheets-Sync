@@ -1,7 +1,8 @@
 package ua.wyverno.sync;
 
 import com.crowdin.client.sourcefiles.model.Directory;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.crowdin.client.sourcefiles.model.FileInfo;
+import com.crowdin.client.storage.model.Storage;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import org.slf4j.Logger;
@@ -16,10 +17,15 @@ import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.EditDirPath;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.PatchDirRequestBuilder;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 import ua.wyverno.google.sheets.GoogleSheetsService;
+import ua.wyverno.google.sheets.model.GoogleSheet;
+import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SynchronizationService {
@@ -63,13 +69,23 @@ public class SynchronizationService {
                 crowdinDirRootId = crowdinDirRoot.getId();
             }
 
-            Spreadsheet spreadsheet = this.googleSheetsService.getSpreadsheetMetadata(this.spreadsheetId);
+            Spreadsheet spreadsheetMetadata = this.googleSheetsService.getSpreadsheetMetadata(this.spreadsheetId);
 
-            List<Sheet> sheets = spreadsheet.getSheets().stream()
+            List<Sheet> sheets = spreadsheetMetadata.getSheets().stream()
                     .filter(sheet -> !this.synchronizeSheetManager.shouldSkipSheetSynchronize(sheet))
                     .toList();
 
-            logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(sheets));
+            GoogleSpreadsheet spreadsheet = this.googleSheetsService.getSpreadsheetData(this.spreadsheetId, sheets);
+            logger.info("Parse sheet-id ");
+            Map<String, String> titleBySheetIdFileName = spreadsheet.getSheets().stream()
+                    .collect(Collectors.toMap(
+                            sheet -> sheet.getSheetId() + ".json",
+                            GoogleSheet::getSheetName,
+                            (exists, replacement) -> {
+                                logger.warn("Sheet has duplicate: '{}' and '{}'", exists, replacement);
+                                return replacement;}));
+            List<FileInfo> files =
+
             logger.info("Finish synchronization Crowdin with Google Sheets.");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -100,7 +116,7 @@ public class SynchronizationService {
     }
 
     /**
-     * Шукає якщо не знаходить створює директорію.
+     * Шукає кореневу директорію якщо не знаходить створює її.
      * @return {@link Directory} Директорію у Кроудіні
      */
     private Directory getCrowdinDirRoot() {
@@ -118,5 +134,49 @@ public class SynchronizationService {
                 .name(this.crowdinDirRoot)
                 .title(Objects.nonNull(this.syncConfig.getCrowdinDirectoryRootTitle()) ? this.syncConfig.getCrowdinDirectoryRootTitle() : null)
                 .execute();
+    }
+
+    /**
+     * Шукає файли якщо не знаходить створює їх.
+     * @return {@link FileInfo} Лист з Файлами у Кроудіні
+     */
+    private List<FileInfo> getCrowdinFiles(Map<String, String> crowdinFileMap, Long crowdinDirRootId) {
+        List<FileInfo> files = this.crowdinService.files()
+                .list(this.projectId)
+                .maxResults(crowdinFileMap.size())
+                .filter(file -> crowdinFileMap
+                        .keySet()
+                        .stream()
+                        .anyMatch(fileName -> file.getName().equals(fileName)))
+                .directoryID(crowdinDirRootId)
+                .execute();
+
+        if (files.size() == crowdinFileMap.size()) return files;
+        List<String> missingFileName = crowdinFileMap.keySet().stream()
+                .filter(fileName -> files.stream().noneMatch(file -> file.getName().equals(fileName)))
+                .toList();
+
+        Map<String, Long> storageIdByFileName = new HashMap<>();
+
+        missingFileName.forEach(fileName -> {
+            Storage storage = this.crowdinService.storages()
+                    .add()
+                    .content("{}")
+                    .fileName(fileName)
+                    .execute();
+            storageIdByFileName.put(fileName, storage.getId());
+        });
+
+        // TODO: Додати створення файлу з Title
+        storageIdByFileName.forEach((fileName, storageId) -> {
+            FileInfo fileInfo = this.crowdinService.files()
+                    .create(this.projectId)
+                    .storageID(storageId)
+                    .name(fileName)
+                    .execute();
+            files.add(fileInfo);
+        });
+
+        return files;
     }
 }
