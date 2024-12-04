@@ -40,5 +40,6 @@ tokens/*
 
 core-config.properties
 sync-config.properties
+synchronize.sheets.json
 logs/*
 /logs
