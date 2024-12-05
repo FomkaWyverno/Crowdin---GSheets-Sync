@@ -34,12 +34,11 @@ public class SyncRootDirectory {
      * Синхронізує кореневу директорію
      * @return повертає Optional з кореневою директорію, якщо у конфігурації не налаштована коренева директорія, то поверне порожній Optional
      */
-    protected Optional<Directory> synchronizeRootDirAndGet() {
-
+    protected Optional<Directory> synchronizeRootDirAndGet(List<Directory> allDirectories) {
         String crowdinDirRootName = this.syncConfig.getCrowdinDirectoryRoot();
         if (Objects.nonNull(crowdinDirRootName) && !crowdinDirRootName.isEmpty()) {
             logger.debug("Start synchronization Crowdin Root Directory with Title.");
-            Directory crowdinDirRoot = this.getOrCreateCrowdinDirRoot(crowdinDirRootName);
+            Directory crowdinDirRoot = this.getOrCreateCrowdinDirRoot(crowdinDirRootName, allDirectories);
             crowdinDirRoot = this.synchronizeRootDirTitleAndGet(crowdinDirRoot);
             logger.debug("Finish synchronization Crowdin Root Directory with Title.");
             return Optional.of(crowdinDirRoot);
@@ -49,11 +48,16 @@ public class SyncRootDirectory {
 
     /**
      * Шукає кореневу директорію якщо не знаходить створює її.
+     * @param crowdinDirRootName назва кореневої директорії
+     * @param allDirectories список з усіма поточними директоріями у Кроудіні
      * @return {@link Directory} Директорію у Кроудіні
      */
-    private Directory getOrCreateCrowdinDirRoot(String crowdinDirRootName) {
+    private Directory getOrCreateCrowdinDirRoot(String crowdinDirRootName, List<Directory> allDirectories) {
         Objects.requireNonNull(crowdinDirRootName, "Crowdin Directory Root can't be null!");
-        Directory rootDirectory = this.directoryManager.getDirectoryByPath("/"+crowdinDirRootName, null);
+        String pathRootDirectory = "/"+crowdinDirRootName;
+        Directory rootDirectory = allDirectories.stream() // Шукаємо кореневу директорію за її шляхом
+                .filter(directory -> directory.getPath().equals(pathRootDirectory))
+                .findFirst().orElse(null);
 
         if (rootDirectory != null) return rootDirectory;
         String dirTitle = Objects.nonNull(this.syncConfig.getCrowdinDirectoryRootTitle()) ? this.syncConfig.getCrowdinDirectoryRootTitle() : null;

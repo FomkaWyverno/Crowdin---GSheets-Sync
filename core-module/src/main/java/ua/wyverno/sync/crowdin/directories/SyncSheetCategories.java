@@ -28,7 +28,14 @@ public class SyncSheetCategories {
         this.directoryManager = directoryManager;
     }
 
-    protected Map<Directory, List<GoogleSheet>> synchronizeToSheetCategories(GoogleSpreadsheet spreadsheet, Directory rootDirectory) {
+    /**
+     * Синхронізує директорії, щоб у категоріях аркушів була відповідна директорія
+     * @param spreadsheet електрона табличка з вмістом
+     * @param rootDirectory коренева директорія
+     * @param allDirectories всі директорії у Кроудіні
+     * @return Мапу де ключ це директорія категорії, а значення це аркуші які входять в цю категорію
+     */
+    protected Map<Directory, List<GoogleSheet>> synchronizeToSheetCategories(GoogleSpreadsheet spreadsheet, Directory rootDirectory, List<Directory> allDirectories) {
         Map<String, List<GoogleSheet>> groupingSheetsByCategory = this.groupingSheetsByCategory(spreadsheet);
         logger.info("Starting synchronize categories sheets.");
 
@@ -36,7 +43,7 @@ public class SyncSheetCategories {
         Long rootDirectoryId = this.getRootDirectoryId(rootDirectory);
 
         // Отримуємо всі директорії які існують
-        List<Directory> existsDirectories = this.fetchExistsDirectories(groupingSheetsByCategory, parentPath, rootDirectoryId);
+        List<Directory> existsDirectories = this.collectExistsDirectories(groupingSheetsByCategory, parentPath, allDirectories);
         // Створюємо директорії, яких не існувало
         List<Directory> createdDirectories = this.creatingMissingDirectories(groupingSheetsByCategory, existsDirectories, rootDirectoryId);
         // Додаємо до листа директорій які існують, ново-створенні директорії
@@ -77,11 +84,20 @@ public class SyncSheetCategories {
     }
 
 
-    private List<Directory> fetchExistsDirectories(Map<String, List<GoogleSheet>> groupingSheetsByCategory, String parentPath, Long rootDirectoryId) {
+    /**
+     * Збирає всі існуючи директорії в лист
+     * @param groupingSheetsByCategory погруповані аркуші за категорією
+     * @param parentPath шлях де лежить директорія
+     * @param allDirectories всі директорії у Кроудіні
+     * @return зібраний список з директоріями
+     */
+    private List<Directory> collectExistsDirectories(Map<String, List<GoogleSheet>> groupingSheetsByCategory, String parentPath, List<Directory> allDirectories) {
         // Створюємо шляхи до категорій, щоб надалі знайти всі ці директорії у Кроудіні
         List<String> pathsCategories = this.toPathsCategories(groupingSheetsByCategory, parentPath);
-        // Отримуємо всі директорії які існують
-        return this.directoryManager.getDirectoriesByPaths(pathsCategories, rootDirectoryId);
+        // Збираємо всі директорії які існують для категорій
+        return allDirectories.stream()
+                .filter(directory -> pathsCategories.contains(directory.getPath()))
+                .collect(Collectors.toList());
     }
 
     private List<String> toPathsCategories(Map<String, List<GoogleSheet>> groupingSheetsByCategory, String parentPath) {
