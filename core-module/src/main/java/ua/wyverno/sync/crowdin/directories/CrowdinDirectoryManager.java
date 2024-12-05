@@ -36,6 +36,16 @@ public class CrowdinDirectoryManager {
     }
 
     /**
+     * Збирає лист з усіма директоріями у проєкті
+     * @return Лист з усіма директоріями у проєкті
+     */
+    protected List<Directory> getAllDirectories() {
+        return this.crowdinService.directories()
+                .list(this.projectId)
+                .execute();
+    }
+
+    /**
      * Створює директорію у Кроудіні
      * @param directoryId айді директорії де має бути розташована директорія, якщо це коренева директорія має бути null
      * @param directoryName ім'я директорії

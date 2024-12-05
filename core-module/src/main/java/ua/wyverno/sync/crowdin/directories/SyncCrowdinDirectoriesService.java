@@ -20,23 +20,22 @@ public class SyncCrowdinDirectoriesService {
     private final SyncRootDirectory syncRootDirectory;
     private final SyncSheetCategories syncSheetCategories;
 
-    private final CrowdinService crowdinService;
-    private final long projectId;
+    private final CrowdinDirectoryManager directoryManager;
 
     @Autowired
-    public SyncCrowdinDirectoriesService(SyncRootDirectory syncRootDirectory, SyncSheetCategories syncSheetCategories, CrowdinService crowdinService, ConfigLoader configLoader) {
+    public SyncCrowdinDirectoriesService(SyncRootDirectory syncRootDirectory,
+                                         SyncSheetCategories syncSheetCategories,
+                                         CrowdinDirectoryManager directoryManager) {
         this.syncRootDirectory = syncRootDirectory;
         this.syncSheetCategories = syncSheetCategories;
-        this.crowdinService = crowdinService;
-        this.projectId = configLoader.getCoreConfig().getProjectID();
+        this.directoryManager = directoryManager;
     }
 
     public SyncDirectoriesResult synchronizeToDirectories(GoogleSpreadsheet spreadsheet) {
         logger.info("Starting synchronization directories.");
 
-        List<Directory> allDirectories = this.crowdinService.directories()
-                .list(this.projectId)
-                .execute();
+        logger.debug("Getting all directories from Crowdin.");
+        List<Directory> allDirectories = this.directoryManager.getAllDirectories();
 
         logger.info("Starting synchronization Root directory.");
         Directory rootDirectory = this.syncRootDirectory.synchronizeRootDirAndGet(allDirectories).orElse(null);
