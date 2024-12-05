@@ -19,6 +19,6 @@ public class SyncCommand implements Command {
     @Override
     public void execute(String[] args) {
         System.out.println("Starting running synchronization Crowdin with Google Sheets...");
-        this.synchronizationService.synchronizeWithGoogleSheets();;
+        this.synchronizationService.synchronizeTranslations();;
     }
 }
