@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.sync.crowdin.directories.SyncCrowdinDirectoriesService;
+import ua.wyverno.sync.crowdin.directories.SyncDirectoriesResult;
 
 @Component
 public class SynchronizationCrowdin {
@@ -23,6 +24,6 @@ public class SynchronizationCrowdin {
     }
 
     public void synchronizeToCrowdin(GoogleSpreadsheet spreadsheet) {
-        this.syncCrowdinDirectoriesService.synchronizeToDirectories(spreadsheet);
+        SyncDirectoriesResult syncDirectoriesResult = this.syncCrowdinDirectoriesService.synchronizeToDirectories(spreadsheet);
     }
 }

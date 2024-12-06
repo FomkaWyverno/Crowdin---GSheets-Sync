@@ -75,4 +75,11 @@ public class CrowdinDirectoryManager {
         patchDirRequests.forEach(query::addPatchRequest);
         return query.execute();
     }
+
+    protected boolean deleteDirectory(Directory directory) {
+        return this.crowdinService.directories()
+                .deleteDirectory(this.projectId)
+                .directoryID(directory.getId())
+                .execute();
+    }
 }
