@@ -18,11 +18,13 @@ public class SyncCrowdinFilesService {
 
     private final CrowdinFilesManager filesManager;
     private final SyncCategoryFiles syncCategoryFiles;
+    private final SyncFilesCleaner syncFilesCleaner;
 
     @Autowired
-    public SyncCrowdinFilesService(CrowdinFilesManager filesManager, SyncCategoryFiles syncCategoryFiles) {
+    public SyncCrowdinFilesService(CrowdinFilesManager filesManager, SyncCategoryFiles syncCategoryFiles, SyncFilesCleaner syncFilesCleaner) {
         this.filesManager = filesManager;
         this.syncCategoryFiles = syncCategoryFiles;
+        this.syncFilesCleaner = syncFilesCleaner;
     }
 
     /**
@@ -30,10 +32,12 @@ public class SyncCrowdinFilesService {
      * @param syncDirectoriesResult результат синхронізації директорій.
      */
     public void synchronizeToFiles(SyncDirectoriesResult syncDirectoriesResult) {
+        logger.info("Staring synchronize to files in categories.");
         List<FileInfo> listFiles = this.filesManager.getListFiles();
         Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir = syncDirectoriesResult.groupingSheetByCategoryDir();
         Map<FileInfo, GoogleSheet> crowdinFileToSheetMap = this.syncCategoryFiles.synchronizeToCategory(groupingSheetsByCategoryDir, listFiles);
+        logger.info("Cleaning no required files.");
+        this.syncFilesCleaner.cleanFiles(crowdinFileToSheetMap.keySet().stream().toList(), listFiles);
         logger.info("Finish synchronize files in categories.");
-        // TODO: Зробити очищення зайвих файлів
     }
 }

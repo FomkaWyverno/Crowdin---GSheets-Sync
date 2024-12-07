@@ -73,4 +73,11 @@ public class CrowdinFilesManager {
                         .value(title))
                 .execute();
     }
+
+    public boolean deleteFile(FileInfo file) {
+        return this.crowdinService.files()
+                .delete(this.projectId)
+                .fileID(file.getId())
+                .execute();
+    }
 }

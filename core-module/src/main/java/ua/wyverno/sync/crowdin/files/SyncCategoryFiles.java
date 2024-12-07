@@ -30,7 +30,6 @@ public class SyncCategoryFiles {
     }
 
     protected Map<FileInfo, GoogleSheet> synchronizeToCategory(Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir , List<FileInfo> allFiles) {
-        logger.info("Starting synchronization File by Category");
         // Перетворюємо лист з файлами на мапу де ключ це шлях до файлу, а значення Файл кроудіну
         Map<String, FileInfo> fileByPathMap = this.listFilesToFileByPathMap(allFiles);
         logger.debug("Collecting exists files.");
