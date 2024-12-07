@@ -34,5 +34,6 @@ public class SyncCrowdinFilesService {
         Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir = syncDirectoriesResult.groupingSheetByCategoryDir();
         Map<FileInfo, GoogleSheet> crowdinFileToSheetMap = this.syncCategoryFiles.synchronizeToCategory(groupingSheetsByCategoryDir, listFiles);
         logger.info("Finish synchronize files in categories.");
+        // TODO: Зробити очищення зайвих файлів
     }
 }
