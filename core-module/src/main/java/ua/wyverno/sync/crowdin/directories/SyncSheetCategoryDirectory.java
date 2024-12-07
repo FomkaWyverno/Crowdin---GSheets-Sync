@@ -16,15 +16,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
-public class SyncSheetCategories {
-    private static final Logger logger = LoggerFactory.getLogger(SyncSheetCategories.class);
+public class SyncSheetCategoryDirectory {
+    private static final Logger logger = LoggerFactory.getLogger(SyncSheetCategoryDirectory.class);
 
     private final CrowdinDirectoryManager directoryManager;
 
     private final Pattern categoryPattern = Pattern.compile("\\((.+)\\)");
 
     @Autowired
-    public SyncSheetCategories(CrowdinDirectoryManager directoryManager) {
+    public SyncSheetCategoryDirectory(CrowdinDirectoryManager directoryManager) {
         this.directoryManager = directoryManager;
     }
 
@@ -45,7 +45,7 @@ public class SyncSheetCategories {
         // Отримуємо всі директорії які існують
         List<Directory> existsDirectories = this.collectExistsDirectories(groupingSheetsByCategory, parentPath, allDirectories);
         // Створюємо директорії, яких не існувало
-        List<Directory> createdDirectories = this.creatingMissingDirectories(groupingSheetsByCategory, existsDirectories, rootDirectoryId);
+        List<Directory> createdDirectories = this.createMissingDirectories(groupingSheetsByCategory, existsDirectories, rootDirectoryId);
         // Додаємо до листа директорій які існують, ново-створенні директорії
         existsDirectories.addAll(createdDirectories);
         // Збираємо мапу з директоріями, де ключ це назва директорії, а значення це директорія
@@ -131,7 +131,7 @@ public class SyncSheetCategories {
      * @param rootDirectoryId айді кореневої директорії
      * @return Лист зі створеними директоріями
      */
-    private List<Directory> creatingMissingDirectories(Map<String, List<GoogleSheet>> groupingSheetsByCategory, List<Directory> existsDirectories, Long rootDirectoryId) {
+    private List<Directory> createMissingDirectories(Map<String, List<GoogleSheet>> groupingSheetsByCategory, List<Directory> existsDirectories, Long rootDirectoryId) {
         // Формуємо за список категорій у вигляді директорії які існують
         List<String> existsCategoriesNames = existsDirectories.stream().map(Directory::getName).toList();
         // Фільтруємо мапу, залишаючи лише ті категорії які не існують.
