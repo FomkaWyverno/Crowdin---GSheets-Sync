@@ -34,7 +34,7 @@ public class SynchronizationCrowdin {
         SyncDirectoriesResult syncDirectoriesResult = this.syncCrowdinDirectoriesService.synchronizeToDirectories(spreadsheet);
         logger.info("Crowdin Sync Step 2: Synchronization to Files.");
         Map<FileInfo, GoogleSheet> fileBySheet = this.syncCrowdinFilesService.synchronizeToFiles(syncDirectoriesResult);
-        logger.info("Crowdin Sync Step 3: Synchronization to Source Strings.");
-        this.syncCrowdinSourceStringsService.synchronizeToSourceStrings(fileBySheet);
+        //logger.info("Crowdin Sync Step 3: Synchronization to Source Strings.");
+        //this.syncCrowdinSourceStringsService.synchronizeToSourceStrings(fileBySheet);
     }
 }

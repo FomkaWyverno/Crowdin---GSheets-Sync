@@ -6,7 +6,7 @@ import com.crowdin.client.sourcestrings.SourceStringsApi;
 import com.crowdin.client.sourcestrings.model.SourceString;
 import ua.wyverno.crowdin.api.Query;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
-import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditBatchStringRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.ReplaceBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.RemoveBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
 
@@ -47,12 +47,12 @@ public class StringsBatchQuery implements Query<List<SourceString>> {
      * Створює операцію replace
      * @param editBatchStringRequest тіло запиту редагування рядка<br/><br/>
      *                               Обов'язкові параметри -<br/>
-     *                               {@link EditBatchStringRequestBuilder#stringID(Long)} - айді рядка який має бути відредагований<br/>
-     *                               {@link EditBatchStringRequestBuilder#path(PathEditString)} - що саме редагувати потрібно в цьому рядку<br/>
-     *                               {@link EditBatchStringRequestBuilder#value(Object)} - нове значення
+     *                               {@link ReplaceBatchStringRequestBuilder#stringID(Long)} - айді рядка який має бути відредагований<br/>
+     *                               {@link ReplaceBatchStringRequestBuilder#path(PathEditString)} - що саме редагувати потрібно в цьому рядку<br/>
+     *                               {@link ReplaceBatchStringRequestBuilder#value(Object)} - нове значення
      * @return {@link StringsBatchQuery}
      */
-    public StringsBatchQuery replacePatch(EditBatchStringRequestBuilder editBatchStringRequest) {
+    public StringsBatchQuery replacePatch(ReplaceBatchStringRequestBuilder editBatchStringRequest) {
         Objects.requireNonNull(editBatchStringRequest, "editBatchStringRequest cannot be null");
         this.requestList.add(editBatchStringRequest.build());
         return this;

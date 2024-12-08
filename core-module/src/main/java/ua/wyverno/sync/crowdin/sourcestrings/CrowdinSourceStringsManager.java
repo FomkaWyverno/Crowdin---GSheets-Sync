@@ -9,7 +9,7 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
 import ua.wyverno.crowdin.api.sourcestrings.queries.batch.StringsBatchQuery;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
-import ua.wyverno.crowdin.api.sourcestrings.queries.builders.EditBatchStringRequestBuilder;
+import ua.wyverno.crowdin.api.sourcestrings.queries.builders.ReplaceBatchStringRequestBuilder;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.RemoveBatchStringRequestBuilder;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class CrowdinSourceStringsManager {
 
     public List<SourceString> batchSourceStrings(List<AddStringRequestBuilder> requestsAdd,
                                                  List<RemoveBatchStringRequestBuilder> requestsRemove,
-                                                 List<EditBatchStringRequestBuilder> requestsEdit) {
+                                                 List<ReplaceBatchStringRequestBuilder> requestsEdit) {
         if (!requestsAdd.isEmpty() || !requestsRemove.isEmpty() || !requestsEdit.isEmpty()) {
             logger.info("String Batch Query starting...");
             StringsBatchQuery query = this.crowdinService.sourceStrings()
