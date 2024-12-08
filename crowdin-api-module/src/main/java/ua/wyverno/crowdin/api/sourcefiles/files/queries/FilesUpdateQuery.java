@@ -6,7 +6,7 @@ import ua.wyverno.crowdin.api.Query;
 
 import java.util.List;
 
-public class FilesUpdateOrRestoreQuery implements Query<FileInfo> {
+public class FilesUpdateQuery implements Query<FileInfo> {
     private final SourceFilesApi sourceFilesApi;
     private final long projectId;
 
@@ -18,25 +18,25 @@ public class FilesUpdateOrRestoreQuery implements Query<FileInfo> {
     private List<Long> attachLabelIds;
     private List<Long> detachLabelIds;
 
-    public FilesUpdateOrRestoreQuery(SourceFilesApi sourceFilesApi, long projectId) {
+    public FilesUpdateQuery(SourceFilesApi sourceFilesApi, long projectId) {
         this.sourceFilesApi = sourceFilesApi;
         this.projectId = projectId;
     }
 
     /**
      * @param fileId File Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.files.getMany">List Files</a>
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery fileId(Long fileId) {
+    public FilesUpdateQuery fileId(Long fileId) {
         this.fileId = fileId;
         return this;
     }
 
     /**
      * @param storageId Storage Identifier. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.storages.getMany">List Storages<a/>
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery storageId(Long storageId) {
+    public FilesUpdateQuery storageId(Long storageId) {
         this.storageId = storageId;
         return this;
     }
@@ -45,45 +45,45 @@ public class FilesUpdateOrRestoreQuery implements Query<FileInfo> {
      * @param updateOption Default: "clear_translations_and_approvals"<br/>
      * Enum: "clear_translations_and_approvals" "keep_translations" "keep_translations_and_approvals"<br/>
      * Defines whether to keep existing translations and approvals for updated strings
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery updateOption(UpdateOption updateOption) {
+    public FilesUpdateQuery updateOption(UpdateOption updateOption) {
         this.updateOption = updateOption;
         return this;
     }
 
     /**
      * @param importOptions Spreadsheet File Import Options (object) or Xml File Import Options (object) or WebXml File Import Options (object) or Docx File Import Options (object) or Html File Import Options (object) or Html with Front Matter File Import Options (object) or Md File Import Options (object) or Mdx v1 File Import Options (object) or Mdx v2 File Import Options (object) or Other Files Import Options (object) (File Import Options)
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery importOptions(ImportOptions importOptions) {
+    public FilesUpdateQuery importOptions(ImportOptions importOptions) {
         this.importOptions = importOptions;
         return this;
     }
 
     /**
      * @param exportOptions General File Export Options (object) or Property File Export Options (object) or JavaScript File Export Options (object) or Md File Export Options (object) or Mdx v1 File Export Options (object) or Mdx v2 File Export Options (object) (File Export Options)
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery exportOptions(ExportOptions exportOptions) {
+    public FilesUpdateQuery exportOptions(ExportOptions exportOptions) {
         this.exportOptions = exportOptions;
         return this;
     }
 
     /**
      * @param attachLabelIds Attach labels to updated strings. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.labels.getMany">List Labels<a/>
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery attachLabelIds(List<Long> attachLabelIds) {
+    public FilesUpdateQuery attachLabelIds(List<Long> attachLabelIds) {
         this.attachLabelIds = attachLabelIds;
         return this;
     }
 
     /**
      * @param detachLabelIds Detach labels from updated strings. Get via <a href="https://support.crowdin.com/developer/api/v2/#operation/api.projects.labels.getMany">List Labels</a>
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    public FilesUpdateOrRestoreQuery detachLabelIds(List<Long> detachLabelIds) {
+    public FilesUpdateQuery detachLabelIds(List<Long> detachLabelIds) {
         this.detachLabelIds = detachLabelIds;
         return this;
     }
@@ -98,7 +98,7 @@ public class FilesUpdateOrRestoreQuery implements Query<FileInfo> {
         updateFileRequest.setAttachLabelIds(this.attachLabelIds);
         updateFileRequest.setDetachLabelIds(this.detachLabelIds);
 
-        return this.sourceFilesApi.updateOrRestoreFile(this.projectId, null, updateFileRequest)
+        return this.sourceFilesApi.updateOrRestoreFile(this.projectId, this.fileId, updateFileRequest)
                 .getData();
     }
 }

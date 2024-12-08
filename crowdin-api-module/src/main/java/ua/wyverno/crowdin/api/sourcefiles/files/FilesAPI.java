@@ -44,9 +44,21 @@ public interface FilesAPI {
 
     /**
      * Створює запит до Crowdin API - Update or Restore File<br/><br/>
+     * Тіло запиту саме - Replace File From Storage<br/>
      * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesUpdateQuery#fileId(Long)} - айді файлу який потрібно оновити
+     * {@link FilesUpdateQuery#storageId(Long)} - айді сховища, з новим вмістом
      * @param projectId айді проєкта де знаходиться файл
-     * @return {@link FilesUpdateOrRestoreQuery}
+     * @return {@link FilesUpdateQuery}
      */
-    FilesUpdateOrRestoreQuery updateOrRestore(long projectId);
+    FilesUpdateQuery update(long projectId);
+
+    /**
+     * Створює запит до Crowdin API - Download File Preview<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesDownloadPreviewQuery#fileId(Long)} - айді файлу який потрібно переглянути
+     * @param projectId айді проєкта де знаходиться файл
+     * @return {@link FilesDownloadPreviewQuery}
+     */
+    FilesDownloadPreviewQuery downloadPreview(long projectId);
 }

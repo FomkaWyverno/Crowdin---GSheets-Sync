@@ -36,7 +36,12 @@ public class FilesApiImpl implements FilesAPI {
     }
 
     @Override
-    public FilesUpdateOrRestoreQuery updateOrRestore(long projectId) {
-        return new FilesUpdateOrRestoreQuery(this.sourceFilesApi, projectId);
+    public FilesUpdateQuery update(long projectId) {
+        return new FilesUpdateQuery(this.sourceFilesApi, projectId);
+    }
+
+    @Override
+    public FilesDownloadPreviewQuery downloadPreview(long projectId) {
+        return new FilesDownloadPreviewQuery(this.sourceFilesApi, projectId);
     }
 }
