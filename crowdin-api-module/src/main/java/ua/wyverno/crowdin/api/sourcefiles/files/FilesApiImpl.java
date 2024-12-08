@@ -4,10 +4,7 @@ import com.crowdin.client.sourcefiles.SourceFilesApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.CrowdinApiClient;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesCreateQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesDeleteQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesEditQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesListQuery;
+import ua.wyverno.crowdin.api.sourcefiles.files.queries.*;
 
 @Component
 public class FilesApiImpl implements FilesAPI {
@@ -36,5 +33,10 @@ public class FilesApiImpl implements FilesAPI {
     @Override
     public FilesDeleteQuery delete(long projectID) {
         return new FilesDeleteQuery(this.sourceFilesApi, projectID);
+    }
+
+    @Override
+    public FilesUpdateOrRestoreQuery updateOrRestore(long projectId) {
+        return new FilesUpdateOrRestoreQuery(this.sourceFilesApi, projectId);
     }
 }

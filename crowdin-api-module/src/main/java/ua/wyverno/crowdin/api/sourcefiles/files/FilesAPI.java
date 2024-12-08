@@ -1,9 +1,6 @@
 package ua.wyverno.crowdin.api.sourcefiles.files;
 
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesCreateQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesDeleteQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesEditQuery;
-import ua.wyverno.crowdin.api.sourcefiles.files.queries.FilesListQuery;
+import ua.wyverno.crowdin.api.sourcefiles.files.queries.*;
 
 public interface FilesAPI {
     /**
@@ -38,10 +35,18 @@ public interface FilesAPI {
 
     /**
      * Створює запит до Crowdin API - Delete File Видаляє гру<br/><br/>
-      * Обов'язкові параметри при створенні запиту -<br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
      * {@link FilesEditQuery#fileID(long fileID)}<br/><br/>
      * @param projectID айді проєкта де знаходиться файл
      * @return {@link FilesDeleteQuery}
      */
     FilesDeleteQuery delete(long projectID);
+
+    /**
+     * Створює запит до Crowdin API - Update or Restore File<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * @param projectId айді проєкта де знаходиться файл
+     * @return {@link FilesUpdateOrRestoreQuery}
+     */
+    FilesUpdateOrRestoreQuery updateOrRestore(long projectId);
 }
