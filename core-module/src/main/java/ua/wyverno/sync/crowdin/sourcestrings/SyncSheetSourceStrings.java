@@ -42,6 +42,7 @@ public class SyncSheetSourceStrings {
         logger.debug("Finding exists source strings for keys."); // Збираємо рядки які існують
         Map<SourceString, GSheetTranslateRegistryKey> existsKeyBySourceString = this.collectExistsSourceStrings(fileStrings, keys);
         logger.debug("Starting exists source strings synchronization.");
+
         logger.debug("Starting prepare AddStringRequest for missing source string."); // Підготовлюємо запит на створення рядків які пропущені
         List<AddStringRequestBuilder> preparedAddStringRequests = this.prepareRequestMissingSourceString(keys, existsKeyBySourceString, file);
 

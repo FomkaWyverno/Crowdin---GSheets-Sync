@@ -50,8 +50,7 @@ public class SyncSourceStringsCleaner {
                     Id: %s
                     Text: %s
                     Context: %s
-                    Print (yes/no): 
-                    """, sourceString.getIdentifier(), sourceString.getText(), sourceString.getContext());
+                    Print (yes/no):\s""", sourceString.getIdentifier(), sourceString.getText(), sourceString.getContext());
             String userInput = reader.readLine();
             return "yes".equalsIgnoreCase(userInput);
         } catch (IOException e) {
