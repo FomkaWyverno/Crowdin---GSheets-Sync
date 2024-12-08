@@ -21,7 +21,9 @@ public class SyncCrowdinFilesService {
     private final SyncFilesCleaner syncFilesCleaner;
 
     @Autowired
-    public SyncCrowdinFilesService(CrowdinFilesManager filesManager, SyncCategoryFiles syncCategoryFiles, SyncFilesCleaner syncFilesCleaner) {
+    public SyncCrowdinFilesService(CrowdinFilesManager filesManager,
+                                   SyncCategoryFiles syncCategoryFiles,
+                                   SyncFilesCleaner syncFilesCleaner) {
         this.filesManager = filesManager;
         this.syncCategoryFiles = syncCategoryFiles;
         this.syncFilesCleaner = syncFilesCleaner;
@@ -30,9 +32,8 @@ public class SyncCrowdinFilesService {
     /**
      * Синхронізує файли у Кроудіні
      * @param syncDirectoriesResult результат синхронізації директорій.
-     * @return Мапу де ключ це файл, а значення це аркуш який він відображає
      */
-    public Map<FileInfo, GoogleSheet> synchronizeToFiles(SyncDirectoriesResult syncDirectoriesResult) {
+    public void synchronizeToFiles(SyncDirectoriesResult syncDirectoriesResult) {
         logger.info("Staring synchronize to files in categories.");
         List<FileInfo> listFiles = this.filesManager.getListFiles();
         Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir = syncDirectoriesResult.groupingSheetByCategoryDir();
@@ -40,6 +41,5 @@ public class SyncCrowdinFilesService {
         logger.info("Cleaning no required files.");
         this.syncFilesCleaner.cleanFiles(crowdinFileToSheetMap.keySet().stream().toList(), listFiles);
         logger.info("Finish synchronize files in categories.");
-        return crowdinFileToSheetMap;
     }
 }

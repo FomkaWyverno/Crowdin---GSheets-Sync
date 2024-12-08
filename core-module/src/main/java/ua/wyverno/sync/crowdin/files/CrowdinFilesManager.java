@@ -1,5 +1,6 @@
 package ua.wyverno.sync.crowdin.files;
 
+import com.crowdin.client.core.model.DownloadLink;
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import com.crowdin.client.storage.model.Storage;
 import org.slf4j.Logger;
@@ -12,6 +13,10 @@ import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.EditFilePath;
 import ua.wyverno.crowdin.api.sourcefiles.files.queries.edit.PatchFileRequestBuilder;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.List;
 
 @Component
@@ -78,6 +83,37 @@ public class CrowdinFilesManager {
         return this.crowdinService.files()
                 .delete(this.projectId)
                 .fileID(file.getId())
+                .execute();
+    }
+
+    public String downloadContent(FileInfo file) {
+        StringBuilder content = new StringBuilder();
+        DownloadLink link = this.crowdinService.files()
+                .download(this.projectId)
+                .fileId(file.getId())
+                .execute();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(URI.create(link.getUrl()).toURL().openStream()))) {
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            return content.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateContent(FileInfo file, String content) {
+        Storage storage = this.crowdinService.storages()
+                .add()
+                .fileName(file.getName())
+                .content(content)
+                .execute();
+        this.crowdinService.files()
+                .update(this.projectId)
+                .fileId(file.getId())
+                .storageId(storage.getId())
                 .execute();
     }
 }

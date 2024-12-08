@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ua.wyverno.csv.parsers.GoogleSheetToCSVParser;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 
 import java.util.HashMap;
@@ -19,14 +20,18 @@ import java.util.stream.Collectors;
 @Component
 public class SyncCategoryFiles {
     private final static Logger logger = LoggerFactory.getLogger(SyncCategoryFiles.class);
-    private final static String FILE_CONTENT = "{}";
-    private final static String FILE_EXTENSION = ".json";
+    private final static String FILE_EXTENSION = ".csv";
     private final static Pattern TITLE_PATTERN = Pattern.compile("(.+)\\(");
+
     private final CrowdinFilesManager filesManager;
+    private final GoogleSheetToCSVParser csvParser;
+    private final SyncContentFiles syncContentFiles;
 
     @Autowired
-    public SyncCategoryFiles(CrowdinFilesManager filesManager) {
+    public SyncCategoryFiles(CrowdinFilesManager filesManager, GoogleSheetToCSVParser csvParser, SyncContentFiles syncContentFiles) {
         this.filesManager = filesManager;
+        this.csvParser = csvParser;
+        this.syncContentFiles = syncContentFiles;
     }
 
     protected Map<FileInfo, GoogleSheet> synchronizeToCategory(Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir , List<FileInfo> allFiles) {
@@ -38,6 +43,9 @@ public class SyncCategoryFiles {
         // Синхронізуємо заголовки файлів, якщо вони не відповідають
         logger.debug("Synchronization exists files to title.");
         existsFiles = this.syncFilesTitle(existsFiles);
+        // Синхронізація вмісту файлів
+        logger.info("Starting synchronization to Content.");
+        this.syncContentFiles.synchronizationToContent(existsFiles);
         // Створюємо файли які не існують
         logger.debug("Creating files if need.");
         Map<FileInfo, GoogleSheet> createdFiles = this.createMissingFiles(groupingSheetsByCategoryDir, existsFiles);
@@ -137,7 +145,10 @@ public class SyncCategoryFiles {
         Map<FileInfo, GoogleSheet> createdMissingFilesForCategory = new HashMap<>();
         // Шукаємо відсутні файли
         missingFilesForSheets.forEach(sheet -> {
-            FileInfo file = this.filesManager.createFile(categoryDir.getId(), this.getFileNameForSheet(sheet), sheet.getSheetName(), FILE_CONTENT);
+            FileInfo file = this.filesManager.createFile(categoryDir.getId(),
+                    this.getFileNameForSheet(sheet),
+                    this.getTitleForSheet(sheet),
+                    this.csvParser.parseSheet(sheet));
             createdMissingFilesForCategory.put(file, sheet);
         });
         return createdMissingFilesForCategory;

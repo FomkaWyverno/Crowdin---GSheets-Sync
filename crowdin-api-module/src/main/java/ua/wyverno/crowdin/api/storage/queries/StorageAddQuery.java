@@ -4,14 +4,15 @@ import com.crowdin.client.storage.StorageApi;
 import com.crowdin.client.storage.model.Storage;
 import ua.wyverno.crowdin.api.Query;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class StorageAddQuery implements Query<Storage> {
 
     private final StorageApi storageApi;
     private String fileName;
-    private String contentStr;
-    private InputStream contentInput;
+    private InputStream content;
     public StorageAddQuery(StorageApi storageApi) {
         this.storageApi = storageApi;
     }
@@ -30,7 +31,7 @@ public class StorageAddQuery implements Query<Storage> {
      * @return {@link StorageAddQuery}
      */
     public StorageAddQuery content(String content) {
-        this.contentStr = content;
+        this.content = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         return this;
     }
 
@@ -39,13 +40,12 @@ public class StorageAddQuery implements Query<Storage> {
      * @return {@link StorageAddQuery}
      */
     public StorageAddQuery content(InputStream content) {
-        this.contentInput = content;
+        this.content = content;
         return this;
     }
 
     @Override
     public Storage execute() {
-        if (this.contentStr != null) return this.storageApi.addStorage(this.fileName, this.contentStr).getData();
-        return this.storageApi.addStorage(this.fileName, this.contentInput).getData();
+        return this.storageApi.addStorage(this.fileName, this.content).getData();
     }
 }

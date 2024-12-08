@@ -40,6 +40,6 @@ public class GoogleSheetToCSVParser {
             throw new RuntimeException(e);
         }
 
-        return sw.toString();
+        return sw.toString().replace("\r\n", "\n");
     }
 }
