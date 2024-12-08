@@ -4,7 +4,7 @@ import com.crowdin.client.core.model.PatchOperation;
 import com.crowdin.client.core.model.PatchRequest;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.enums.PathEditString;
 
-public class EditBatchStringRequestBuilder {
+public class ReplaceBatchStringRequestBuilder {
     private Long stringID;
     private String path;
     private Object value;
@@ -13,7 +13,7 @@ public class EditBatchStringRequestBuilder {
      * @param stringID рядок який потрібно змінити. Обов'язковий рядок.
      * @return {@link EditStringRequestBuilder}
      */
-    public EditBatchStringRequestBuilder stringID(Long stringID) {
+    public ReplaceBatchStringRequestBuilder stringID(Long stringID) {
         this.stringID = stringID;
         return this;
     }
@@ -23,7 +23,7 @@ public class EditBatchStringRequestBuilder {
      * @param path що саме потрібно змінити. Обов'язковий параметр.
      * @return {@link EditStringRequestBuilder}
      */
-    public EditBatchStringRequestBuilder path(PathEditString path) {
+    public ReplaceBatchStringRequestBuilder path(PathEditString path) {
         this.path = path.toString();
         return this;
     }
@@ -32,7 +32,7 @@ public class EditBatchStringRequestBuilder {
      * @param value string or object or integer or boolean / Обов'язковий параметр.
      * @return {@link EditStringRequestBuilder}
      */
-    public EditBatchStringRequestBuilder value(Object value) {
+    public ReplaceBatchStringRequestBuilder value(Object value) {
         this.value = value;
         return this;
     }

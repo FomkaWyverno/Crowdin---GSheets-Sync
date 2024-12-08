@@ -56,9 +56,18 @@ public interface FilesAPI {
     /**
      * Створює запит до Crowdin API - Download File Preview<br/><br/>
      * Обов'язкові параметри при створенні запиту -<br/>
-     * {@link FilesDownloadPreviewQuery#fileId(Long)} - айді файлу який потрібно переглянути
+     * {@link FilesDownloadPreviewQuery#fileId(Long)} - айді файлу який потрібно завантажити прев'ю.
      * @param projectId айді проєкта де знаходиться файл
      * @return {@link FilesDownloadPreviewQuery}
      */
     FilesDownloadPreviewQuery downloadPreview(long projectId);
+
+    /**
+     * Створює запит до Crowdin API - Download<br/><br/>
+     * Обов'язкові параметри при створенні запиту -<br/>
+     * {@link FilesDownloadQuery#fileId(Long)} - айді файлу який потрібно завантажити
+     * @param projectId айді проєкта де знаходиться файл
+     * @return {@link FilesDownloadQuery}
+     */
+    FilesDownloadQuery download(long projectId);
 }

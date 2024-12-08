@@ -44,4 +44,9 @@ public class FilesApiImpl implements FilesAPI {
     public FilesDownloadPreviewQuery downloadPreview(long projectId) {
         return new FilesDownloadPreviewQuery(this.sourceFilesApi, projectId);
     }
+
+    @Override
+    public FilesDownloadQuery download(long projectId) {
+        return new FilesDownloadQuery(this.sourceFilesApi, projectId);
+    }
 }
