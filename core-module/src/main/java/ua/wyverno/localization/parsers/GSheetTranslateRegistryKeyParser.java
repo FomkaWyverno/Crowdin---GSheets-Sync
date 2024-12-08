@@ -8,6 +8,7 @@ import ua.wyverno.google.sheets.model.GoogleRow;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
+import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslateRegistryKey;
 import ua.wyverno.localization.model.builders.LocationA1KeyBuilder;
 import ua.wyverno.localization.model.builders.GSheetTranslateRegistryKeyBuilder;
@@ -18,8 +19,8 @@ import ua.wyverno.localization.parsers.util.RowDataExtractor;
 import java.util.*;
 
 @Component
-public class TranslateRegistryKeyParser {
-    private final static Logger logger = LoggerFactory.getLogger(TranslateRegistryKey.class);
+public class GSheetTranslateRegistryKeyParser {
+    private final static Logger logger = LoggerFactory.getLogger(GSheetTranslateRegistryKeyParser.class);
     private final static String line = "---------------------------------------------";
 
     @Autowired
@@ -30,9 +31,9 @@ public class TranslateRegistryKeyParser {
      * @param spreadsheet електронна таблиця
      * @return {@link Map}<{@link GoogleSheet}, {@link List}<{@link TranslateRegistryKey}>> - ключ - аркуш, значення - лист з усіма ключами перекладу у цьому аркуші
      */
-    public Map<GoogleSheet, List<TranslateRegistryKey>> parseSpreadsheet(GoogleSpreadsheet spreadsheet) {
-        Map<GoogleSheet, List<TranslateRegistryKey>> keysBySheetName = new HashMap<>();
-        logger.info("Start parsing spreadsheet to Map<GoogleSheet, List<TranslateRegistryKey>>");
+    public Map<GoogleSheet, List<GSheetTranslateRegistryKey>> parseSpreadsheet(GoogleSpreadsheet spreadsheet) {
+        Map<GoogleSheet, List<GSheetTranslateRegistryKey>> keysBySheetName = new HashMap<>();
+        logger.info("Start parsing spreadsheet to Map<GoogleSheet, List<GSheetTranslateRegistryKey>>");
 
         spreadsheet.getSheets().forEach(sheet -> keysBySheetName.put(sheet, this.parseSheet(sheet)));
 
@@ -45,13 +46,13 @@ public class TranslateRegistryKeyParser {
      * @param sheet аркуш
      * @return лист з ключами перекладу з аркуша
      */
-    public List<TranslateRegistryKey> parseSheet(GoogleSheet sheet) {
+    public List<GSheetTranslateRegistryKey> parseSheet(GoogleSheet sheet) {
         String sheetName = sheet.getSheetName();
         logger.debug(line);
-        logger.debug("Parsing to List<TranslateRegistryKey> - Sheet-name: {}", sheetName);
+        logger.debug("Parsing to List<GSheetTranslateRegistryKey> - Sheet-name: {}", sheetName);
         logger.debug(line);
 
-        List<TranslateRegistryKey> keys = new ArrayList<>();
+        List<GSheetTranslateRegistryKey> keys = new ArrayList<>();
         List<GoogleRow> rows = sheet.getRows();
         GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
 
@@ -143,7 +144,7 @@ public class TranslateRegistryKeyParser {
      * @param endColumnIndex індекс кінцевої колонки де знаходиться
      * @param keys лист з ключами перекладу
      */
-    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, LocationA1KeyBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<TranslateRegistryKey> keys) {
+    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, LocationA1KeyBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateRegistryKey> keys) {
         if (this.isValidKeyTranslate(keyBuilder.getKey(), keyBuilder.getContainerId())) { // Якщо KeyBuilder має ключ та контейнер айді зберігаємо це як ключ перекладу
             keyBuilder.sheetLocationA1(locationA1Builder // Встановлюємо локацію у таблиці
                     .endRowIndex(endRowIndex) // Встановлюємо індекс попереднього рядка як останній рядок де знаходиться ключ перекладу

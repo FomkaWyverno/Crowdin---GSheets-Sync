@@ -1,6 +1,6 @@
 package ua.wyverno.localization.model;
 
-public class CrowdinTranslateRegistryKey extends TranslateRegistryKey {
+public final class CrowdinTranslateRegistryKey extends TranslateRegistryKey {
     private final String crowdinSourceStringId;
     /**
      * Модель ключа локалізації

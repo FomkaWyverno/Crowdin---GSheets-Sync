@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.crowdin.api.sourcestrings.queries.builders.AddStringRequestBuilder;
 import ua.wyverno.google.sheets.model.GoogleSheet;
+import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslateRegistryKey;
-import ua.wyverno.localization.parsers.TranslateRegistryKeyParser;
+import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,11 @@ import java.util.stream.Collectors;
 public class SyncSheetSourceStrings {
     private final static Logger logger = LoggerFactory.getLogger(SyncSheetSourceStrings.class);
 
-    private final TranslateRegistryKeyParser parser;
+    private final GSheetTranslateRegistryKeyParser parser;
     private final CrowdinSourceStringsManager sourceStringsManager;
 
     @Autowired
-    public SyncSheetSourceStrings(TranslateRegistryKeyParser parser, CrowdinSourceStringsManager sourceStringsManager) {
+    public SyncSheetSourceStrings(GSheetTranslateRegistryKeyParser parser, CrowdinSourceStringsManager sourceStringsManager) {
         this.parser = parser;
         this.sourceStringsManager = sourceStringsManager;
     }
@@ -37,9 +38,10 @@ public class SyncSheetSourceStrings {
      */
     public SyncSheetSourceStringsResult synchronizeToSheet(FileInfo file, GoogleSheet sheet, List<SourceString> fileStrings) {
         logger.debug("Start parsing sheet.");
-        List<TranslateRegistryKey> keys = this.parser.parseSheet(sheet);
+        List<GSheetTranslateRegistryKey> keys = this.parser.parseSheet(sheet);
         logger.debug("Finding exists source strings for keys."); // Збираємо рядки які існують
-        Map<SourceString, TranslateRegistryKey> existsKeyBySourceString = this.collectExistsSourceStrings(fileStrings, keys);
+        Map<SourceString, GSheetTranslateRegistryKey> existsKeyBySourceString = this.collectExistsSourceStrings(fileStrings, keys);
+        logger.debug("Starting exists source strings synchronization.");
         logger.debug("Starting prepare AddStringRequest for missing source string."); // Підготовлюємо запит на створення рядків які пропущені
         List<AddStringRequestBuilder> preparedAddStringRequests = this.prepareRequestMissingSourceString(keys, existsKeyBySourceString, file);
 
@@ -53,7 +55,7 @@ public class SyncSheetSourceStrings {
      * @param keys ключі з аркуша
      * @return Повертає мапу де ключ це рядок у Кроудіні, значення це відповідний ключ в аркуші
      */
-    private Map<SourceString, TranslateRegistryKey> collectExistsSourceStrings(List<SourceString> fileStrings, List<TranslateRegistryKey> keys) {
+    private Map<SourceString, GSheetTranslateRegistryKey> collectExistsSourceStrings(List<SourceString> fileStrings, List<GSheetTranslateRegistryKey> keys) {
         Map<String, SourceString> stringById = fileStrings.stream()
                 .collect(Collectors.toMap(SourceString::getIdentifier, Function.identity()));
         return keys.stream()
@@ -69,12 +71,12 @@ public class SyncSheetSourceStrings {
      * @param existsKeyBySourceString рядки які існують вже в аркуші
      * @return Повертає лист з підготовленими запитами для створення рядків які відсутні
      */
-    private List<AddStringRequestBuilder> prepareRequestMissingSourceString(List<TranslateRegistryKey> keys, Map<SourceString, TranslateRegistryKey> existsKeyBySourceString, FileInfo file) {
+    private List<AddStringRequestBuilder> prepareRequestMissingSourceString(List<GSheetTranslateRegistryKey> keys, Map<SourceString, GSheetTranslateRegistryKey> existsKeyBySourceString, FileInfo file) {
         List<String> existsStringId = existsKeyBySourceString.keySet().stream()
                 .map(SourceString::getIdentifier)
                 .toList();
 
-        List<TranslateRegistryKey> missingKeys = keys.stream()
+        List<GSheetTranslateRegistryKey> missingKeys = keys.stream()
                 .filter(key -> !existsStringId.contains(key.identifier().toString()))
                 .toList();
 
