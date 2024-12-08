@@ -30,8 +30,9 @@ public class SyncCrowdinFilesService {
     /**
      * Синхронізує файли у Кроудіні
      * @param syncDirectoriesResult результат синхронізації директорій.
+     * @return Мапу де ключ це файл, а значення це аркуш який він відображає
      */
-    public void synchronizeToFiles(SyncDirectoriesResult syncDirectoriesResult) {
+    public Map<FileInfo, GoogleSheet> synchronizeToFiles(SyncDirectoriesResult syncDirectoriesResult) {
         logger.info("Staring synchronize to files in categories.");
         List<FileInfo> listFiles = this.filesManager.getListFiles();
         Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir = syncDirectoriesResult.groupingSheetByCategoryDir();
@@ -39,5 +40,6 @@ public class SyncCrowdinFilesService {
         logger.info("Cleaning no required files.");
         this.syncFilesCleaner.cleanFiles(crowdinFileToSheetMap.keySet().stream().toList(), listFiles);
         logger.info("Finish synchronize files in categories.");
+        return crowdinFileToSheetMap;
     }
 }

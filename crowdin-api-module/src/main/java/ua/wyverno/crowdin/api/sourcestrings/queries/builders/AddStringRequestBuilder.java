@@ -88,4 +88,17 @@ public class AddStringRequestBuilder {
 
         return request;
     }
+
+    @Override
+    public String toString() {
+        return "{\"AddStringRequestBuilder\":{"
+                + "\"text\":\"" + text + "\",\n"
+                + "\"fileID\":\"" + fileID + "\",\n"
+                + "\"identifier\":\"" + identifier + "\",\n"
+                + "\"context\":\"" + context + "\",\n"
+                + "\"isHidden\":\"" + isHidden + "\",\n"
+                + "\"maxLength\":\"" + maxLength + "\",\n"
+                + "\"labelIds\":" + labelIds
+                + "}}";
+    }
 }

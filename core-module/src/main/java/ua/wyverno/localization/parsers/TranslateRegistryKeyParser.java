@@ -30,7 +30,7 @@ public class TranslateRegistryKeyParser {
      * @param spreadsheet електронна таблиця
      * @return {@link Map}<{@link GoogleSheet}, {@link List}<{@link TranslateRegistryKey}>> - ключ - аркуш, значення - лист з усіма ключами перекладу у цьому аркуші
      */
-    public Map<GoogleSheet, List<TranslateRegistryKey>> parse(GoogleSpreadsheet spreadsheet) {
+    public Map<GoogleSheet, List<TranslateRegistryKey>> parseSpreadsheet(GoogleSpreadsheet spreadsheet) {
         Map<GoogleSheet, List<TranslateRegistryKey>> keysBySheetName = new HashMap<>();
         logger.info("Start parsing spreadsheet to Map<GoogleSheet, List<TranslateRegistryKey>>");
 
@@ -45,10 +45,10 @@ public class TranslateRegistryKeyParser {
      * @param sheet аркуш
      * @return лист з ключами перекладу з аркуша
      */
-    private List<TranslateRegistryKey> parseSheet(GoogleSheet sheet) {
+    public List<TranslateRegistryKey> parseSheet(GoogleSheet sheet) {
         String sheetName = sheet.getSheetName();
         logger.debug(line);
-        logger.debug("Sheet-name: {}", sheetName);
+        logger.debug("Parsing to List<TranslateRegistryKey> - Sheet-name: {}", sheetName);
         logger.debug(line);
 
         List<TranslateRegistryKey> keys = new ArrayList<>();
