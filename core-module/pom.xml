@@ -44,8 +44,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.crowdin</groupId>
-            <artifactId>crowdin-api-client-java</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
         </dependency>
 
         <dependency>
