@@ -3,6 +3,7 @@ package ua.wyverno.config;
 public class CoreConfig implements Config {
     private String crowdinToken;
     private String spreadsheetID;
+    private String languageId;
     private long projectID;
 
     protected CoreConfig() {
@@ -30,6 +31,20 @@ public class CoreConfig implements Config {
 
     public long getProjectID() {
         return projectID;
+    }
+
+    public String getLanguageId() {
+        return languageId;
+    }
+
+    protected CoreConfig setLanguageId(String languageId) {
+        this.languageId = languageId;
+        return this;
+    }
+
+    public CoreConfig setProjectID(long projectID) {
+        this.projectID = projectID;
+        return this;
     }
 
     protected void setProjectID(String projectID) {

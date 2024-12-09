@@ -98,7 +98,7 @@ public abstract class ListStringsQuery<T, Q extends ListStringsQuery<T,Q>> exten
      * @return {@link Q}
      */
     public Q croQL(String croQL) {
-        this.croQL = croQL;
+        this.croQL = URLEncoder.encode(croQL, StandardCharsets.UTF_8);
         return this.self();
     }
 

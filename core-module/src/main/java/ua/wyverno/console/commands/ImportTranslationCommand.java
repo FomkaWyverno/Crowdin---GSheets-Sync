@@ -20,6 +20,6 @@ public class ImportTranslationCommand implements Command {
     @Override
     public void execute(String[] args) {
         System.out.println("Starting importing translation.");
-        this.importTranslationService.importTranslationToCrowdin();
+        this.importTranslationService.importTranslationsToCrowdin();
     }
 }
