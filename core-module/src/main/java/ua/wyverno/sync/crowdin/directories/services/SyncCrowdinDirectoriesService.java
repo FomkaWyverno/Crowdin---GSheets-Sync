@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.directories.services;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import org.slf4j.Logger;
@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
+import ua.wyverno.sync.crowdin.directories.*;
+import ua.wyverno.sync.crowdin.directories.operations.RootDirectorySynchronizer;
+import ua.wyverno.sync.crowdin.directories.operations.SheetCategoryDirectorySynchronizer;
+import ua.wyverno.sync.crowdin.directories.results.SyncDirectoriesResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +20,20 @@ import java.util.Map;
 public class SyncCrowdinDirectoriesService {
     private static final Logger logger = LoggerFactory.getLogger(SyncCrowdinDirectoriesService.class);
 
-    private final SyncRootDirectory syncRootDirectory;
-    private final SyncSheetCategoryDirectory syncSheetCategoryDirectory;
-    private final SyncDirectoryCleaner syncDirectoryCleaner;
+    private final RootDirectorySynchronizer rootDirectorySynchronizer;
+    private final SheetCategoryDirectorySynchronizer sheetCategoryDirectorySynchronizer;
+    private final SyncDirectoryCleanerService syncDirectoryCleanerService;
 
     private final CrowdinDirectoryManager directoryManager;
 
     @Autowired
-    public SyncCrowdinDirectoriesService(SyncRootDirectory syncRootDirectory,
-                                         SyncSheetCategoryDirectory syncSheetCategoryDirectory,
-                                         SyncDirectoryCleaner syncDirectoryCleaner,
+    public SyncCrowdinDirectoriesService(RootDirectorySynchronizer rootDirectorySynchronizer,
+                                         SheetCategoryDirectorySynchronizer sheetCategoryDirectorySynchronizer,
+                                         SyncDirectoryCleanerService syncDirectoryCleanerService,
                                          CrowdinDirectoryManager directoryManager) {
-        this.syncRootDirectory = syncRootDirectory;
-        this.syncSheetCategoryDirectory = syncSheetCategoryDirectory;
-        this.syncDirectoryCleaner = syncDirectoryCleaner;
+        this.rootDirectorySynchronizer = rootDirectorySynchronizer;
+        this.sheetCategoryDirectorySynchronizer = sheetCategoryDirectorySynchronizer;
+        this.syncDirectoryCleanerService = syncDirectoryCleanerService;
 
         this.directoryManager = directoryManager;
     }
@@ -41,14 +45,14 @@ public class SyncCrowdinDirectoriesService {
         List<Directory> allDirectories = this.directoryManager.getAllDirectories();
 
         logger.info("Starting synchronization Root directory.");
-        Directory rootDirectory = this.syncRootDirectory.synchronizeRootDirAndGet(allDirectories).orElse(null);
+        Directory rootDirectory = this.rootDirectorySynchronizer.synchronizeRootDirAndGet(allDirectories).orElse(null);
         logger.info("Starting grouping sheet by Category.");
-        Map<Directory, List<GoogleSheet>> syncCategoriesMap = this.syncSheetCategoryDirectory.synchronizeToSheetCategories(spreadsheet, rootDirectory, allDirectories);
+        Map<Directory, List<GoogleSheet>> syncCategoriesMap = this.sheetCategoryDirectorySynchronizer.synchronizeToSheetCategories(spreadsheet, rootDirectory, allDirectories);
         logger.info("Starting cleaning directories.");
 
         List<Directory> requiredDirectories = new ArrayList<>(syncCategoriesMap.keySet()); // Збираємо всі потрібні директорії у один лист
         requiredDirectories.add(rootDirectory);
-        this.syncDirectoryCleaner.cleanDirectories(requiredDirectories, allDirectories);
+        this.syncDirectoryCleanerService.cleanDirectories(requiredDirectories, allDirectories);
 
         logger.info("Finish synchronization directories.");
         return new SyncDirectoriesResult(rootDirectory, syncCategoriesMap);

@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.files;
+package ua.wyverno.sync.crowdin.files.operations;
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import org.slf4j.Logger;
@@ -7,18 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.csv.parsers.GoogleSheetToCSVParser;
 import ua.wyverno.google.sheets.model.GoogleSheet;
+import ua.wyverno.sync.crowdin.files.CrowdinFilesManager;
 
 import java.util.Map;
 
 @Component
-public class SyncContentFiles {
-    private final static Logger logger = LoggerFactory.getLogger(SyncContentFiles.class);
+public class FilesContentSynchronizer {
+    private final static Logger logger = LoggerFactory.getLogger(FilesContentSynchronizer.class);
 
     private final CrowdinFilesManager filesManager;
     private final GoogleSheetToCSVParser csvParser;
 
     @Autowired
-    public SyncContentFiles(CrowdinFilesManager filesManager, GoogleSheetToCSVParser csvParser) {
+    public FilesContentSynchronizer(CrowdinFilesManager filesManager, GoogleSheetToCSVParser csvParser) {
         this.filesManager = filesManager;
         this.csvParser = csvParser;
     }

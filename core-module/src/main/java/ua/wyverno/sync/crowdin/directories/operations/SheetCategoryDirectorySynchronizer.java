@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.directories.operations;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import org.slf4j.Logger;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
+import ua.wyverno.sync.crowdin.directories.CrowdinDirectoryManager;
 
 import java.util.List;
 import java.util.Map;
@@ -16,15 +17,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
-public class SyncSheetCategoryDirectory {
-    private static final Logger logger = LoggerFactory.getLogger(SyncSheetCategoryDirectory.class);
+public class SheetCategoryDirectorySynchronizer {
+    private static final Logger logger = LoggerFactory.getLogger(SheetCategoryDirectorySynchronizer.class);
 
     private final CrowdinDirectoryManager directoryManager;
 
     private final Pattern categoryPattern = Pattern.compile("\\((.+)\\)");
 
     @Autowired
-    public SyncSheetCategoryDirectory(CrowdinDirectoryManager directoryManager) {
+    public SheetCategoryDirectorySynchronizer(CrowdinDirectoryManager directoryManager) {
         this.directoryManager = directoryManager;
     }
 
@@ -35,7 +36,7 @@ public class SyncSheetCategoryDirectory {
      * @param allDirectories всі директорії у Кроудіні
      * @return Мапу де ключ це директорія категорії, а значення це аркуші які входять в цю категорію
      */
-    protected Map<Directory, List<GoogleSheet>> synchronizeToSheetCategories(GoogleSpreadsheet spreadsheet, Directory rootDirectory, List<Directory> allDirectories) {
+    public Map<Directory, List<GoogleSheet>> synchronizeToSheetCategories(GoogleSpreadsheet spreadsheet, Directory rootDirectory, List<Directory> allDirectories) {
         Map<String, List<GoogleSheet>> groupingSheetsByCategory = this.groupingSheetsByCategory(spreadsheet);
         logger.info("Starting synchronize categories sheets.");
 

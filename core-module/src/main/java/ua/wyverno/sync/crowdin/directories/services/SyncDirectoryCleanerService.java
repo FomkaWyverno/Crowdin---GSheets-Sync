@@ -1,33 +1,33 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.directories.services;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import ua.wyverno.sync.crowdin.directories.CrowdinDirectoryManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Component
-public class SyncDirectoryCleaner {
-    private final static Logger logger = LoggerFactory.getLogger(SyncDirectoryCleaner.class);
+@Service
+public class SyncDirectoryCleanerService {
+    private final static Logger logger = LoggerFactory.getLogger(SyncDirectoryCleanerService.class);
 
     private final CrowdinDirectoryManager directoryManager;
 
     private final BufferedReader reader;
 
     @Autowired
-    public SyncDirectoryCleaner(CrowdinDirectoryManager directoryManager) {
+    public SyncDirectoryCleanerService(CrowdinDirectoryManager directoryManager) {
         this.directoryManager = directoryManager;
 
         this.reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    protected void cleanDirectories(List<Directory> requiredDirectories, List<Directory> allDirectories) {
+    public void cleanDirectories(List<Directory> requiredDirectories, List<Directory> allDirectories) {
         List<String> requiredDirPaths = requiredDirectories.stream().map(Directory::getPath).toList();
         List<Directory> noRequiredDirs = allDirectories.stream()
                 .filter(directory -> !requiredDirPaths.contains(directory.getPath()))

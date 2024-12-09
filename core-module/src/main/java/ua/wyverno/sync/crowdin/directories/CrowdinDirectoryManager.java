@@ -39,7 +39,7 @@ public class CrowdinDirectoryManager {
      * Збирає лист з усіма директоріями у проєкті
      * @return Лист з усіма директоріями у проєкті
      */
-    protected List<Directory> getAllDirectories() {
+    public List<Directory> getAllDirectories() {
         return this.crowdinService.directories()
                 .list(this.projectId)
                 .execute();
@@ -52,7 +52,7 @@ public class CrowdinDirectoryManager {
      * @param directoryTitle заголовок директорії може бути null, щоб не встановлювати загаловок
      * @return {@link Directory} створена директорія на Кроудіні
      */
-    protected Directory createDirectory(@Nullable Long directoryId, String directoryName, @Nullable String directoryTitle) {
+    public Directory createDirectory(@Nullable Long directoryId, String directoryName, @Nullable String directoryTitle) {
         Objects.requireNonNull(directoryName, "Directory name can't be null!");
         logger.debug("Creating directories: {}, Title: {}, in directoryId: {}", directoryName, directoryTitle, directoryId);
         return this.crowdinService.directories() // Створюємо директорію у Кроудіні
@@ -63,7 +63,7 @@ public class CrowdinDirectoryManager {
                 .execute();
     }
 
-    protected Directory editDirectory(Long directoryId, List<PatchDirRequestBuilder> patchDirRequests) {
+    public Directory editDirectory(Long directoryId, List<PatchDirRequestBuilder> patchDirRequests) {
         try {
             logger.debug("Edit directory with request: {}",this.mapper.writeValueAsString(patchDirRequests));
         } catch (JsonProcessingException e) {
@@ -76,7 +76,7 @@ public class CrowdinDirectoryManager {
         return query.execute();
     }
 
-    protected boolean deleteDirectory(Directory directory) {
+    public boolean deleteDirectory(Directory directory) {
         return this.crowdinService.directories()
                 .deleteDirectory(this.projectId)
                 .directoryID(directory.getId())

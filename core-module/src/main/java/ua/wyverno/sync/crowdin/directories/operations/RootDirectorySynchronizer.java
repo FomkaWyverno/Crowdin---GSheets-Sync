@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.directories.operations;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import ua.wyverno.config.SyncConfig;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.EditDirPath;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.PatchDirRequestBuilder;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
+import ua.wyverno.sync.crowdin.directories.CrowdinDirectoryManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,15 +18,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-public class SyncRootDirectory {
-    private static final Logger logger = LoggerFactory.getLogger(SyncRootDirectory.class);
+public class RootDirectorySynchronizer {
+    private static final Logger logger = LoggerFactory.getLogger(RootDirectorySynchronizer.class);
 
     private final CrowdinDirectoryManager directoryManager;
 
     private final SyncConfig syncConfig;
 
     @Autowired
-    public SyncRootDirectory(CrowdinDirectoryManager directoryManager, ConfigLoader configLoader) {
+    public RootDirectorySynchronizer(CrowdinDirectoryManager directoryManager, ConfigLoader configLoader) {
         this.directoryManager = directoryManager;
         this.syncConfig = configLoader.getSyncConfig();
     }
@@ -34,7 +35,7 @@ public class SyncRootDirectory {
      * Синхронізує кореневу директорію
      * @return повертає Optional з кореневою директорію, якщо у конфігурації не налаштована коренева директорія, то поверне порожній Optional
      */
-    protected Optional<Directory> synchronizeRootDirAndGet(List<Directory> allDirectories) {
+    public Optional<Directory> synchronizeRootDirAndGet(List<Directory> allDirectories) {
         String crowdinDirRootName = this.syncConfig.getCrowdinDirectoryRoot();
         if (Objects.nonNull(crowdinDirRootName) && !crowdinDirRootName.isEmpty()) {
             logger.debug("Start synchronization Crowdin Root Directory with Title.");

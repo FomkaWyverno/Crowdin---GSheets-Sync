@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.directories.results;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import ua.wyverno.google.sheets.model.GoogleSheet;

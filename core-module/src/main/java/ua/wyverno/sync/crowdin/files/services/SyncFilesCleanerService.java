@@ -1,25 +1,26 @@
-package ua.wyverno.sync.crowdin.files;
+package ua.wyverno.sync.crowdin.files.services;
 
 import com.crowdin.client.sourcefiles.model.FileInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import ua.wyverno.sync.crowdin.files.CrowdinFilesManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-@Component
-public class SyncFilesCleaner {
-    private final static Logger logger = LoggerFactory.getLogger(SyncFilesCleaner.class);
+@Service
+public class SyncFilesCleanerService {
+    private final static Logger logger = LoggerFactory.getLogger(SyncFilesCleanerService.class);
 
     private final CrowdinFilesManager filesManager;
     private final BufferedReader reader;
 
     @Autowired
-    public SyncFilesCleaner(CrowdinFilesManager filesManager) {
+    public SyncFilesCleanerService(CrowdinFilesManager filesManager) {
         this.filesManager = filesManager;
         this.reader = new BufferedReader(new InputStreamReader(System.in));
     }
