@@ -66,6 +66,8 @@ public class CrowdinTranslationService {
         return this.crowdinService.string_translations()
                 .listLanguageTranslations(this.projectId)
                 .languageId(this.languageId)
+                .maxResults(1)
+                .limitAPI(1)
                 .stringIds(sourceString.getId().toString())
                 .approvedOnly(true)
                 .execute().isEmpty();

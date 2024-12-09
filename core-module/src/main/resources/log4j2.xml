@@ -36,7 +36,7 @@
         <Logger name="ua.wyverno.localization.parsers"
                 level="INFO"/>
         <Logger name="ua.wyverno.sync.translation"
-                level="INFO"/>
+                level="TRACE"/>
         <Root level="INFO">
             <AppenderRef ref="console"/>
             <AppenderRef ref="file_log"/>
