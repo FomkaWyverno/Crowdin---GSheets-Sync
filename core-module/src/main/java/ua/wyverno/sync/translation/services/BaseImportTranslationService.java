@@ -1,48 +1,44 @@
-package ua.wyverno.sync.translation;
+package ua.wyverno.sync.translation.services;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import com.crowdin.client.stringtranslations.model.LanguageTranslations;
 import com.crowdin.client.stringtranslations.model.StringTranslation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslateRegistryKey;
+import ua.wyverno.sync.translation.managers.CrowdinTranslationManager;
+import ua.wyverno.sync.translation.managers.GoogleSheetsTranslationManager;
 import ua.wyverno.sync.translation.utils.LanguageTranslationsUtils;
 import ua.wyverno.utils.json.JSONCreator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Service
-public class ImportTranslationService {
-    private final static Logger logger = LoggerFactory.getLogger(ImportTranslationService.class);
+public abstract class BaseImportTranslationService {
+    private final static Logger logger = LoggerFactory.getLogger(BaseImportTranslationService.class);
 
-    private final GoogleSheetsTranslationService sheetsTranslationService;
-    private final CrowdinTranslationService translationService;
+    private final GoogleSheetsTranslationManager sheetsTranslationService;
+    private final CrowdinTranslationManager translationService;
     private final LanguageTranslationsUtils translationsUtils;
     private final JSONCreator jsonCreator;
 
-    // Встановлюємо 20 максимальних одночасних запитів, щоб вписатися у ліміт до Crowdin API, для прискорення запису перекладів
-    private final static int NUMBER_SIMULTANEOUS_REQUESTS = 20;
-
-    @Autowired
-    public ImportTranslationService(GoogleSheetsTranslationService sheetsTranslationService,
-                                    CrowdinTranslationService translationService,
-                                    LanguageTranslationsUtils translationsUtils,
-                                    JSONCreator jsonCreator) {
+    public BaseImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationService,
+                                        CrowdinTranslationManager translationService,
+                                        LanguageTranslationsUtils translationsUtils,
+                                        JSONCreator jsonCreator) {
         this.sheetsTranslationService = sheetsTranslationService;
         this.translationService = translationService;
         this.translationsUtils = translationsUtils;
         this.jsonCreator = jsonCreator;
     }
 
+    /**
+     * Імпортує переклад з таблиці до Кроудіна.<br/>
+     * Залежно від реалізації {@link #processImport(List, Map, AtomicInteger)} processImport(List, Map, AtomicInteger)} успадкованого класса
+     * буде певним чином відбуватись імпорт перекладу.
+     */
     public void importTranslationsToCrowdin() {
         logger.info("Downloading and parsing sheet keys...");
         Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById = this.sheetsTranslationService.getTranslationsKeys();
@@ -53,7 +49,8 @@ public class ImportTranslationService {
 
         long startImportMs = System.currentTimeMillis();
 
-        this.asyncImportTranslationToCrowdin(sourceStrings, mapGSheetKeysById);
+        AtomicInteger counter = new AtomicInteger(0);
+        this.processImport(sourceStrings, mapGSheetKeysById, counter);
 
         long endImportMs = System.currentTimeMillis();
         logger.info("Total time for import: {}ms", endImportMs - startImportMs);
@@ -97,46 +94,30 @@ public class ImportTranslationService {
     }
 
     /**
-     * Асинхроний імпорт перекладу у Кроудін
-     * @param sourceStrings лист вихідних рядків з Кроудіна
+     * Процес імпорту який має бути реалізований в успадкованому класі.<br/>
+     * Після модифікацій з параметрами - потрібно викликати {@link BaseImportTranslationService#importTranslations(List, Map, AtomicInteger, int)}, щоб запустити імпорт перекладу
+     * @param sourceStrings лист з вихідними рядками які потрібно імпортувати переклад
      * @param mapGSheetKeysById мапа де ключ це Айді, а значення ключ перекладу з Аркуша
+     * @param counter Атомарний лічильник, для асинхронного лічильника
+     * @param sizeSourceStrings загальна кількість вихідних рядків, потрібно вказати, через те, що цей метод може виконуватись асинхронно, одразу великий пакет
      */
-    private void asyncImportTranslationToCrowdin(List<SourceString> sourceStrings,
-                                                 Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById) {
-        // Створюємо Тред-Пул на максимальну кількість одночасних запитів до Crowdin API
-        try (ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_SIMULTANEOUS_REQUESTS)) {
-            // Спільний лічильник прогресу
-            AtomicInteger counter = new AtomicInteger(0);
-            // Розбиваємо список на максимальну кількість запитів до Crowdin API
-            int batchSize = (int) Math.ceil((double) sourceStrings.size() / NUMBER_SIMULTANEOUS_REQUESTS);
-            // Ділимо один запит на кількість максимально одночасних запитів
-            List<List<SourceString>> batches = this.splitList(sourceStrings, batchSize);
-            // Запускаємо завдання на імпорт перекладу
-            List<CompletableFuture<Void>> futures = batches.stream()
-                    .map(batch -> // Створюємо завдання для виконання всього імпорту
-                            CompletableFuture.runAsync(() ->
-                                    this.processBatch(batch,
-                                            mapGSheetKeysById,
-                                            counter,
-                                            sourceStrings.size()), executorService))
-                    .toList();
-
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        }
-    }
+    protected abstract void processImport(List<SourceString> sourceStrings,
+                                       Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                       AtomicInteger counter);
 
     /**
-     * Виконання однієї партії імпорту
-     * @param batch партія для імпорту
+     * Імпорт певних вихідних рядків.<br/>
+     * Потрібно цей метод викликати з {@link BaseImportTranslationService#processImport(List, Map, AtomicInteger)}, щоб запустити процес імпорту
+     * @param sourceStrings лист з рядками для яких потрібно імпортувати переклад
      * @param mapGSheetKeysById мапа де ключ це Айді, а значення ключ перекладу з Аркуша
-     * @param counter лічильник
-     * @param sizeSourceStrings загальна кількість вихідних рядків
+     * @param counter Атомарний лічильник, для асинхронного лічильника
+     * @param sizeSourceStrings загальна кількість вихідних рядків, потрібно вказати, через те, що цей метод може виконуватись асинхронно, одразу великий пакет
      */
-    private void processBatch(List<SourceString> batch,
-                              Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
-                              AtomicInteger counter,
-                              final int sizeSourceStrings) {
-        batch.forEach(string -> {
+    protected void importTranslations(List<SourceString> sourceStrings,
+                                      Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                      AtomicInteger counter,
+                                      final int sizeSourceStrings) {
+        sourceStrings.forEach(string -> {
             try {
                 if (mapGSheetKeysById.containsKey(string.getIdentifier())) {
                     this.importTranslation(string, mapGSheetKeysById.get(string.getIdentifier()));
@@ -153,14 +134,5 @@ public class ImportTranslationService {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    private List<List<SourceString>> splitList(List<SourceString> list, int batchSize) {
-        int totalSize = list.size();
-        List<List<SourceString>> batches = new ArrayList<>();
-        for (int i = 0; i < totalSize; i += batchSize) {
-            batches.add(list.subList(i, Math.min(i + batchSize, totalSize)));
-        }
-        return batches;
     }
 }

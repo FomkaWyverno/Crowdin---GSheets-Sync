@@ -1,9 +1,9 @@
-package ua.wyverno.sync.translation;
+package ua.wyverno.sync.translation.managers;
 
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSheet;
@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
-public class GoogleSheetsTranslationService {
+@Component
+public class GoogleSheetsTranslationManager {
 
     private final GoogleSheetsService sheetsService;
     private final SynchronizeSheetManager sheetManager;
@@ -30,7 +30,7 @@ public class GoogleSheetsTranslationService {
     private final String spreadsheetId;
 
     @Autowired
-    public GoogleSheetsTranslationService(GoogleSheetsService sheetsService,
+    public GoogleSheetsTranslationManager(GoogleSheetsService sheetsService,
                                           SynchronizeSheetManager sheetManager,
                                           GSheetTranslateRegistryKeyParser sheetParser,
                                           JSONCreator jsonCreator,
@@ -47,7 +47,7 @@ public class GoogleSheetsTranslationService {
      *
      * @return Мапа де ключ це айді ключа, а значення сам ключ перекладу
      */
-    protected Map<String, GSheetTranslateRegistryKey> getTranslationsKeys() {
+    public Map<String, GSheetTranslateRegistryKey> getTranslationsKeys() {
         try {
             Spreadsheet spreadsheet = this.sheetsService.getSpreadsheetMetadata(this.spreadsheetId);
             List<Sheet> sheets = spreadsheet.getSheets().stream() // Фільтруємо всі аркуші які повині пропустити

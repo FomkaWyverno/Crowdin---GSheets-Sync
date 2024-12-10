@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.console.Command;
 import ua.wyverno.console.ConsoleCommand;
-import ua.wyverno.sync.translation.ImportTranslationService;
+import ua.wyverno.sync.translation.services.ImportTranslationService;
 
-@ConsoleCommand(command = "/import-translation", description = "Importing translation from sheets to Crowdin")
+@ConsoleCommand(command = "/import", description = "Import translation from Google Sheets to Crowdin in one thread")
 @Component
 public class ImportTranslationCommand implements Command {
 
@@ -19,7 +19,7 @@ public class ImportTranslationCommand implements Command {
 
     @Override
     public void execute(String[] args) {
-        System.out.println("Starting importing translation.");
+        System.out.println("Starting importing translation in one thread.");
         this.importTranslationService.importTranslationsToCrowdin();
     }
 }
