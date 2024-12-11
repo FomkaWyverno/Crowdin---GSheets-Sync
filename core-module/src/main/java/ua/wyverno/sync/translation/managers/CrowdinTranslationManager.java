@@ -46,31 +46,22 @@ public class CrowdinTranslationManager {
      * @param sourceString вихідний рядок
      * @return лист з перекладами
      */
-    public List<LanguageTranslations> getTranslations(SourceString sourceString) {
+    public List<StringTranslation> getTranslationsForString(SourceString sourceString) {
         logger.trace("Getting Translations for: {}", sourceString.getIdentifier());
         return this.crowdinService.string_translations()
-                .listLanguageTranslations(this.projectId)
-                .stringIds(sourceString.getId().toString())
+                .listTranslation(this.projectId)
+                .stringId(sourceString.getId())
                 .languageId(this.languageId)
                 .execute();
     }
 
-    /**
-     * Перевіряє чи у Вихідного рядка є затверджений переклад
-     *
-     * @param sourceString вихідний рядок
-     * @return якщо є затверджений переклад поверне true, якщо немає затвердженого перекладу поверне false
-     */
-    public boolean noApprovalString(SourceString sourceString) {
-        logger.trace("Checking for no approve source string: {}", sourceString.getIdentifier());
+    public List<LanguageTranslations> getApprovalTranslations() {
+        logger.trace("Getting list approvals from Crowdin Project.");
         return this.crowdinService.string_translations()
                 .listLanguageTranslations(this.projectId)
                 .languageId(this.languageId)
-                .maxResults(1)
-                .limitAPI(1)
-                .stringIds(sourceString.getId().toString())
-                .approvedOnly(true)
-                .execute().isEmpty();
+                .croql("count of approvals > 0")
+                .execute();
     }
 
     /**

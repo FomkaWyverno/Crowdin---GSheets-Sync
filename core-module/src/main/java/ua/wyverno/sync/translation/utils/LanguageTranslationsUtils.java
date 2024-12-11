@@ -1,14 +1,14 @@
 package ua.wyverno.sync.translation.utils;
 
-import com.crowdin.client.stringtranslations.model.ICULanguageTranslations;
-import com.crowdin.client.stringtranslations.model.LanguageTranslations;
-import com.crowdin.client.stringtranslations.model.PlainLanguageTranslations;
-import com.crowdin.client.stringtranslations.model.PluralLanguageTranslations;
+import com.crowdin.client.stringtranslations.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.utils.json.JSONCreator;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class LanguageTranslationsUtils {
@@ -44,6 +44,29 @@ public class LanguageTranslationsUtils {
 
     }
 
+    /**
+     * Повертає айді вихідного з LanguageTranslations
+     * @param translation переклад
+     * @return айді перекладу
+     */
+    public long getStringId(LanguageTranslations translation) {
+        if (translation instanceof PlainLanguageTranslations plainTranslation)
+            return plainTranslation.getStringId();
+        if (translation instanceof ICULanguageTranslations icuTranslation)
+            return icuTranslation.getStringId();
+        if (translation instanceof PluralLanguageTranslations pluralTranslation) {
+            throw new UnsupportedOperationException(
+                    "PluralLanguageTranslations unsupported class for matches translation!\nJSON: "
+                            + this.jsonCreator.toJSON(pluralTranslation));
+        }
+
+        String messageError = String.format("Unsupported translations: %s%nJSON: %s",
+                translation.getClass().getName(),
+                this.jsonCreator.toJSON(translation));
+        throw new IllegalStateException(messageError);
+
+    }
+
     public String getTranslation(LanguageTranslations translation) {
         if (translation instanceof PlainLanguageTranslations plainTranslation)
             return plainTranslation.getText();
@@ -59,13 +82,24 @@ public class LanguageTranslationsUtils {
     }
 
     /**
+     * Перетворює лист з перекладами, на лист з айді вихідних рядків цих перекладів
+     * @param translationsList лист перекладів
+     * @return Повертає множину з айді вихідних рядків, листа перекладів який був переданий у цей метод
+     */
+    public Set<Long> listTranslationsToStringId(List<LanguageTranslations> translationsList) {
+        return translationsList.stream()
+                .map(this::getStringId)
+                .collect(Collectors.toSet());
+    }
+
+    /**
      * Шукає переклад у Кроудіні, якщо існує повертає його, якщо ні поверне null
      *
      * @param crowdinTranslations переклади для одного вихідного рядка
      * @param sheetTranslation    переклад у аркуші
-     * @return {@link LanguageTranslations} якщо був знайдений поверне переклад, Кроудіна, якщо не існує поверне null
+     * @return {@link StringTranslation} якщо був знайдений поверне переклад, Кроудіна, якщо не існує поверне null
      */
-    public LanguageTranslations findCrowdinTranslation(List<LanguageTranslations> crowdinTranslations, String sheetTranslation) {
+    public StringTranslation findCrowdinTranslation(List<StringTranslation> crowdinTranslations, String sheetTranslation) {
         if (crowdinTranslations.isEmpty()) return null; // Якщо перекладів для цього рядка не існує, тоді повертає false
         return crowdinTranslations.stream()
                 .filter(translation -> this.matchesTranslation(sheetTranslation, translation))
@@ -79,18 +113,7 @@ public class LanguageTranslationsUtils {
      * @param crowdinTranslation переклад з Кроудіна
      * @return true якщо переклад однаковий, інакше false
      */
-    private boolean matchesTranslation(String sheetTranslation, LanguageTranslations crowdinTranslation) {
-        if (crowdinTranslation instanceof PlainLanguageTranslations plainTranslation) {
-            return plainTranslation.getText().equals(sheetTranslation);
-        }
-        if (crowdinTranslation instanceof ICULanguageTranslations icuTranslation) {
-            return icuTranslation.getText().equals(sheetTranslation);
-        }
-        if (crowdinTranslation instanceof PluralLanguageTranslations pluralTranslations) {
-            throw new UnsupportedOperationException(
-                    "PluralLanguageTranslations unsupported class for matches translation!\nJSON: "
-                            + this.jsonCreator.toJSON(pluralTranslations));
-        }
-        return false;
+    private boolean matchesTranslation(String sheetTranslation, StringTranslation crowdinTranslation) {
+        return crowdinTranslation.getText().equals(sheetTranslation);
     }
 }

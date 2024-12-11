@@ -10,118 +10,148 @@ import ua.wyverno.localization.model.TranslateRegistryKey;
 import ua.wyverno.sync.translation.managers.CrowdinTranslationManager;
 import ua.wyverno.sync.translation.managers.GoogleSheetsTranslationManager;
 import ua.wyverno.sync.translation.utils.LanguageTranslationsUtils;
+import ua.wyverno.utils.execution.ExecutionTimer;
+import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseImportTranslationService {
     private final static Logger logger = LoggerFactory.getLogger(BaseImportTranslationService.class);
 
-    private final GoogleSheetsTranslationManager sheetsTranslationService;
-    private final CrowdinTranslationManager translationService;
+    private final GoogleSheetsTranslationManager sheetsTranslationManager;
+    private final CrowdinTranslationManager translationManager;
     private final LanguageTranslationsUtils translationsUtils;
+    private final ExecutionTimerFactory executionTimerFactory;
     private final JSONCreator jsonCreator;
 
-    public BaseImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationService,
-                                        CrowdinTranslationManager translationService,
+    public BaseImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationManager,
+                                        CrowdinTranslationManager translationManager,
                                         LanguageTranslationsUtils translationsUtils,
+                                        ExecutionTimerFactory executionTimerFactory,
                                         JSONCreator jsonCreator) {
-        this.sheetsTranslationService = sheetsTranslationService;
-        this.translationService = translationService;
+        this.sheetsTranslationManager = sheetsTranslationManager;
+        this.translationManager = translationManager;
         this.translationsUtils = translationsUtils;
+        this.executionTimerFactory = executionTimerFactory;
         this.jsonCreator = jsonCreator;
     }
 
     /**
      * Імпортує переклад з таблиці до Кроудіна.<br/>
-     * Залежно від реалізації {@link #processImport(List, Map, AtomicInteger)} processImport(List, Map, AtomicInteger)} успадкованого класса
+     * Залежно від реалізації {@link #processImport(List, Map, AtomicInteger, Set)} processImport(List, Map, AtomicInteger)} успадкованого класса
      * буде певним чином відбуватись імпорт перекладу.
      */
     public void importTranslationsToCrowdin() {
         logger.info("Downloading and parsing sheet keys...");
-        Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById = this.sheetsTranslationService.getTranslationsKeys();
+        ExecutionTimer timerDownload = this.executionTimerFactory.createTimer();
+        timerDownload.start();
+        Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById = this.sheetsTranslationManager.getTranslationsKeys();
+        timerDownload.end();
+        logger.info("Downloaded and parsed sheet keys. Total time: {}.", timerDownload.getDetailFormattedDuration());
+
         logger.info("Getting all source strings.");
-        List<SourceString> sourceStrings = this.translationService.getListSourceString();
-        logger.info("Got all the Source Strings, the number of: {}.", sourceStrings.size());
+        ExecutionTimer stringsGetTimer = this.executionTimerFactory.createTimer();
+        stringsGetTimer.start();
+        List<SourceString> sourceStrings = this.translationManager.getListSourceString();
+        stringsGetTimer.end();
+        logger.info("Got all the Source Strings, the number of: {}. Total time: {}.", sourceStrings.size(), stringsGetTimer.getDetailFormattedDuration());
+
+
+        logger.info("Getting all approve translations in Crowdin project.");
+        ExecutionTimer approveTimer = this.executionTimerFactory.createTimer();
+        approveTimer.start();
+        List<LanguageTranslations> approveTranslations = this.translationManager.getApprovalTranslations();
+        approveTimer.end();
+        logger.info("Converting list with an approved translation to a Set with the StringId of these translations.\n" +
+                "Total time: {}", approveTimer.getDetailFormattedDuration());
+
+
+        Set<Long> approveStringIds = this.translationsUtils.listTranslationsToStringId(approveTranslations);
+        logger.info("Converted approve translations to Set with StringId. Size: {}", approveStringIds.size());
         logger.info("Importing translation.");
 
-        long startImportMs = System.currentTimeMillis();
-
+        ExecutionTimer importTimer = this.executionTimerFactory.createTimer();
+        importTimer.start();
         AtomicInteger counter = new AtomicInteger(0);
-        this.processImport(sourceStrings, mapGSheetKeysById, counter);
-
-        long endImportMs = System.currentTimeMillis();
-        logger.info("Total time for import: {}ms", endImportMs - startImportMs);
+        this.processImport(sourceStrings, mapGSheetKeysById, counter, approveStringIds);
+        importTimer.end();
+        logger.info("Total time for import: {}.", importTimer.getDetailFormattedDuration());
     }
 
     /**
      * Імпорт певного перекладу
      * @param sourceString вихідний рядок
      * @param key ключ перекладу з Аркуша
+     * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
-    private void importTranslation(SourceString sourceString, TranslateRegistryKey key) {
+    private void importTranslation(SourceString sourceString, TranslateRegistryKey key, Set<Long> approveStringIds) {
         if (key.translate().isEmpty()) {
             logger.trace("Translation not found in Sheet for SourceString: {}.", sourceString.getIdentifier());
             return;
         }
-        List<LanguageTranslations> translations = this.translationService.getTranslations(sourceString);
-        LanguageTranslations crowdinTranslation = this.translationsUtils.findCrowdinTranslation(translations, key.translate());
+        List<StringTranslation> translations = this.translationManager.getTranslationsForString(sourceString);
+        StringTranslation crowdinTranslation = this.translationsUtils.findCrowdinTranslation(translations, key.translate());
         if (crowdinTranslation != null) {
             if (!key.isApprove()) {
                 logger.trace("{} - already has translation, but not have approve.", sourceString.getIdentifier());
                 return;
             }
-            if (this.translationService.noApprovalString(sourceString)) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
+            if (!approveStringIds.contains(sourceString.getId())) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
                 logger.trace("Adding approve for: {} Approved: {}",
                         sourceString.getIdentifier(),
-                        this.translationsUtils.getTranslation(crowdinTranslation));
-                this.translationService.addApproveTranslation(this.translationsUtils.getTranslationId(crowdinTranslation));
+                        crowdinTranslation.getText());
+                this.translationManager.addApproveTranslation(crowdinTranslation.getId());
             } else {
                 logger.trace("{} - Already has approval.", sourceString.getIdentifier());
             }
             return;
         }
         logger.trace("Creating translation for: {}, Translation: {}", sourceString.getIdentifier(), key.translate());
-        StringTranslation stringTranslation = this.translationService.addTranslation(sourceString, key.translate());
+        StringTranslation stringTranslation = this.translationManager.addTranslation(sourceString, key.translate());
         if (key.isApprove()) {
-            if (this.translationService.noApprovalString(sourceString)) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
+            if (!approveStringIds.contains(sourceString.getId())) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
                 logger.trace("Approving translation: {}, Translation: {}", sourceString.getIdentifier(), key.translate());
-                this.translationService.addApproveTranslation(stringTranslation.getId());
+                this.translationManager.addApproveTranslation(stringTranslation.getId());
             }
         }
     }
 
     /**
      * Процес імпорту який має бути реалізований в успадкованому класі.<br/>
-     * Після модифікацій з параметрами - потрібно викликати {@link BaseImportTranslationService#importTranslations(List, Map, AtomicInteger, int)}, щоб запустити імпорт перекладу
+     * Після модифікацій з параметрами - потрібно викликати {@link BaseImportTranslationService#importTranslations(List, Map, AtomicInteger, Set, int)}, щоб запустити імпорт перекладу
      * @param sourceStrings лист з вихідними рядками які потрібно імпортувати переклад
      * @param mapGSheetKeysById мапа де ключ це Айді, а значення ключ перекладу з Аркуша
      * @param counter Атомарний лічильник, для асинхронного лічильника
-     * @param sizeSourceStrings загальна кількість вихідних рядків, потрібно вказати, через те, що цей метод може виконуватись асинхронно, одразу великий пакет
+     * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     protected abstract void processImport(List<SourceString> sourceStrings,
-                                       Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
-                                       AtomicInteger counter);
+                                          Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                          AtomicInteger counter,
+                                          Set<Long> approveStringIds);
 
     /**
      * Імпорт певних вихідних рядків.<br/>
-     * Потрібно цей метод викликати з {@link BaseImportTranslationService#processImport(List, Map, AtomicInteger)}, щоб запустити процес імпорту
+     * Потрібно цей метод викликати з {@link BaseImportTranslationService#processImport(List, Map, AtomicInteger, Set)}, щоб запустити процес імпорту
      * @param sourceStrings лист з рядками для яких потрібно імпортувати переклад
      * @param mapGSheetKeysById мапа де ключ це Айді, а значення ключ перекладу з Аркуша
      * @param counter Атомарний лічильник, для асинхронного лічильника
      * @param sizeSourceStrings загальна кількість вихідних рядків, потрібно вказати, через те, що цей метод може виконуватись асинхронно, одразу великий пакет
+     * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     protected void importTranslations(List<SourceString> sourceStrings,
                                       Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
                                       AtomicInteger counter,
+                                      Set<Long> approveStringIds,
                                       final int sizeSourceStrings) {
         sourceStrings.forEach(string -> {
             try {
                 if (mapGSheetKeysById.containsKey(string.getIdentifier())) {
-                    this.importTranslation(string, mapGSheetKeysById.get(string.getIdentifier()));
-                    logger.info("Imported: {} Remaining: {}/{}",
+                    this.importTranslation(string, mapGSheetKeysById.get(string.getIdentifier()), approveStringIds);
+                    logger.info("Processed: {} Remaining: {}/{}",
                             string.getIdentifier(),
                             counter.incrementAndGet(),
                             sizeSourceStrings);

@@ -8,11 +8,14 @@ import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.sync.translation.managers.CrowdinTranslationManager;
 import ua.wyverno.sync.translation.managers.GoogleSheetsTranslationManager;
 import ua.wyverno.sync.translation.utils.LanguageTranslationsUtils;
+import ua.wyverno.utils.execution.ExecutionTimer;
+import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,8 +38,9 @@ public class AsyncImportTranslationService extends BaseImportTranslationService 
     public AsyncImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationService,
                                          CrowdinTranslationManager translationService,
                                          LanguageTranslationsUtils translationsUtils,
+                                         ExecutionTimerFactory executionTimerFactory,
                                          JSONCreator jsonCreator) {
-        super(sheetsTranslationService, translationService, translationsUtils, jsonCreator);
+        super(sheetsTranslationService, translationService, translationsUtils, executionTimerFactory, jsonCreator);
     }
 
     /**
@@ -46,9 +50,13 @@ public class AsyncImportTranslationService extends BaseImportTranslationService 
      * @param sourceStrings лист з вихідними рядками які потрібно імпортувати переклад
      * @param mapGSheetKeysById мапа де ключ це Айді, а значення ключ перекладу з Аркуша
      * @param counter Атомарний лічильник, для асинхронного лічильника
+     * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     @Override
-    protected void processImport(List<SourceString> sourceStrings, Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById, AtomicInteger counter) {
+    protected void processImport(List<SourceString> sourceStrings,
+                                 Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                 AtomicInteger counter,
+                                 Set<Long> approveStringIds) {
 
         // Рахуємо розмір однієї партії
         int batchSize = (int) Math.ceil((double) sourceStrings.size() / MAX_PARALLEL_CALLS_API);
@@ -64,6 +72,7 @@ public class AsyncImportTranslationService extends BaseImportTranslationService 
                                             batch,
                                             mapGSheetKeysById,
                                             counter,
+                                            approveStringIds,
                                             sourceStrings.size()), executor))
                     .toList();
             // Очікуємо виконання всіх асинхронного виконання
