@@ -10,7 +10,7 @@ import ua.wyverno.config.SyncConfig;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.EditDirPath;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.PatchDirRequestBuilder;
 import ua.wyverno.crowdin.api.util.edit.PatchEditOperation;
-import ua.wyverno.sync.crowdin.directories.CrowdinDirectoryManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinDirectorySyncManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,12 +21,12 @@ import java.util.Optional;
 public class RootDirectorySynchronizer {
     private static final Logger logger = LoggerFactory.getLogger(RootDirectorySynchronizer.class);
 
-    private final CrowdinDirectoryManager directoryManager;
+    private final CrowdinDirectorySyncManager directoryManager;
 
     private final SyncConfig syncConfig;
 
     @Autowired
-    public RootDirectorySynchronizer(CrowdinDirectoryManager directoryManager, ConfigLoader configLoader) {
+    public RootDirectorySynchronizer(CrowdinDirectorySyncManager directoryManager, ConfigLoader configLoader) {
         this.directoryManager = directoryManager;
         this.syncConfig = configLoader.getSyncConfig();
     }

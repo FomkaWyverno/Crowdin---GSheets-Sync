@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.csv.parsers.GoogleSheetToCSVParser;
 import ua.wyverno.google.sheets.model.GoogleSheet;
-import ua.wyverno.sync.crowdin.files.CrowdinFilesManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinFilesSyncManager;
 
 import java.util.Map;
 
@@ -15,11 +15,11 @@ import java.util.Map;
 public class FilesContentSynchronizer {
     private final static Logger logger = LoggerFactory.getLogger(FilesContentSynchronizer.class);
 
-    private final CrowdinFilesManager filesManager;
+    private final CrowdinFilesSyncManager filesManager;
     private final GoogleSheetToCSVParser csvParser;
 
     @Autowired
-    public FilesContentSynchronizer(CrowdinFilesManager filesManager, GoogleSheetToCSVParser csvParser) {
+    public FilesContentSynchronizer(CrowdinFilesSyncManager filesManager, GoogleSheetToCSVParser csvParser) {
         this.filesManager = filesManager;
         this.csvParser = csvParser;
     }

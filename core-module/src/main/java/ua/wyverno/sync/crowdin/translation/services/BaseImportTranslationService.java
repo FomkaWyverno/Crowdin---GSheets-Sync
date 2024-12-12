@@ -1,4 +1,4 @@
-package ua.wyverno.sync.translation.services;
+package ua.wyverno.sync.crowdin.translation.services;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import com.crowdin.client.stringtranslations.model.LanguageTranslations;
@@ -7,9 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslateRegistryKey;
-import ua.wyverno.sync.translation.managers.CrowdinTranslationManager;
-import ua.wyverno.sync.translation.managers.GoogleSheetsTranslationManager;
-import ua.wyverno.sync.translation.utils.LanguageTranslationsUtils;
+import ua.wyverno.sync.crowdin.managers.CrowdinStringsSyncManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinTranslationSyncManager;
+import ua.wyverno.sync.crowdin.translation.GoogleSheetsTranslationManager;
+import ua.wyverno.sync.crowdin.translation.utils.LanguageTranslationsUtils;
 import ua.wyverno.utils.execution.ExecutionTimer;
 import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
@@ -23,18 +24,21 @@ public abstract class BaseImportTranslationService {
     private final static Logger logger = LoggerFactory.getLogger(BaseImportTranslationService.class);
 
     private final GoogleSheetsTranslationManager sheetsTranslationManager;
-    private final CrowdinTranslationManager translationManager;
+    private final CrowdinTranslationSyncManager translationManager;
+    private final CrowdinStringsSyncManager stringsManager;
     private final LanguageTranslationsUtils translationsUtils;
     private final ExecutionTimerFactory executionTimerFactory;
     private final JSONCreator jsonCreator;
 
     public BaseImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationManager,
-                                        CrowdinTranslationManager translationManager,
+                                        CrowdinTranslationSyncManager translationManager,
+                                        CrowdinStringsSyncManager stringsManager,
                                         LanguageTranslationsUtils translationsUtils,
                                         ExecutionTimerFactory executionTimerFactory,
                                         JSONCreator jsonCreator) {
         this.sheetsTranslationManager = sheetsTranslationManager;
         this.translationManager = translationManager;
+        this.stringsManager = stringsManager;
         this.translationsUtils = translationsUtils;
         this.executionTimerFactory = executionTimerFactory;
         this.jsonCreator = jsonCreator;
@@ -56,7 +60,7 @@ public abstract class BaseImportTranslationService {
         logger.info("Getting all source strings.");
         ExecutionTimer stringsGetTimer = this.executionTimerFactory.createTimer();
         stringsGetTimer.start();
-        List<SourceString> sourceStrings = this.translationManager.getListSourceString();
+        List<SourceString> sourceStrings = this.stringsManager.getListSourceString();
         stringsGetTimer.end();
         logger.info("Got all the Source Strings, the number of: {}. Total time: {}.", sourceStrings.size(), stringsGetTimer.getDetailFormattedDuration());
 

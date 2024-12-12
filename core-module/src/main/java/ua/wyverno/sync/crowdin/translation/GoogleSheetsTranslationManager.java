@@ -1,4 +1,4 @@
-package ua.wyverno.sync.translation.managers;
+package ua.wyverno.sync.crowdin.translation;
 
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;

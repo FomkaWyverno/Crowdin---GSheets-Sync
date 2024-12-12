@@ -18,8 +18,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class SyncCategoryFilesService {
-    private final static Logger logger = LoggerFactory.getLogger(SyncCategoryFilesService.class);
+public class SyncFilesInCategoryService {
+    private final static Logger logger = LoggerFactory.getLogger(SyncFilesInCategoryService.class);
 
     private final ExistsFilesCollector existsFilesCollector;
     private final FileTitleSynchronizer fileTitleSynchronizer;
@@ -27,17 +27,23 @@ public class SyncCategoryFilesService {
     private final MissingFilesCreator missingFilesCreator;
 
     @Autowired
-    public SyncCategoryFilesService(FilesContentSynchronizer filesContentSynchronizer,
-                                    ExistsFilesCollector existsFilesCollector,
-                                    FileTitleSynchronizer fileTitleSynchronizer,
-                                    MissingFilesCreator missingFilesCreator) {
+    public SyncFilesInCategoryService(FilesContentSynchronizer filesContentSynchronizer,
+                                      ExistsFilesCollector existsFilesCollector,
+                                      FileTitleSynchronizer fileTitleSynchronizer,
+                                      MissingFilesCreator missingFilesCreator) {
         this.filesContentSynchronizer = filesContentSynchronizer;
         this.existsFilesCollector = existsFilesCollector;
         this.fileTitleSynchronizer = fileTitleSynchronizer;
         this.missingFilesCreator = missingFilesCreator;
     }
 
-    protected Map<FileInfo, GoogleSheet> synchronizeToCategory(Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir , List<FileInfo> allFiles) {
+    /**
+     * Синхронізує файли в категоріях, та повертає мапу, де ключ це файл, а значення це аркуш, який відображає
+     * @param groupingSheetsByCategoryDir групована мапа де значення це директорія, а значення це лист, який вона містить
+     * @param allFiles всі файли які зараз існують
+     * @return Повертає мапу, де ключ це файл, а значення це аркуш, який відображає
+     */
+    protected Map<FileInfo, GoogleSheet> synchronizeToCategoryInFiles(Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir , List<FileInfo> allFiles) {
         // Перетворюємо лист з файлами на мапу де ключ це шлях до файлу, а значення Файл кроудіну
         Map<String, FileInfo> fileByPathMap = this.mapFileByPath(allFiles);
         logger.debug("Collecting exists files.");

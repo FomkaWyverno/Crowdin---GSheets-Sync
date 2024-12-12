@@ -129,7 +129,7 @@ public class StringTranslationLanguageListQuery extends ListQuery<LanguageTransl
      * Note: Can't be used with stringIds, labelIds, fileId or approvedOnly in same request
      * @return {@link StringTranslationLanguageListQuery}
      */
-    public StringTranslationLanguageListQuery croql(String croql) {
+    public StringTranslationLanguageListQuery croQL(String croql) {
         this.croql = URLEncoder.encode(croql, StandardCharsets.UTF_8);
         return this;
     }

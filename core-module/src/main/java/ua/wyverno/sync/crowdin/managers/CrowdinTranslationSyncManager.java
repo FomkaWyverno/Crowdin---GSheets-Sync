@@ -1,4 +1,4 @@
-package ua.wyverno.sync.translation.managers;
+package ua.wyverno.sync.crowdin.managers;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import com.crowdin.client.stringtranslations.model.Approval;
@@ -14,37 +14,27 @@ import ua.wyverno.crowdin.CrowdinService;
 import java.util.List;
 
 @Component
-public class CrowdinTranslationManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinTranslationManager.class);
+public class CrowdinTranslationSyncManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinTranslationSyncManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
     private final String languageId;
 
     @Autowired
-    public CrowdinTranslationManager(CrowdinService crowdinService, ConfigLoader configLoader) {
+    public CrowdinTranslationSyncManager(CrowdinService crowdinService, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
         this.languageId = configLoader.getCoreConfig().getLanguageId();
     }
 
-    /**
-     * Отримання всіх вихідних рядків
-     *
-     * @return Лист з усіма вихідними рядками
-     */
-    public List<SourceString> getListSourceString() {
-        logger.trace("Getting list source strings from Crowdin Project.");
-        return this.crowdinService.sourceStrings()
-                .list(this.projectId)
-                .execute();
-    }
+
 
     /**
      * Отримує список перекладів для вихідного рядка
      *
      * @param sourceString вихідний рядок
-     * @return лист з перекладами
+     * @return лист з перекладами для певного рядка
      */
     public List<StringTranslation> getTranslationsForString(SourceString sourceString) {
         logger.trace("Getting Translations for: {}", sourceString.getIdentifier());
@@ -55,12 +45,27 @@ public class CrowdinTranslationManager {
                 .execute();
     }
 
-    public List<LanguageTranslations> getApprovalTranslations() {
-        logger.trace("Getting list approvals from Crowdin Project.");
+    /**
+     * @return повертає список з перекладами які не мають затвердження
+     */
+    public List<LanguageTranslations> getTranslationsWithoutApproval() {
+        logger.trace("Getting list translations without approval from Crowdin Project.");
         return this.crowdinService.string_translations()
                 .listLanguageTranslations(this.projectId)
                 .languageId(this.languageId)
-                .croql("count of approvals > 0")
+                .croQL("count of approvals = 0")
+                .execute();
+    }
+
+    /**
+     * @return Повертає список затверджених перекладів з Кроудіну
+     */
+    public List<LanguageTranslations> getApprovalTranslations() {
+        logger.trace("Getting list translations with approval from Crowdin Project.");
+        return this.crowdinService.string_translations()
+                .listLanguageTranslations(this.projectId)
+                .languageId(this.languageId)
+                .croQL("count of approvals > 0")
                 .execute();
     }
 

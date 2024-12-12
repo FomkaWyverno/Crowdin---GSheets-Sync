@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.sync.crowdin.directories.CrowdinDirectoryManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinDirectorySyncManager;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 public class SheetCategoryDirectorySynchronizer {
     private static final Logger logger = LoggerFactory.getLogger(SheetCategoryDirectorySynchronizer.class);
 
-    private final CrowdinDirectoryManager directoryManager;
+    private final CrowdinDirectorySyncManager directoryManager;
 
     private final Pattern categoryPattern = Pattern.compile("\\((.+)\\)");
 
     @Autowired
-    public SheetCategoryDirectorySynchronizer(CrowdinDirectoryManager directoryManager) {
+    public SheetCategoryDirectorySynchronizer(CrowdinDirectorySyncManager directoryManager) {
         this.directoryManager = directoryManager;
     }
 

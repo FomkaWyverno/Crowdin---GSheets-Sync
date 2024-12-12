@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.sync.crowdin.directories.results.SyncDirectoriesResult;
-import ua.wyverno.sync.crowdin.files.CrowdinFilesManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinFilesSyncManager;
 
 import java.util.List;
 import java.util.Map;
@@ -17,16 +17,16 @@ import java.util.Map;
 public class SyncCrowdinFilesService {
     private final static Logger logger = LoggerFactory.getLogger(SyncCrowdinFilesService.class);
 
-    private final CrowdinFilesManager filesManager;
-    private final SyncCategoryFilesService syncCategoryFilesService;
+    private final CrowdinFilesSyncManager filesManager;
+    private final SyncFilesInCategoryService syncFilesInCategoryService;
     private final SyncFilesCleanerService syncFilesCleanerService;
 
     @Autowired
-    public SyncCrowdinFilesService(CrowdinFilesManager filesManager,
-                                   SyncCategoryFilesService syncCategoryFilesService,
+    public SyncCrowdinFilesService(CrowdinFilesSyncManager filesManager,
+                                   SyncFilesInCategoryService syncFilesInCategoryService,
                                    SyncFilesCleanerService syncFilesCleanerService) {
         this.filesManager = filesManager;
-        this.syncCategoryFilesService = syncCategoryFilesService;
+        this.syncFilesInCategoryService = syncFilesInCategoryService;
         this.syncFilesCleanerService = syncFilesCleanerService;
     }
 
@@ -38,7 +38,7 @@ public class SyncCrowdinFilesService {
         logger.info("Staring synchronize to files in categories.");
         List<FileInfo> listFiles = this.filesManager.getListFiles();
         Map<Directory, List<GoogleSheet>> groupingSheetsByCategoryDir = syncDirectoriesResult.groupingSheetByCategoryDir();
-        Map<FileInfo, GoogleSheet> crowdinFileToSheetMap = this.syncCategoryFilesService.synchronizeToCategory(groupingSheetsByCategoryDir, listFiles);
+        Map<FileInfo, GoogleSheet> crowdinFileToSheetMap = this.syncFilesInCategoryService.synchronizeToCategoryInFiles(groupingSheetsByCategoryDir, listFiles);
         logger.info("Cleaning no required files.");
         this.syncFilesCleanerService.cleanFiles(crowdinFileToSheetMap.keySet().stream().toList(), listFiles);
         logger.info("Finish synchronize files in categories.");

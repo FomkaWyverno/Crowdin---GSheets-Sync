@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.sync.crowdin.SynchronizationCrowdin;
+import ua.wyverno.sync.crowdin.SynchronizationCrowdinService;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,14 +20,14 @@ public class SynchronizationService {
 
     private final String spreadsheetId;
 
-    private final SynchronizationCrowdin synchronizationCrowdin;
+    private final SynchronizationCrowdinService synchronizationCrowdinService;
     private final SynchronizeSheetManager synchronizeSheetManager;
     private final GoogleSheetsService googleSheetsService;
 
     @Autowired
-    public SynchronizationService(SynchronizationCrowdin synchronizationCrowdin, SynchronizeSheetManager synchronizeSheetManager,
+    public SynchronizationService(SynchronizationCrowdinService synchronizationCrowdinService, SynchronizeSheetManager synchronizeSheetManager,
                                   GoogleSheetsService googleSheetsService, ConfigLoader configLoader) {
-        this.synchronizationCrowdin = synchronizationCrowdin;
+        this.synchronizationCrowdinService = synchronizationCrowdinService;
         this.synchronizeSheetManager = synchronizeSheetManager;
         this.googleSheetsService = googleSheetsService;
         this.spreadsheetId = configLoader.getCoreConfig().getSpreadsheetID();
@@ -46,7 +46,7 @@ public class SynchronizationService {
             GoogleSpreadsheet spreadsheet = this.googleSheetsService.getSpreadsheetData(this.spreadsheetId, sheets);
 
             logger.info("Start synchronize to Crowdin.");
-            this.synchronizationCrowdin.synchronizeToCrowdin(spreadsheet);
+            this.synchronizationCrowdinService.synchronizeToCrowdin(spreadsheet);
             logger.info("Finish synchronization Crowdin with Google Sheets.");
 
 

@@ -1,14 +1,14 @@
-package ua.wyverno.sync.translation.services;
+package ua.wyverno.sync.crowdin.translation.services;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
-import ua.wyverno.sync.translation.managers.CrowdinTranslationManager;
-import ua.wyverno.sync.translation.managers.GoogleSheetsTranslationManager;
-import ua.wyverno.sync.translation.utils.LanguageTranslationsUtils;
-import ua.wyverno.utils.execution.ExecutionTimer;
+import ua.wyverno.sync.crowdin.managers.CrowdinStringsSyncManager;
+import ua.wyverno.sync.crowdin.managers.CrowdinTranslationSyncManager;
+import ua.wyverno.sync.crowdin.translation.GoogleSheetsTranslationManager;
+import ua.wyverno.sync.crowdin.translation.utils.LanguageTranslationsUtils;
 import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
 
@@ -36,11 +36,12 @@ public class AsyncImportTranslationService extends BaseImportTranslationService 
 
     @Autowired
     public AsyncImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationService,
-                                         CrowdinTranslationManager translationService,
+                                         CrowdinTranslationSyncManager translationManager,
+                                         CrowdinStringsSyncManager stringsManager,
                                          LanguageTranslationsUtils translationsUtils,
                                          ExecutionTimerFactory executionTimerFactory,
                                          JSONCreator jsonCreator) {
-        super(sheetsTranslationService, translationService, translationsUtils, executionTimerFactory, jsonCreator);
+        super(sheetsTranslationService, translationManager, stringsManager, translationsUtils, executionTimerFactory, jsonCreator);
     }
 
     /**

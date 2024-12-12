@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.console.Command;
 import ua.wyverno.console.ConsoleCommand;
-import ua.wyverno.sync.translation.services.AsyncImportTranslationService;
+import ua.wyverno.sync.crowdin.translation.services.AsyncImportTranslationService;
 
 @ConsoleCommand(command = "/async-import", description = "Async import translation from Google Sheets to Crowdin")
 @Component

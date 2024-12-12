@@ -10,19 +10,23 @@ import ua.wyverno.sync.crowdin.directories.results.SyncDirectoriesResult;
 import ua.wyverno.sync.crowdin.files.services.SyncCrowdinFilesService;
 
 @Component
-public class SynchronizationCrowdin {
-    private static final Logger logger = LoggerFactory.getLogger(SynchronizationCrowdin.class);
+public class SynchronizationCrowdinService {
+    private static final Logger logger = LoggerFactory.getLogger(SynchronizationCrowdinService.class);
 
     private final SyncCrowdinDirectoriesService syncCrowdinDirectoriesService;
     private final SyncCrowdinFilesService syncCrowdinFilesService;
 
     @Autowired
-    public SynchronizationCrowdin(SyncCrowdinDirectoriesService syncCrowdinDirectoriesService,
-                                  SyncCrowdinFilesService syncCrowdinFilesService) {
+    public SynchronizationCrowdinService(SyncCrowdinDirectoriesService syncCrowdinDirectoriesService,
+                                         SyncCrowdinFilesService syncCrowdinFilesService) {
         this.syncCrowdinDirectoriesService = syncCrowdinDirectoriesService;
         this.syncCrowdinFilesService = syncCrowdinFilesService;
     }
 
+    /**
+     * Синхронізує Кроудін проєкт з гугл таблицею
+     * @param spreadsheet електронна таблиця з вмістом, для синхронізації
+     */
     public void synchronizeToCrowdin(GoogleSpreadsheet spreadsheet) {
         logger.info("Crowdin Sync Step 1: Synchronization to Directories.");
         SyncDirectoriesResult syncDirectoriesResult = this.syncCrowdinDirectoriesService.synchronizeToDirectories(spreadsheet);

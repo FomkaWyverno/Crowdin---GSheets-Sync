@@ -1,4 +1,4 @@
-package ua.wyverno.sync.translation.utils;
+package ua.wyverno.sync.crowdin.translation.utils;
 
 import com.crowdin.client.stringtranslations.model.*;
 import org.springframework.beans.factory.annotation.Autowired;

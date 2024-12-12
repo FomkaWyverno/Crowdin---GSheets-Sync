@@ -1,9 +1,6 @@
-package ua.wyverno.sync.crowdin.directories;
+package ua.wyverno.sync.crowdin.managers;
 
 import com.crowdin.client.sourcefiles.model.Directory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +10,25 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.crowdin.CrowdinService;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.DirectoryEditQuery;
 import ua.wyverno.crowdin.api.sourcefiles.directories.queries.edit.PatchDirRequestBuilder;
+import ua.wyverno.utils.json.JSONCreator;
 
 import java.util.List;
 import java.util.Objects;
 
 @Component
-public class CrowdinDirectoryManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinDirectoryManager.class);
+public class CrowdinDirectorySyncManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinDirectorySyncManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
 
-    private final ObjectMapper mapper;
+    private final JSONCreator jsonCreator;
 
     @Autowired
-    public CrowdinDirectoryManager(CrowdinService crowdinService, ConfigLoader configLoader) {
+    public CrowdinDirectorySyncManager(CrowdinService crowdinService, ConfigLoader configLoader, JSONCreator jsonCreator) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
-
-        this.mapper = new ObjectMapper();
-        this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.jsonCreator = jsonCreator;
     }
 
     /**
@@ -64,11 +60,8 @@ public class CrowdinDirectoryManager {
     }
 
     public Directory editDirectory(Long directoryId, List<PatchDirRequestBuilder> patchDirRequests) {
-        try {
-            logger.debug("Edit directory with request: {}",this.mapper.writeValueAsString(patchDirRequests));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        logger.debug("Edit directory with request: {}", this.jsonCreator.toJSON(patchDirRequests));
+
         DirectoryEditQuery query = this.crowdinService.directories()
                 .editDirectory(this.projectId)
                 .directoryID(directoryId);
