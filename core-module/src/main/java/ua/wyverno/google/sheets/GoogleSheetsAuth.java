@@ -1,6 +1,7 @@
 package ua.wyverno.google.sheets;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -11,19 +12,20 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GoogleSheetsAuth {
+    private static final Logger logger = LoggerFactory.getLogger(GoogleSheetsAuth.class);
     private static final String APPLICATION_NAME = "Google Sheets API Java Crowdin-Sync";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -33,13 +35,20 @@ public class GoogleSheetsAuth {
      */
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-    private final Sheets service;
 
+    private Sheets service;
+    private Credential credential;
 
     @Autowired
     public GoogleSheetsAuth() throws GeneralSecurityException, IOException {
-        Credential credential = this.authorize();
-        this.service = new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), credential)
+        this.initializeService();
+    }
+
+    private void initializeService() throws IOException, GeneralSecurityException {
+        this.credential = this.authorize();
+        this.service = new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(),
+                    GsonFactory.getDefaultInstance(),
+                    this.credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
@@ -70,7 +79,44 @@ public class GoogleSheetsAuth {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public Sheets getService() {
+    /**
+     * Ensures the token is valid before making API requests.
+     *
+     * @throws IOException If the token refresh fails.
+     */
+    private void ensureValidToken() throws IOException {
+        if (this.credential == null) throw new IllegalStateException("Credential has not been initialized.");
+
+        try {
+            this.credential.refreshToken();
+        } catch (TokenResponseException e) {
+            if (e.getStatusCode() == 400 && e.getStatusMessage().equals("Bad Request") &&
+                e.getContent().contains("\"error_description\" : \"Token has been expired or revoked.\"")) {
+                logger.warn("Token refresh failed. Requesting new authorization...");
+                try {
+                    this.clearStoredTokens();
+                    this.initializeService(); // Переініціалізовуємо сервіс
+                } catch (GeneralSecurityException | IOException exception) {
+                    throw new IOException("Failed reauthorized: " + exception.getMessage(), exception);
+                }
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private void clearStoredTokens()  {
+        File tokenDir = new File(TOKENS_DIRECTORY_PATH);
+        if (tokenDir.exists()) {
+            for (File file : Objects.requireNonNull(tokenDir.listFiles())) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete(); // Delete all stored tokens
+            }
+        }
+    }
+
+    public Sheets getService() throws IOException {
+        this.ensureValidToken();
         return service;
     }
 }

@@ -13,6 +13,10 @@ public class CrowdinTranslation {
         this.isApprove = isApprove;
     }
 
+    public SourceString getSourceString() {
+        return sourceString;
+    }
+
     public String getTranslation() {
         return translation;
     }

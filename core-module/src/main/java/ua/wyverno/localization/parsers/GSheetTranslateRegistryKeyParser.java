@@ -14,6 +14,7 @@ import ua.wyverno.localization.model.builders.LocationA1KeyBuilder;
 import ua.wyverno.localization.model.builders.GSheetTranslateRegistryKeyBuilder;
 import ua.wyverno.localization.parsers.util.KeyContextBuilder;
 import ua.wyverno.localization.parsers.util.KeyContextConfig;
+import ua.wyverno.localization.parsers.util.RowData;
 import ua.wyverno.localization.parsers.util.RowDataExtractor;
 
 import java.util.*;
@@ -25,6 +26,8 @@ public class GSheetTranslateRegistryKeyParser {
 
     @Autowired
     private KeyContextConfig keyContextConfig;
+    @Autowired
+    private RowDataExtractor rowDataExtractor;
 
     /**
      * Парсить таблицю у мапу
@@ -65,7 +68,7 @@ public class GSheetTranslateRegistryKeyParser {
             GoogleRow row = rows.get(i);
             if (row.isEmpty()) continue; // Якщо порожній рядок скіпаємо
             // Створюємо екстрактор рядка для вилучення значень з рядка таблиці
-            RowDataExtractor rowExtractor = new RowDataExtractor(sheetHeader, row);
+            RowData rowExtractor = this.rowDataExtractor.extract(sheetHeader, row);
             // Логуємо рядок
             this.logRowDetails(rowExtractor);
 
@@ -101,7 +104,7 @@ public class GSheetTranslateRegistryKeyParser {
      * @param hasFormattedColumn чи має аркуш колонку Formatted-Text
      * @return новий білдер Ключа перекладу
      */
-    private GSheetTranslateRegistryKeyBuilder initializeNewKey(RowDataExtractor extractor, boolean hasFormattedColumn) {
+    private GSheetTranslateRegistryKeyBuilder initializeNewKey(RowData extractor, boolean hasFormattedColumn) {
         GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder() // Створюємо нового білдера для ключа перекладу
                 .containerId(extractor.getContainerId()) // Встановлюємо контейнер айді
                 .key(extractor.getKey()); // Встановлюємо ключ перекладу
@@ -128,7 +131,7 @@ public class GSheetTranslateRegistryKeyParser {
      * @param keyBuilder білдер ключа перекладу
      * @param extractor екстрактор рядка
      */
-    private void appendTranslationForKey(GSheetTranslateRegistryKeyBuilder keyBuilder, RowDataExtractor extractor) {
+    private void appendTranslationForKey(GSheetTranslateRegistryKeyBuilder keyBuilder, RowData extractor) {
         if (Objects.nonNull(extractor.getEditText()) && !extractor.getEditText().isEmpty()) {
             keyBuilder.appendTranslateText(extractor.getEditText())
                       .setIsApprove(true);
@@ -175,7 +178,7 @@ public class GSheetTranslateRegistryKeyParser {
      * Логуємо рядок у таблиці
      * @param extractor екстрактор рядка
      */
-    private void logRowDetails(RowDataExtractor extractor) {
+    private void logRowDetails(RowData extractor) {
         if (logger.isTraceEnabled()) {
             logger.trace("Container-ID: {}\tKey: {}\tActor: {}\tGame-Text: {}\tOriginal Text: {}\tTranslate-Text: {}\tEdit-Text: {}\tContext: {}\tTiming: {}\tVoice: {}\tDub: {}\tFormatted-Text: {}",
                     truncateString(extractor.getContainerId(), 5), truncateString(extractor.getKey(), 10), truncateString(extractor.getActor(), 10),

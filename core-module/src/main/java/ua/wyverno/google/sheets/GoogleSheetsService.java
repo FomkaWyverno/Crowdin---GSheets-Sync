@@ -28,7 +28,7 @@ public class GoogleSheetsService {
     private GoogleSpreadsheetParser spreadsheetParser;
 
     @Autowired
-    public GoogleSheetsService(GoogleSheetsAuth sheetsAuth) throws GeneralSecurityException, IOException {
+    public GoogleSheetsService(GoogleSheetsAuth sheetsAuth) throws IOException {
         this.service = sheetsAuth.getService();
     }
 

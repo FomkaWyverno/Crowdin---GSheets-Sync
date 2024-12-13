@@ -43,7 +43,7 @@ public class GSheetTranslateRegistryKeyBuilder {
     }
 
     public GSheetTranslateRegistryKeyBuilder sheetLocationA1(String sheetLocationA1) {
-        this.sheetLocationA1 = this.sheetLocationA1;
+        this.sheetLocationA1 = sheetLocationA1;
         return this;
     }
 

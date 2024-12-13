@@ -1,125 +1,35 @@
 package ua.wyverno.localization.parsers.util;
 
-import org.springframework.lang.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleRow;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 
+@Component
 public class RowDataExtractor {
-    private final String containerId;
-    private final String key;
-    private final String actor;
-    private final String gameText;
-    private final String originalText;
-    private final String translateText;
-    private final String editText;
-    private final String context;
-    private final String timing;
-    private final String voice;
-    private final String dub;
-    private final String formattedText;
+    private final LocalizationNameColumns localizationNameColumns;
 
-    public RowDataExtractor(GoogleSheetHeader header, GoogleRow row) {
-        this.containerId = header.getValue(row, "Container-ID");
-        this.key = header.getValue(row, "Key-Translate");
-        this.actor = header.getValueIfExists(row, "Актор");
-        this.gameText = header.getValue(row, "Game-Text");
-        this.originalText = header.getValue(row, "Original-Text");
-        this.translateText = header.getValue(row, "Translate-Text");
-        this.editText = header.getValue(row, "Edit-Text");
-        this.context = header.getValue(row, "Context");
-        this.timing = header.getValue(row, "Timing");
-        this.voice = header.getValueIfExists(row, "Voice");
-        this.dub = header.getValueIfExists(row, "Dub");
-        this.formattedText = header.getValueIfExists(row, "Formatted-Text");
+    @Autowired
+    public RowDataExtractor(LocalizationNameColumns localizationNameColumns) {
+        this.localizationNameColumns = localizationNameColumns;
     }
 
-    /**
-     * @return Айді контейнера ключа перекладу
-     */
-    public String getContainerId() {
-        return containerId;
-    }
+    public RowData extract(GoogleSheetHeader header, GoogleRow row) {
+        RowData rowData = new RowData();
 
-    /**
-     * @return Ключ перекладу
-     */
-    public String getKey() {
-        return key;
-    }
+        rowData.setContainerId(header.getValue(row, this.localizationNameColumns.getContainerId()));
+        rowData.setKey(header.getValue(row, this.localizationNameColumns.getKey()));
+        rowData.setActor(header.getValueIfExists(row, this.localizationNameColumns.getActor()));
+        rowData.setGameText(header.getValue(row, this.localizationNameColumns.getGameText()));
+        rowData.setOriginalText(header.getValue(row, this.localizationNameColumns.getOriginalText()));
+        rowData.setTranslateText(header.getValue(row, this.localizationNameColumns.getTranslateText()));
+        rowData.setEditText(header.getValue(row, this.localizationNameColumns.getEditText()));
+        rowData.setContext(header.getValue(row, this.localizationNameColumns.getContext()));
+        rowData.setTiming(header.getValue(row, this.localizationNameColumns.getTiming()));
+        rowData.setVoice(header.getValueIfExists(row, this.localizationNameColumns.getVoice()));
+        rowData.setDub(header.getValueIfExists(row, this.localizationNameColumns.getDub()));
+        rowData.setFormattedText(header.getValueIfExists(row, this.localizationNameColumns.getFormattedText()));
 
-    /**
-     * @return роль Актора, поверне null якщо колонки не існує в аркуші.
-     */
-    @Nullable
-    public String getActor() {
-        return actor;
-    }
-
-    /**
-     * @return ігровий текст, не оброблений текст з тегами.
-     */
-    public String getGameText() {
-        return gameText;
-    }
-
-    /**
-     * @return оригінальний текст, без тегів, кожен тег замінений на перенесення рядка.
-     */
-    public String getOriginalText() {
-        return originalText;
-    }
-
-    /**
-     * @return переклад для поточного рядка з колонки Перекладачів
-     */
-    public String getTranslateText() {
-        return translateText;
-    }
-
-    /**
-     * @return переклад для поточного рядка з колонки редакторів
-     */
-    public String getEditText() {
-        return editText;
-    }
-
-    /**
-     * @return текст з колонки Context - контекст про переклад поточного ключа перекладу.
-     */
-    public String getContext() {
-        return context;
-    }
-
-    /**
-     * @return текст з колонки таймінга, використовується для зазначення таймінга на відео.
-     */
-    public String getTiming() {
-        return timing;
-    }
-
-    /**
-     * @return текст з колонки Voice (Оригінальна аудіодоріжка) якщо існує, якщо не існує колонки в аркуші буде null
-     */
-    @Nullable
-    public String getVoice() {
-        return voice;
-    }
-
-    /**
-     * @return текст к колонки Dub (Дубляж) якщо існує, якщо не існує колонки в аркуші буде null
-     */
-    @Nullable
-    public String getDub() {
-        return dub;
-    }
-
-    /**
-     * @return текст з колонки Formatted-Text, переклад з тегами
-     */
-    @Nullable
-    public String getFormattedText() {
-        return formattedText;
+        return rowData;
     }
 }
-
-
