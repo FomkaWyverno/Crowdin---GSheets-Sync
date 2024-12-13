@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.managers;
+package ua.wyverno.crowdin.managers;
 
 import com.crowdin.client.core.model.DownloadLink;
 import com.crowdin.client.sourcefiles.model.FileInfo;
@@ -20,14 +20,14 @@ import java.net.URI;
 import java.util.List;
 
 @Component
-public class CrowdinFilesSyncManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinFilesSyncManager.class);
+public class CrowdinFilesManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinFilesManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
 
     @Autowired
-    public CrowdinFilesSyncManager(CrowdinService crowdinService, ConfigLoader configLoader) {
+    public CrowdinFilesManager(CrowdinService crowdinService, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
     }

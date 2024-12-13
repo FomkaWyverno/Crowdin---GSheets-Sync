@@ -10,7 +10,7 @@ import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.sync.crowdin.directories.operations.RootDirectorySynchronizer;
 import ua.wyverno.sync.crowdin.directories.operations.SheetCategoryDirectorySynchronizer;
 import ua.wyverno.sync.crowdin.directories.results.SyncDirectoriesResult;
-import ua.wyverno.sync.crowdin.managers.CrowdinDirectorySyncManager;
+import ua.wyverno.crowdin.managers.CrowdinDirectoryManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,13 @@ public class SyncCrowdinDirectoriesService {
     private final SheetCategoryDirectorySynchronizer sheetCategoryDirectorySynchronizer;
     private final SyncDirectoryCleanerService syncDirectoryCleanerService;
 
-    private final CrowdinDirectorySyncManager directoryManager;
+    private final CrowdinDirectoryManager directoryManager;
 
     @Autowired
     public SyncCrowdinDirectoriesService(RootDirectorySynchronizer rootDirectorySynchronizer,
                                          SheetCategoryDirectorySynchronizer sheetCategoryDirectorySynchronizer,
                                          SyncDirectoryCleanerService syncDirectoryCleanerService,
-                                         CrowdinDirectorySyncManager directoryManager) {
+                                         CrowdinDirectoryManager directoryManager) {
         this.rootDirectorySynchronizer = rootDirectorySynchronizer;
         this.sheetCategoryDirectorySynchronizer = sheetCategoryDirectorySynchronizer;
         this.syncDirectoryCleanerService = syncDirectoryCleanerService;

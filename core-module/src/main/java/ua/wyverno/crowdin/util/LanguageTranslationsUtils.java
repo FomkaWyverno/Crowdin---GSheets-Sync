@@ -1,11 +1,10 @@
-package ua.wyverno.sync.crowdin.translation.utils;
+package ua.wyverno.crowdin.util;
 
 import com.crowdin.client.stringtranslations.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.utils.json.JSONCreator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,6 +66,11 @@ public class LanguageTranslationsUtils {
 
     }
 
+    /**
+     *
+     * @param translation
+     * @return
+     */
     public String getTranslation(LanguageTranslations translation) {
         if (translation instanceof PlainLanguageTranslations plainTranslation)
             return plainTranslation.getText();

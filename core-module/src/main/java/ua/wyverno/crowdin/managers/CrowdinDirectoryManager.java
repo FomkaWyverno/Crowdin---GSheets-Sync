@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.managers;
+package ua.wyverno.crowdin.managers;
 
 import com.crowdin.client.sourcefiles.model.Directory;
 import org.slf4j.Logger;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class CrowdinDirectorySyncManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinDirectorySyncManager.class);
+public class CrowdinDirectoryManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinDirectoryManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
@@ -25,7 +25,7 @@ public class CrowdinDirectorySyncManager {
     private final JSONCreator jsonCreator;
 
     @Autowired
-    public CrowdinDirectorySyncManager(CrowdinService crowdinService, ConfigLoader configLoader, JSONCreator jsonCreator) {
+    public CrowdinDirectoryManager(CrowdinService crowdinService, ConfigLoader configLoader, JSONCreator jsonCreator) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
         this.jsonCreator = jsonCreator;

@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.managers;
+package ua.wyverno.crowdin.managers;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import com.crowdin.client.stringtranslations.model.Approval;
@@ -14,15 +14,15 @@ import ua.wyverno.crowdin.CrowdinService;
 import java.util.List;
 
 @Component
-public class CrowdinTranslationSyncManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinTranslationSyncManager.class);
+public class CrowdinTranslationManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinTranslationManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
     private final String languageId;
 
     @Autowired
-    public CrowdinTranslationSyncManager(CrowdinService crowdinService, ConfigLoader configLoader) {
+    public CrowdinTranslationManager(CrowdinService crowdinService, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
         this.languageId = configLoader.getCoreConfig().getLanguageId();
@@ -77,7 +77,7 @@ public class CrowdinTranslationSyncManager {
      * @return повертає об'єкт перекладу який був створений у Кроудіні
      */
     public StringTranslation addTranslation(SourceString sourceString, String translation) {
-        logger.trace("Add translation: {}\nTranslation: {}", sourceString.getIdentifier(), translation);
+        logger.trace("Add translation: {}\nCrowdinTranslation: {}", sourceString.getIdentifier(), translation);
         return this.crowdinService.string_translations()
                 .addTranslation(this.projectId)
                 .stringId(sourceString.getId())

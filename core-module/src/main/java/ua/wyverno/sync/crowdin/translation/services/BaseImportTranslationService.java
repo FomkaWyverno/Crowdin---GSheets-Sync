@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.model.TranslateRegistryKey;
-import ua.wyverno.sync.crowdin.managers.CrowdinStringsSyncManager;
-import ua.wyverno.sync.crowdin.managers.CrowdinTranslationSyncManager;
+import ua.wyverno.crowdin.managers.CrowdinStringsManager;
+import ua.wyverno.crowdin.managers.CrowdinTranslationManager;
 import ua.wyverno.sync.crowdin.translation.GoogleSheetsTranslationManager;
-import ua.wyverno.sync.crowdin.translation.utils.LanguageTranslationsUtils;
+import ua.wyverno.crowdin.util.LanguageTranslationsUtils;
 import ua.wyverno.utils.execution.ExecutionTimer;
 import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
@@ -24,15 +24,15 @@ public abstract class BaseImportTranslationService {
     private final static Logger logger = LoggerFactory.getLogger(BaseImportTranslationService.class);
 
     private final GoogleSheetsTranslationManager sheetsTranslationManager;
-    private final CrowdinTranslationSyncManager translationManager;
-    private final CrowdinStringsSyncManager stringsManager;
+    private final CrowdinTranslationManager translationManager;
+    private final CrowdinStringsManager stringsManager;
     private final LanguageTranslationsUtils translationsUtils;
     private final ExecutionTimerFactory executionTimerFactory;
     private final JSONCreator jsonCreator;
 
     public BaseImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationManager,
-                                        CrowdinTranslationSyncManager translationManager,
-                                        CrowdinStringsSyncManager stringsManager,
+                                        CrowdinTranslationManager translationManager,
+                                        CrowdinStringsManager stringsManager,
                                         LanguageTranslationsUtils translationsUtils,
                                         ExecutionTimerFactory executionTimerFactory,
                                         JSONCreator jsonCreator) {
@@ -94,7 +94,7 @@ public abstract class BaseImportTranslationService {
      */
     private void importTranslation(SourceString sourceString, TranslateRegistryKey key, Set<Long> approveStringIds) {
         if (key.translate().isEmpty()) {
-            logger.trace("Translation not found in Sheet for SourceString: {}.", sourceString.getIdentifier());
+            logger.trace("CrowdinTranslation not found in Sheet for SourceString: {}.", sourceString.getIdentifier());
             return;
         }
         List<StringTranslation> translations = this.translationManager.getTranslationsForString(sourceString);
@@ -114,11 +114,11 @@ public abstract class BaseImportTranslationService {
             }
             return;
         }
-        logger.trace("Creating translation for: {}, Translation: {}", sourceString.getIdentifier(), key.translate());
+        logger.trace("Creating translation for: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translate());
         StringTranslation stringTranslation = this.translationManager.addTranslation(sourceString, key.translate());
         if (key.isApprove()) {
             if (!approveStringIds.contains(sourceString.getId())) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
-                logger.trace("Approving translation: {}, Translation: {}", sourceString.getIdentifier(), key.translate());
+                logger.trace("Approving translation: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translate());
                 this.translationManager.addApproveTranslation(stringTranslation.getId());
             }
         }

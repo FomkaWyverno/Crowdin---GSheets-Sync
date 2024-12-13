@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.wyverno.sync.crowdin.managers.CrowdinDirectorySyncManager;
+import ua.wyverno.crowdin.managers.CrowdinDirectoryManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import java.util.List;
 public class SyncDirectoryCleanerService {
     private final static Logger logger = LoggerFactory.getLogger(SyncDirectoryCleanerService.class);
 
-    private final CrowdinDirectorySyncManager directoryManager;
+    private final CrowdinDirectoryManager directoryManager;
 
     private final BufferedReader reader;
 
     @Autowired
-    public SyncDirectoryCleanerService(CrowdinDirectorySyncManager directoryManager) {
+    public SyncDirectoryCleanerService(CrowdinDirectoryManager directoryManager) {
         this.directoryManager = directoryManager;
 
         this.reader = new BufferedReader(new InputStreamReader(System.in));

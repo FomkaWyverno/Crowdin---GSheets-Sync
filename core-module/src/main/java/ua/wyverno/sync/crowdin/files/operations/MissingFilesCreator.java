@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.csv.parsers.GoogleSheetToCSVParser;
 import ua.wyverno.google.sheets.model.GoogleSheet;
-import ua.wyverno.sync.crowdin.managers.CrowdinFilesSyncManager;
+import ua.wyverno.crowdin.managers.CrowdinFilesManager;
 import ua.wyverno.sync.crowdin.files.utils.SheetFileUtils;
 
 import java.util.HashMap;
@@ -20,11 +20,11 @@ public class MissingFilesCreator {
     private final static Logger logger = LoggerFactory.getLogger(MissingFilesCreator.class);
 
     private final SheetFileUtils sheetFileUtils;
-    private final CrowdinFilesSyncManager filesManager;
+    private final CrowdinFilesManager filesManager;
     private final GoogleSheetToCSVParser csvParser;
 
     @Autowired
-    public MissingFilesCreator(SheetFileUtils sheetFileUtils, CrowdinFilesSyncManager filesManager, GoogleSheetToCSVParser csvParser) {
+    public MissingFilesCreator(SheetFileUtils sheetFileUtils, CrowdinFilesManager filesManager, GoogleSheetToCSVParser csvParser) {
         this.sheetFileUtils = sheetFileUtils;
         this.filesManager = filesManager;
         this.csvParser = csvParser;

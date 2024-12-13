@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
-import ua.wyverno.sync.crowdin.managers.CrowdinFilesSyncManager;
+import ua.wyverno.crowdin.managers.CrowdinFilesManager;
 import ua.wyverno.sync.crowdin.files.utils.SheetFileUtils;
 
 import java.util.Map;
@@ -17,10 +17,10 @@ public class FileTitleSynchronizer {
     private final static Logger logger = LoggerFactory.getLogger(FileTitleSynchronizer.class);
 
     private final SheetFileUtils sheetFileUtils;
-    private final CrowdinFilesSyncManager filesManager;
+    private final CrowdinFilesManager filesManager;
 
     @Autowired
-    public FileTitleSynchronizer(SheetFileUtils sheetFileUtils, CrowdinFilesSyncManager filesManager) {
+    public FileTitleSynchronizer(SheetFileUtils sheetFileUtils, CrowdinFilesManager filesManager) {
         this.sheetFileUtils = sheetFileUtils;
         this.filesManager = filesManager;
     }

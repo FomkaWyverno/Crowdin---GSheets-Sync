@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
-import ua.wyverno.sync.crowdin.managers.CrowdinStringsSyncManager;
-import ua.wyverno.sync.crowdin.managers.CrowdinTranslationSyncManager;
+import ua.wyverno.crowdin.managers.CrowdinStringsManager;
+import ua.wyverno.crowdin.managers.CrowdinTranslationManager;
 import ua.wyverno.sync.crowdin.translation.GoogleSheetsTranslationManager;
-import ua.wyverno.sync.crowdin.translation.utils.LanguageTranslationsUtils;
+import ua.wyverno.crowdin.util.LanguageTranslationsUtils;
 import ua.wyverno.utils.execution.ExecutionTimerFactory;
 import ua.wyverno.utils.json.JSONCreator;
 
@@ -36,8 +36,8 @@ public class AsyncImportTranslationService extends BaseImportTranslationService 
 
     @Autowired
     public AsyncImportTranslationService(GoogleSheetsTranslationManager sheetsTranslationService,
-                                         CrowdinTranslationSyncManager translationManager,
-                                         CrowdinStringsSyncManager stringsManager,
+                                         CrowdinTranslationManager translationManager,
+                                         CrowdinStringsManager stringsManager,
                                          LanguageTranslationsUtils translationsUtils,
                                          ExecutionTimerFactory executionTimerFactory,
                                          JSONCreator jsonCreator) {

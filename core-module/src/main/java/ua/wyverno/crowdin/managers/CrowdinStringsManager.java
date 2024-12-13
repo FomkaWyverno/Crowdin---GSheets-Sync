@@ -1,4 +1,4 @@
-package ua.wyverno.sync.crowdin.managers;
+package ua.wyverno.crowdin.managers;
 
 import com.crowdin.client.sourcestrings.model.SourceString;
 import org.slf4j.Logger;
@@ -11,14 +11,14 @@ import ua.wyverno.crowdin.CrowdinService;
 import java.util.List;
 
 @Component
-public class CrowdinStringsSyncManager {
-    private final static Logger logger = LoggerFactory.getLogger(CrowdinStringsSyncManager.class);
+public class CrowdinStringsManager {
+    private final static Logger logger = LoggerFactory.getLogger(CrowdinStringsManager.class);
 
     private final CrowdinService crowdinService;
     private final long projectId;
 
     @Autowired
-    public CrowdinStringsSyncManager(CrowdinService crowdinService, ConfigLoader configLoader) {
+    public CrowdinStringsManager(CrowdinService crowdinService, ConfigLoader configLoader) {
         this.crowdinService = crowdinService;
         this.projectId = configLoader.getCoreConfig().getProjectID();
     }

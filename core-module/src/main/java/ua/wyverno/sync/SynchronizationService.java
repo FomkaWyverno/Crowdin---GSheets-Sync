@@ -10,6 +10,7 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.sync.crowdin.SynchronizationCrowdinService;
+import ua.wyverno.sync.google.sheets.SynchronizationGoogleSheetsService;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,16 +20,23 @@ public class SynchronizationService {
     private static final Logger logger = LoggerFactory.getLogger(SynchronizationService.class);
 
     private final String spreadsheetId;
+    private final GoogleSheetsService googleSheetsService;
 
     private final SynchronizationCrowdinService synchronizationCrowdinService;
     private final SynchronizeSheetManager synchronizeSheetManager;
-    private final GoogleSheetsService googleSheetsService;
+
+    private final SynchronizationGoogleSheetsService synchronizationGoogleSheetsService;
+
 
     @Autowired
-    public SynchronizationService(SynchronizationCrowdinService synchronizationCrowdinService, SynchronizeSheetManager synchronizeSheetManager,
-                                  GoogleSheetsService googleSheetsService, ConfigLoader configLoader) {
+    public SynchronizationService(SynchronizationCrowdinService synchronizationCrowdinService,
+                                  SynchronizeSheetManager synchronizeSheetManager,
+                                  SynchronizationGoogleSheetsService synchronizationGoogleSheetsService,
+                                  GoogleSheetsService googleSheetsService,
+                                  ConfigLoader configLoader) {
         this.synchronizationCrowdinService = synchronizationCrowdinService;
         this.synchronizeSheetManager = synchronizeSheetManager;
+        this.synchronizationGoogleSheetsService = synchronizationGoogleSheetsService;
         this.googleSheetsService = googleSheetsService;
         this.spreadsheetId = configLoader.getCoreConfig().getSpreadsheetID();
     }
@@ -49,6 +57,8 @@ public class SynchronizationService {
             this.synchronizationCrowdinService.synchronizeToCrowdin(spreadsheet);
             logger.info("Finish synchronization Crowdin with Google Sheets.");
 
+            logger.info("Start synchronize to Google Sheets");
+            this.synchronizationGoogleSheetsService.synchronizeToGoogleSheets(spreadsheet);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
