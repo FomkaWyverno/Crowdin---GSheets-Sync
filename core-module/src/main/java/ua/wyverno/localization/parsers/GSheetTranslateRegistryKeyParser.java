@@ -8,14 +8,13 @@ import ua.wyverno.google.sheets.model.GoogleRow;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.model.TranslateRegistryKey;
-import ua.wyverno.localization.model.builders.LocationA1KeyBuilder;
-import ua.wyverno.localization.model.builders.GSheetTranslateRegistryKeyBuilder;
-import ua.wyverno.localization.parsers.util.KeyContextBuilder;
-import ua.wyverno.localization.parsers.util.KeyContextConfig;
-import ua.wyverno.localization.parsers.util.RowData;
-import ua.wyverno.localization.parsers.util.RowDataExtractor;
+import ua.wyverno.localization.builder.parsers.KeyContextBuilder;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.TranslateRegistryKey;
+import ua.wyverno.google.sheets.util.RangeA1NotationBuilder;
+import ua.wyverno.localization.builder.key.GSheetTranslateRegistryKeyBuilder;
+import ua.wyverno.localization.config.KeyContextConfig;
+import ua.wyverno.localization.model.row.RowData;
 
 import java.util.*;
 
@@ -59,7 +58,7 @@ public class GSheetTranslateRegistryKeyParser {
         List<GoogleRow> rows = sheet.getRows();
         GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
 
-        LocationA1KeyBuilder locationA1Builder = new LocationA1KeyBuilder();
+        RangeA1NotationBuilder locationA1Builder = new RangeA1NotationBuilder();
         GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder();
         // Чи є колонка FormattedText
         boolean hasFormattedColumn = hasFormattedColumn(sheet, sheetHeader);
@@ -118,8 +117,8 @@ public class GSheetTranslateRegistryKeyParser {
                 .hasFormattedColumn(hasFormattedColumn)
                 .build());
     }
-    private LocationA1KeyBuilder initializeNewLocationKey(String sheetName, int rowIndex) {
-        return new LocationA1KeyBuilder() // Створюємо новий білдер локації ключа перекладу
+    private RangeA1NotationBuilder initializeNewLocationKey(String sheetName, int rowIndex) {
+        return new RangeA1NotationBuilder() // Створюємо новий білдер локації ключа перекладу
                 .sheetName(sheetName) // Встановлюємо назву аркуша
                 .startRowIndex(rowIndex); // Встановлюємо індекс початка рядка ключа перекладу
     }
@@ -147,7 +146,7 @@ public class GSheetTranslateRegistryKeyParser {
      * @param endColumnIndex індекс кінцевої колонки де знаходиться
      * @param keys лист з ключами перекладу
      */
-    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, LocationA1KeyBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateRegistryKey> keys) {
+    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, RangeA1NotationBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateRegistryKey> keys) {
         if (this.isValidKeyTranslate(keyBuilder.getKey(), keyBuilder.getContainerId())) { // Якщо KeyBuilder має ключ та контейнер айді зберігаємо це як ключ перекладу
             keyBuilder.sheetLocationA1(locationA1Builder // Встановлюємо локацію у таблиці
                     .endRowIndex(endRowIndex) // Встановлюємо індекс попереднього рядка як останній рядок де знаходиться ключ перекладу

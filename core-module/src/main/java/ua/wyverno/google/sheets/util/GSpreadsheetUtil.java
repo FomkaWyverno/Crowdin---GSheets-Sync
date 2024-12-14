@@ -4,7 +4,7 @@ import com.google.common.base.Functions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
 
 import java.util.List;

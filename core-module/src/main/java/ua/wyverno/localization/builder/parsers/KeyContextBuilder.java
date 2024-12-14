@@ -1,4 +1,6 @@
-package ua.wyverno.localization.parsers.util;
+package ua.wyverno.localization.builder.parsers;
+
+import ua.wyverno.localization.config.KeyContextConfig;
 
 public class KeyContextBuilder {
     private final String contextActorField;

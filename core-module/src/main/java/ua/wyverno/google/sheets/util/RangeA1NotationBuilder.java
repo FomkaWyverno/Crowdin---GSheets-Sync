@@ -1,29 +1,27 @@
-package ua.wyverno.localization.model.builders;
+package ua.wyverno.google.sheets.util;
 
-import ua.wyverno.google.sheets.util.SheetA1NotationUtil;
-
-public class LocationA1KeyBuilder {
+public class RangeA1NotationBuilder {
     private String sheetName;
     private int startRowIndex;
     private int endRowIndex;
     private int endColumnIndex;
 
-    public LocationA1KeyBuilder sheetName(String sheetName) {
+    public RangeA1NotationBuilder sheetName(String sheetName) {
         this.sheetName = sheetName;
         return this;
     }
 
-    public LocationA1KeyBuilder startRowIndex(int startRowIndex) {
+    public RangeA1NotationBuilder startRowIndex(int startRowIndex) {
         this.startRowIndex = startRowIndex;
         return this;
     }
 
-    public LocationA1KeyBuilder endRowIndex(int endRowIndex) {
+    public RangeA1NotationBuilder endRowIndex(int endRowIndex) {
         this.endRowIndex = endRowIndex;
         return this;
     }
 
-    public LocationA1KeyBuilder endColumnIndex(int endColumnIndex) {
+    public RangeA1NotationBuilder endColumnIndex(int endColumnIndex) {
         this.endColumnIndex = endColumnIndex;
         return this;
     }

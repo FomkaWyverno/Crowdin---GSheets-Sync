@@ -1,9 +1,11 @@
-package ua.wyverno.localization.parsers.util;
+package ua.wyverno.localization.parsers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleRow;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
+import ua.wyverno.localization.config.LocalizationNameColumns;
+import ua.wyverno.localization.model.row.RowData;
 
 @Component
 public class RowDataExtractor {

@@ -8,7 +8,7 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
 import ua.wyverno.sync.SynchronizeSheetManager;
 import ua.wyverno.utils.json.JSONCreator;

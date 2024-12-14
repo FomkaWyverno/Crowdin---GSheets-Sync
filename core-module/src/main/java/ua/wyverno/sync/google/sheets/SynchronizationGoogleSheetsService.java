@@ -1,6 +1,5 @@
 package ua.wyverno.sync.google.sheets;
 
-import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +12,10 @@ import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.google.sheets.util.A1RangeNotation;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 import ua.wyverno.google.sheets.util.SheetA1NotationUtil;
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
 import ua.wyverno.crowdin.managers.fetcher.CrowdinTranslationFetcher;
 import ua.wyverno.google.sheets.util.GSpreadsheetUtil;
-import ua.wyverno.localization.parsers.util.LocalizationNameColumns;
+import ua.wyverno.localization.config.LocalizationNameColumns;
 import ua.wyverno.sync.google.sheets.exceptions.GoogleSheetNoHasTranslationException;
 import ua.wyverno.sync.google.sheets.exceptions.NoMatchCountLinesException;
 import ua.wyverno.utils.json.JSONCreator;

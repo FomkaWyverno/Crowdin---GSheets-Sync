@@ -1,7 +1,7 @@
-package ua.wyverno.localization.model.builders;
+package ua.wyverno.localization.builder.key;
 
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.model.TranslationIdentifier;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.TranslationIdentifier;
 
 public class GSheetTranslateRegistryKeyBuilder {
     private String containerId;

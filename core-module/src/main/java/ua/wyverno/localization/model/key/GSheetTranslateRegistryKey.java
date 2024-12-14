@@ -1,4 +1,4 @@
-package ua.wyverno.localization.model;
+package ua.wyverno.localization.model.key;
 
 public final class GSheetTranslateRegistryKey extends TranslateRegistryKey {
     private final String sheetLocationA1;

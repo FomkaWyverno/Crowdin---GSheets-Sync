@@ -1,8 +1,6 @@
-package ua.wyverno.localization.parsers.util;
+package ua.wyverno.localization.model.row;
 
 import org.springframework.lang.Nullable;
-import ua.wyverno.google.sheets.model.GoogleRow;
-import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 
 public class RowData {
     private String containerId;
@@ -18,7 +16,7 @@ public class RowData {
     private String dub;
     private String formattedText;
 
-    protected RowData() {}
+    public RowData() {}
 
     /**
      * @return Айді контейнера ключа перекладу
@@ -109,62 +107,62 @@ public class RowData {
     }
 
 
-    protected RowData setContainerId(String containerId) {
+    public RowData setContainerId(String containerId) {
         this.containerId = containerId;
         return this;
     }
 
-    protected RowData setKey(String key) {
+    public RowData setKey(String key) {
         this.key = key;
         return this;
     }
 
-    protected RowData setActor(String actor) {
+    public RowData setActor(String actor) {
         this.actor = actor;
         return this;
     }
 
-    protected RowData setGameText(String gameText) {
+    public RowData setGameText(String gameText) {
         this.gameText = gameText;
         return this;
     }
 
-    protected RowData setOriginalText(String originalText) {
+    public RowData setOriginalText(String originalText) {
         this.originalText = originalText;
         return this;
     }
 
-    protected RowData setTranslateText(String translateText) {
+    public RowData setTranslateText(String translateText) {
         this.translateText = translateText;
         return this;
     }
 
-    protected RowData setEditText(String editText) {
+    public RowData setEditText(String editText) {
         this.editText = editText;
         return this;
     }
 
-    protected RowData setContext(String context) {
+    public RowData setContext(String context) {
         this.context = context;
         return this;
     }
 
-    protected RowData setTiming(String timing) {
+    public RowData setTiming(String timing) {
         this.timing = timing;
         return this;
     }
 
-    protected RowData setVoice(String voice) {
+    public RowData setVoice(String voice) {
         this.voice = voice;
         return this;
     }
 
-    protected RowData setDub(String dub) {
+    public RowData setDub(String dub) {
         this.dub = dub;
         return this;
     }
 
-    protected RowData setFormattedText(String formattedText) {
+    public RowData setFormattedText(String formattedText) {
         this.formattedText = formattedText;
         return this;
     }

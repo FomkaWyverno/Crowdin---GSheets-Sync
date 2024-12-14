@@ -1,4 +1,4 @@
-package ua.wyverno.localization.model;
+package ua.wyverno.localization.model.key;
 
 import java.util.Objects;
 

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
-import ua.wyverno.localization.model.GSheetTranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
 import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
 
 import java.io.IOException;
