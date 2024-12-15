@@ -1,6 +1,6 @@
 package ua.wyverno.localization.model.key;
 
-public final class GSheetTranslateRegistryKey extends TranslateRegistryKey {
+public final class GSheetTranslateKey extends TranslateKey {
     private final String sheetLocationA1;
     /**
      * Модель ключа локалізації в гугл таблиці
@@ -12,7 +12,7 @@ public final class GSheetTranslateRegistryKey extends TranslateRegistryKey {
      * @param isApprove    чи затверджений цей переклад
      * @param sheetLocationA1 місце розташування в таблиці
      */
-    public GSheetTranslateRegistryKey(TranslationIdentifier identifier, String originalText, String translate, String context, boolean isApprove, String sheetLocationA1) {
+    public GSheetTranslateKey(TranslationIdentifier identifier, String originalText, String translate, String context, boolean isApprove, String sheetLocationA1) {
         super(identifier, originalText, translate, context, isApprove);
         this.sheetLocationA1 = sheetLocationA1;
     }

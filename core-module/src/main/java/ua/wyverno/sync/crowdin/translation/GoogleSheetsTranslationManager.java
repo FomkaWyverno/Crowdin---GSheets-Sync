@@ -8,8 +8,8 @@ import ua.wyverno.config.ConfigLoader;
 import ua.wyverno.google.sheets.GoogleSheetsService;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
+import ua.wyverno.localization.model.key.GSheetTranslateKey;
+import ua.wyverno.localization.parsers.GSheetTranslateKeyParser;
 import ua.wyverno.sync.SynchronizeSheetManager;
 import ua.wyverno.utils.json.JSONCreator;
 
@@ -24,7 +24,7 @@ public class GoogleSheetsTranslationManager {
 
     private final GoogleSheetsService sheetsService;
     private final SynchronizeSheetManager sheetManager;
-    private final GSheetTranslateRegistryKeyParser sheetParser;
+    private final GSheetTranslateKeyParser sheetParser;
     private final JSONCreator jsonCreator;
 
     private final String spreadsheetId;
@@ -32,7 +32,7 @@ public class GoogleSheetsTranslationManager {
     @Autowired
     public GoogleSheetsTranslationManager(GoogleSheetsService sheetsService,
                                           SynchronizeSheetManager sheetManager,
-                                          GSheetTranslateRegistryKeyParser sheetParser,
+                                          GSheetTranslateKeyParser sheetParser,
                                           JSONCreator jsonCreator,
                                           ConfigLoader configLoader) {
         this.sheetsService = sheetsService;
@@ -47,14 +47,14 @@ public class GoogleSheetsTranslationManager {
      *
      * @return Мапа де ключ це айді ключа, а значення сам ключ перекладу
      */
-    public Map<String, GSheetTranslateRegistryKey> getTranslationsKeys() {
+    public Map<String, GSheetTranslateKey> getTranslationsKeys() {
         try {
             Spreadsheet spreadsheet = this.sheetsService.getSpreadsheetMetadata(this.spreadsheetId);
             List<Sheet> sheets = spreadsheet.getSheets().stream() // Фільтруємо всі аркуші які повині пропустити
                     .filter(sheet -> !this.sheetManager.shouldSkipSheetSynchronize(sheet))
                     .toList();
             GoogleSpreadsheet googleSpreadsheet = this.sheetsService.getSpreadsheetData(this.spreadsheetId, sheets); // Отримуємо вміст аркушів
-            Map<GoogleSheet, List<GSheetTranslateRegistryKey>> keysMap = this.sheetParser.parseSpreadsheet(googleSpreadsheet); // Отримуємо мапу з ключів з таблиці
+            Map<GoogleSheet, List<GSheetTranslateKey>> keysMap = this.sheetParser.parseSpreadsheet(googleSpreadsheet); // Отримуємо мапу з ключів з таблиці
 
             return keysMap.values().stream() // Перетворюємо мапу де ключ це айді ключа перекладу, а значення саме значення
                     .flatMap(List::stream) // Об'єднуємо всі листи ключів у один потік

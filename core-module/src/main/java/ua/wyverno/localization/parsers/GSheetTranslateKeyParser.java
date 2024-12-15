@@ -9,18 +9,18 @@ import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
 import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 import ua.wyverno.localization.builder.parsers.KeyContextBuilder;
-import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.model.key.TranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateKey;
+import ua.wyverno.localization.model.key.TranslateKey;
 import ua.wyverno.google.sheets.util.RangeA1NotationBuilder;
-import ua.wyverno.localization.builder.key.GSheetTranslateRegistryKeyBuilder;
+import ua.wyverno.localization.builder.key.GSheetTranslateKeyBuilder;
 import ua.wyverno.localization.config.KeyContextConfig;
 import ua.wyverno.localization.model.row.RowData;
 
 import java.util.*;
 
 @Component
-public class GSheetTranslateRegistryKeyParser {
-    private final static Logger logger = LoggerFactory.getLogger(GSheetTranslateRegistryKeyParser.class);
+public class GSheetTranslateKeyParser {
+    private final static Logger logger = LoggerFactory.getLogger(GSheetTranslateKeyParser.class);
     private final static String line = "---------------------------------------------";
 
     @Autowired
@@ -31,11 +31,11 @@ public class GSheetTranslateRegistryKeyParser {
     /**
      * Парсить таблицю у мапу
      * @param spreadsheet електронна таблиця
-     * @return {@link Map}<{@link GoogleSheet}, {@link List}<{@link TranslateRegistryKey}>> - ключ - аркуш, значення - лист з усіма ключами перекладу у цьому аркуші
+     * @return {@link Map}<{@link GoogleSheet}, {@link List}<{@link TranslateKey}>> - ключ - аркуш, значення - лист з усіма ключами перекладу у цьому аркуші
      */
-    public Map<GoogleSheet, List<GSheetTranslateRegistryKey>> parseSpreadsheet(GoogleSpreadsheet spreadsheet) {
-        Map<GoogleSheet, List<GSheetTranslateRegistryKey>> keysBySheetName = new HashMap<>();
-        logger.info("Start parsing spreadsheet to Map<GoogleSheet, List<GSheetTranslateRegistryKey>>");
+    public Map<GoogleSheet, List<GSheetTranslateKey>> parseSpreadsheet(GoogleSpreadsheet spreadsheet) {
+        Map<GoogleSheet, List<GSheetTranslateKey>> keysBySheetName = new HashMap<>();
+        logger.info("Start parsing spreadsheet to Map<GoogleSheet, List<GSheetTranslateKey>>");
 
         spreadsheet.getSheets().forEach(sheet -> keysBySheetName.put(sheet, this.parseSheet(sheet)));
 
@@ -48,18 +48,18 @@ public class GSheetTranslateRegistryKeyParser {
      * @param sheet аркуш
      * @return лист з ключами перекладу з аркуша
      */
-    public List<GSheetTranslateRegistryKey> parseSheet(GoogleSheet sheet) {
+    public List<GSheetTranslateKey> parseSheet(GoogleSheet sheet) {
         String sheetName = sheet.getSheetName();
         logger.debug(line);
-        logger.debug("Parsing to List<GSheetTranslateRegistryKey> - Sheet-name: {}", sheetName);
+        logger.debug("Parsing to List<GSheetTranslateKey> - Sheet-name: {}", sheetName);
         logger.debug(line);
 
-        List<GSheetTranslateRegistryKey> keys = new ArrayList<>();
+        List<GSheetTranslateKey> keys = new ArrayList<>();
         List<GoogleRow> rows = sheet.getRows();
         GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
 
         RangeA1NotationBuilder locationA1Builder = new RangeA1NotationBuilder();
-        GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder();
+        GSheetTranslateKeyBuilder keyBuilder = new GSheetTranslateKeyBuilder();
         // Чи є колонка FormattedText
         boolean hasFormattedColumn = hasFormattedColumn(sheet, sheetHeader);
 
@@ -103,8 +103,8 @@ public class GSheetTranslateRegistryKeyParser {
      * @param hasFormattedColumn чи має аркуш колонку Formatted-Text
      * @return новий білдер Ключа перекладу
      */
-    private GSheetTranslateRegistryKeyBuilder initializeNewKey(RowData extractor, boolean hasFormattedColumn) {
-        GSheetTranslateRegistryKeyBuilder keyBuilder = new GSheetTranslateRegistryKeyBuilder() // Створюємо нового білдера для ключа перекладу
+    private GSheetTranslateKeyBuilder initializeNewKey(RowData extractor, boolean hasFormattedColumn) {
+        GSheetTranslateKeyBuilder keyBuilder = new GSheetTranslateKeyBuilder() // Створюємо нового білдера для ключа перекладу
                 .containerId(extractor.getContainerId()) // Встановлюємо контейнер айді
                 .key(extractor.getKey()); // Встановлюємо ключ перекладу
 
@@ -130,7 +130,7 @@ public class GSheetTranslateRegistryKeyParser {
      * @param keyBuilder білдер ключа перекладу
      * @param extractor екстрактор рядка
      */
-    private void appendTranslationForKey(GSheetTranslateRegistryKeyBuilder keyBuilder, RowData extractor) {
+    private void appendTranslationForKey(GSheetTranslateKeyBuilder keyBuilder, RowData extractor) {
         if (Objects.nonNull(extractor.getEditText()) && !extractor.getEditText().isEmpty()) {
             keyBuilder.appendTranslateText(extractor.getEditText())
                       .setIsApprove(true);
@@ -146,7 +146,7 @@ public class GSheetTranslateRegistryKeyParser {
      * @param endColumnIndex індекс кінцевої колонки де знаходиться
      * @param keys лист з ключами перекладу
      */
-    private void saveKeyTranslate(GSheetTranslateRegistryKeyBuilder keyBuilder, RangeA1NotationBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateRegistryKey> keys) {
+    private void saveKeyTranslate(GSheetTranslateKeyBuilder keyBuilder, RangeA1NotationBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateKey> keys) {
         if (this.isValidKeyTranslate(keyBuilder.getKey(), keyBuilder.getContainerId())) { // Якщо KeyBuilder має ключ та контейнер айді зберігаємо це як ключ перекладу
             keyBuilder.sheetLocationA1(locationA1Builder // Встановлюємо локацію у таблиці
                     .endRowIndex(endRowIndex) // Встановлюємо індекс попереднього рядка як останній рядок де знаходиться ключ перекладу

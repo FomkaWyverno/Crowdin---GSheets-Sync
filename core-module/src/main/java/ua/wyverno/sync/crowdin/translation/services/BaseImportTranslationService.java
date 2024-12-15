@@ -5,8 +5,8 @@ import com.crowdin.client.stringtranslations.model.LanguageTranslations;
 import com.crowdin.client.stringtranslations.model.StringTranslation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.model.key.TranslateRegistryKey;
+import ua.wyverno.localization.model.key.GSheetTranslateKey;
+import ua.wyverno.localization.model.key.TranslateKey;
 import ua.wyverno.crowdin.managers.CrowdinStringsManager;
 import ua.wyverno.crowdin.managers.CrowdinTranslationManager;
 import ua.wyverno.sync.crowdin.translation.GoogleSheetsTranslationManager;
@@ -53,7 +53,7 @@ public abstract class BaseImportTranslationService {
         logger.info("Downloading and parsing sheet keys...");
         ExecutionTimer timerDownload = this.executionTimerFactory.createTimer();
         timerDownload.start();
-        Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById = this.sheetsTranslationManager.getTranslationsKeys();
+        Map<String, GSheetTranslateKey> mapGSheetKeysById = this.sheetsTranslationManager.getTranslationsKeys();
         timerDownload.end();
         logger.info("Downloaded and parsed sheet keys. Total time: {}.", timerDownload.getDetailFormattedDuration());
 
@@ -92,7 +92,7 @@ public abstract class BaseImportTranslationService {
      * @param key ключ перекладу з Аркуша
      * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
-    private void importTranslation(SourceString sourceString, TranslateRegistryKey key, Set<Long> approveStringIds) {
+    private void importTranslation(SourceString sourceString, TranslateKey key, Set<Long> approveStringIds) {
         if (key.translate().isEmpty()) {
             logger.trace("CrowdinTranslation not found in Sheet for SourceString: {}.", sourceString.getIdentifier());
             return;
@@ -133,7 +133,7 @@ public abstract class BaseImportTranslationService {
      * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     protected abstract void processImport(List<SourceString> sourceStrings,
-                                          Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                          Map<String, GSheetTranslateKey> mapGSheetKeysById,
                                           AtomicInteger counter,
                                           Set<Long> approveStringIds);
 
@@ -147,7 +147,7 @@ public abstract class BaseImportTranslationService {
      * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     protected void importTranslations(List<SourceString> sourceStrings,
-                                      Map<String, GSheetTranslateRegistryKey> mapGSheetKeysById,
+                                      Map<String, GSheetTranslateKey> mapGSheetKeysById,
                                       AtomicInteger counter,
                                       Set<Long> approveStringIds,
                                       final int sizeSourceStrings) {

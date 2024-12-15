@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleSheet;
-import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
+import ua.wyverno.localization.model.key.GSheetTranslateKey;
+import ua.wyverno.localization.parsers.GSheetTranslateKeyParser;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -19,10 +19,10 @@ public class GoogleSheetToCSVParser {
     private final static Logger logger = LoggerFactory.getLogger(GoogleSheetToCSVParser.class);
     private final static String[] HEADERS = new String[]{"Id","Text","Context","Translate"};
 
-    private final GSheetTranslateRegistryKeyParser translationParser;
+    private final GSheetTranslateKeyParser translationParser;
 
     @Autowired
-    public GoogleSheetToCSVParser(GSheetTranslateRegistryKeyParser translationParser) {
+    public GoogleSheetToCSVParser(GSheetTranslateKeyParser translationParser) {
         this.translationParser = translationParser;
     }
 
@@ -31,9 +31,9 @@ public class GoogleSheetToCSVParser {
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setHeader(HEADERS)
                 .build();
-        List<GSheetTranslateRegistryKey> keys = this.translationParser.parseSheet(sheet);
+        List<GSheetTranslateKey> keys = this.translationParser.parseSheet(sheet);
         try (final CSVPrinter printer = new CSVPrinter(sw, csvFormat)) {
-            for (GSheetTranslateRegistryKey key : keys) {
+            for (GSheetTranslateKey key : keys) {
                 printer.printRecord(key.identifier().toString(), key.originalText(), key.context());
             }
         } catch (IOException e) {

@@ -2,7 +2,7 @@ package ua.wyverno.localization.model.key;
 
 import java.util.Objects;
 
-public class TranslateRegistryKey {
+public class TranslateKey {
     private final TranslationIdentifier identifier;
     private final String originalText;
     private final String translate;
@@ -18,7 +18,7 @@ public class TranslateRegistryKey {
      * @param context      контекст цього ключа локалізації
      * @param isApprove    чи затверджений цей переклад
      */
-    public TranslateRegistryKey(
+    public TranslateKey(
             TranslationIdentifier identifier,
             String originalText,
             String translate,
@@ -55,7 +55,7 @@ public class TranslateRegistryKey {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (TranslateRegistryKey) obj;
+        var that = (TranslateKey) obj;
         return Objects.equals(this.identifier, that.identifier) &&
                 Objects.equals(this.originalText, that.originalText) &&
                 Objects.equals(this.translate, that.translate) &&
@@ -70,7 +70,7 @@ public class TranslateRegistryKey {
 
     @Override
     public String toString() {
-        return "TranslateRegistryKey[" +
+        return "TranslateKey[" +
                 "identifier=" + identifier + ", " +
                 "originalText=" + originalText + ", " +
                 "translate=" + translate + ", " +
