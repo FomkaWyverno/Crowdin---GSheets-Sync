@@ -1,38 +1,22 @@
 package ua.wyverno.google.sheets.util;
 
-import com.google.common.base.Functions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.localization.model.key.GSheetTranslateRegistryKey;
-import ua.wyverno.localization.parsers.GSheetTranslateRegistryKeyParser;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
 public class GSpreadsheetUtil {
 
-    private final GSheetTranslateRegistryKeyParser keyParser;
-
-    @Autowired
-    public GSpreadsheetUtil(GSheetTranslateRegistryKeyParser keyParser) {
-        this.keyParser = keyParser;
-    }
-
     /**
-     * Перетворює вміст електронної таблиці на мапу де ключ це індифікатор ключа перекладу, а значення сам ключ перекладу
-     * @param spreadsheet електронна таблиця з вмістом
-     * @return мапу де ключ це індифікатор ключа перекладу, а значення сам ключ перекладу
+     * Формує мапу де ключ це назва аркуша, а значення це його утилітарний класс для заголовка
+     * @param spreadsheet електронна таблиця зі вмістом
+     * @return Мапа де ключ це назва аркуша, а значення Заголовок аркуша
      */
-    public Map<String, GSheetTranslateRegistryKey> toTranslateKeyMap(GoogleSpreadsheet spreadsheet) {
-        return this.keyParser.parseSpreadsheet(spreadsheet)
-                .values()
-                .stream()
-                .flatMap(List::stream)
+    public static Map<String, GoogleSheetHeader> getSheetHeaderBySheetName(GoogleSpreadsheet spreadsheet) {
+        return spreadsheet.getSheets().stream()
                 .collect(Collectors.toMap(
-                        key -> key.identifier().toString(),
-                        Functions.identity()));
+                        GoogleSheet::getSheetName,
+                        GoogleSheetHeader::new));
     }
 }
