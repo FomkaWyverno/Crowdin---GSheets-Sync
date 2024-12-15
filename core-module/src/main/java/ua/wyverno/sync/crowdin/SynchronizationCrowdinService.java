@@ -28,9 +28,11 @@ public class SynchronizationCrowdinService {
      * @param spreadsheet електронна таблиця з вмістом, для синхронізації
      */
     public void synchronizeToCrowdin(GoogleSpreadsheet spreadsheet) {
+        logger.info("Start synchronize to Crowdin.");
         logger.info("Crowdin Sync Step 1: Synchronization to Directories.");
         SyncDirectoriesResult syncDirectoriesResult = this.syncCrowdinDirectoriesService.synchronizeToDirectories(spreadsheet);
         logger.info("Crowdin Sync Step 2: Synchronization to Files.");
         this.syncCrowdinFilesService.synchronizeToFiles(syncDirectoriesResult);
+        logger.info("Finish synchronization Crowdin with Google Sheets.");
     }
 }
