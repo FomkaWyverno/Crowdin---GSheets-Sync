@@ -6,7 +6,7 @@ import ua.wyverno.console.Command;
 import ua.wyverno.console.ConsoleCommand;
 import ua.wyverno.sync.SynchronizationService;
 
-@ConsoleCommand(command = "/sync", description = "Run synchronization Crowdin with Google Sheets.")
+@ConsoleCommand(command = "/sync", description = "Run synchronization Crowdin to Google Sheets and Google Sheets to Crowdin translations.")
 @Component
 public class SyncCommand implements Command {
     private final SynchronizationService synchronizationService;
@@ -18,7 +18,7 @@ public class SyncCommand implements Command {
 
     @Override
     public void execute(String[] args) {
-        System.out.println("Starting running synchronization Crowdin with Google Sheets...");
+        System.out.println("Running full synchronization Crowdin Google Sheets...");
         this.synchronizationService.synchronizeTranslations();;
     }
 }
