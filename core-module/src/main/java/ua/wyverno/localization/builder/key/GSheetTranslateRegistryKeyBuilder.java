@@ -23,12 +23,14 @@ public class GSheetTranslateRegistryKeyBuilder {
     }
 
     public GSheetTranslateRegistryKeyBuilder appendOriginalText(String originalText) {
-        this.originalText.append(originalText).append("\n");
+        originalText = originalText.replaceAll("\n", "");
+        this.originalText.append(originalText).append("\\n\n");
         return this;
     }
 
     public GSheetTranslateRegistryKeyBuilder appendTranslateText(String translateText) {
-        this.translateText.append(translateText).append("\n");
+        translateText = translateText.replaceAll("\\n", "");
+        this.translateText.append(translateText).append("\\n\n");
         return this;
     }
 
@@ -78,8 +80,8 @@ public class GSheetTranslateRegistryKeyBuilder {
     public GSheetTranslateRegistryKey build() {
         TranslationIdentifier identifier = new TranslationIdentifier(Integer.parseInt(this.containerId), this.key);
         return new GSheetTranslateRegistryKey(identifier,
-                this.originalText.toString().replaceAll("\\n$", ""),
-                this.translateText.toString().replaceAll("\\n$", ""),
+                this.originalText.toString().replaceAll("\\\\n\\n$", ""),
+                this.translateText.toString().replaceAll("\\\\n\\n$", ""),
                 this.context.replaceAll("\\n$", ""),
                 this.isApprove,
                 this.sheetLocationA1);

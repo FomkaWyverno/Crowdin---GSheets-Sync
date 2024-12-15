@@ -53,9 +53,9 @@ public class SynchronizationService {
             logger.info("Getting spreadsheet with content only with filtered sheets.");
             GoogleSpreadsheet spreadsheet = this.googleSheetsService.getSpreadsheetData(this.spreadsheetId, sheets);
 
-//            logger.info("Start synchronize to Crowdin.");
-//            this.synchronizationCrowdinService.synchronizeToCrowdin(spreadsheet);
-//            logger.info("Finish synchronization Crowdin with Google Sheets.");
+            logger.info("Start synchronize to Crowdin.");
+            this.synchronizationCrowdinService.synchronizeToCrowdin(spreadsheet);
+            logger.info("Finish synchronization Crowdin with Google Sheets.");
 
             logger.info("Start synchronize to Google Sheets");
             this.synchronizationGoogleSheetsService.synchronizeToGoogleSheets(spreadsheet);
