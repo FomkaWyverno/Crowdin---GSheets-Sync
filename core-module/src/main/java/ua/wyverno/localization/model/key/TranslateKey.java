@@ -39,7 +39,7 @@ public class TranslateKey {
         return originalText;
     }
 
-    public String translate() {
+    public String translation() {
         return translate;
     }
 

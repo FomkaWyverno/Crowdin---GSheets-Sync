@@ -1,7 +1,9 @@
 package ua.wyverno.localization.model.key;
 
+import ua.wyverno.google.sheets.util.A1RangeNotation;
+
 public final class GSheetTranslateKey extends TranslateKey {
-    private final String sheetLocationA1;
+    private final A1RangeNotation locationA1;
     /**
      * Модель ключа локалізації в гугл таблиці
      *
@@ -10,14 +12,14 @@ public final class GSheetTranslateKey extends TranslateKey {
      * @param translate    переклад в таблиці
      * @param context      контекст цього ключа локалізації
      * @param isApprove    чи затверджений цей переклад
-     * @param sheetLocationA1 місце розташування в таблиці
+     * @param locationA1 місце розташування в таблиці
      */
-    public GSheetTranslateKey(TranslationIdentifier identifier, String originalText, String translate, String context, boolean isApprove, String sheetLocationA1) {
+    public GSheetTranslateKey(TranslationIdentifier identifier, String originalText, String translate, String context, boolean isApprove, A1RangeNotation locationA1) {
         super(identifier, originalText, translate, context, isApprove);
-        this.sheetLocationA1 = sheetLocationA1;
+        this.locationA1 = locationA1;
     }
 
-    public String sheetLocationA1() {
-        return sheetLocationA1;
+    public A1RangeNotation locationA1() {
+        return locationA1;
     }
 }

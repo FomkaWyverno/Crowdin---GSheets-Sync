@@ -26,12 +26,13 @@ public class RangeA1NotationBuilder {
         return this;
     }
 
-    public String build() {
-        return SheetA1NotationUtil.rangeToA1Notation(this.sheetName, this.startRowIndex, 0, this.endRowIndex, this.endColumnIndex);
+    public A1RangeNotation build() {
+        String a1Notation = SheetA1NotationUtil.rangeToA1Notation(this.sheetName, this.startRowIndex, 0, this.endRowIndex, this.endColumnIndex);
+        return new A1RangeNotation(a1Notation, this.sheetName, 0, this.endColumnIndex, this.startRowIndex, this.endRowIndex);
     }
 
     @Override
     public String toString() {
-        return this.build();
+        return this.build().A1Notation();
     }
 }

@@ -93,12 +93,12 @@ public abstract class BaseImportTranslationService {
      * @param approveStringIds айді вихідних рядків, які мають затверджений переклад
      */
     private void importTranslation(SourceString sourceString, TranslateKey key, Set<Long> approveStringIds) {
-        if (key.translate().isEmpty()) {
+        if (key.translation().isEmpty()) {
             logger.trace("CrowdinTranslation not found in Sheet for SourceString: {}.", sourceString.getIdentifier());
             return;
         }
         List<StringTranslation> translations = this.translationManager.getTranslationsForString(sourceString);
-        StringTranslation crowdinTranslation = this.translationsUtils.findCrowdinTranslation(translations, key.translate());
+        StringTranslation crowdinTranslation = this.translationsUtils.findCrowdinTranslation(translations, key.translation());
         if (crowdinTranslation != null) {
             if (!key.isApprove()) {
                 logger.trace("{} - already has translation, but not have approve.", sourceString.getIdentifier());
@@ -114,11 +114,11 @@ public abstract class BaseImportTranslationService {
             }
             return;
         }
-        logger.trace("Creating translation for: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translate());
-        StringTranslation stringTranslation = this.translationManager.addTranslation(sourceString, key.translate());
+        logger.trace("Creating translation for: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translation());
+        StringTranslation stringTranslation = this.translationManager.addTranslation(sourceString, key.translation());
         if (key.isApprove()) {
             if (!approveStringIds.contains(sourceString.getId())) { // Якщо переклад не має затвердження будь-якого, тоді додаємо затвердження
-                logger.trace("Approving translation: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translate());
+                logger.trace("Approving translation: {}, CrowdinTranslation: {}", sourceString.getIdentifier(), key.translation());
                 this.translationManager.addApproveTranslation(stringTranslation.getId());
             }
         }

@@ -1,5 +1,6 @@
 package ua.wyverno.localization.builder.key;
 
+import ua.wyverno.google.sheets.util.A1RangeNotation;
 import ua.wyverno.localization.model.key.GSheetTranslateKey;
 import ua.wyverno.localization.model.key.TranslationIdentifier;
 
@@ -10,7 +11,7 @@ public class GSheetTranslateKeyBuilder {
     private final StringBuilder translateText = new StringBuilder();
     private String context = "";
     private boolean isApprove = false;
-    private String sheetLocationA1;
+    private A1RangeNotation sheetLocationA1;
 
     public GSheetTranslateKeyBuilder containerId(String containerId) {
         this.containerId = containerId;
@@ -44,7 +45,7 @@ public class GSheetTranslateKeyBuilder {
         return this;
     }
 
-    public GSheetTranslateKeyBuilder sheetLocationA1(String sheetLocationA1) {
+    public GSheetTranslateKeyBuilder sheetLocationA1(A1RangeNotation sheetLocationA1) {
         this.sheetLocationA1 = sheetLocationA1;
         return this;
     }
@@ -73,7 +74,7 @@ public class GSheetTranslateKeyBuilder {
         return isApprove;
     }
 
-    public String getSheetLocationA1() {
+    public A1RangeNotation getSheetLocationA1() {
         return sheetLocationA1;
     }
 
