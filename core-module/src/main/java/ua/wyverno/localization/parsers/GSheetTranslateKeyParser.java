@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 import ua.wyverno.google.sheets.model.GoogleRow;
 import ua.wyverno.google.sheets.model.GoogleSheet;
 import ua.wyverno.google.sheets.model.GoogleSpreadsheet;
-import ua.wyverno.google.sheets.util.GoogleSheetHeader;
 import ua.wyverno.localization.builder.parsers.KeyContextBuilder;
+import ua.wyverno.localization.header.TranslationSheetHeader;
+import ua.wyverno.localization.header.TranslationSheetHeaderFactory;
 import ua.wyverno.localization.model.key.GSheetTranslateKey;
 import ua.wyverno.localization.model.key.TranslateKey;
 import ua.wyverno.google.sheets.util.RangeA1NotationBuilder;
@@ -27,6 +28,8 @@ public class GSheetTranslateKeyParser {
     private KeyContextConfig keyContextConfig;
     @Autowired
     private RowDataExtractor rowDataExtractor;
+    @Autowired
+    private TranslationSheetHeaderFactory headerFactory;
 
     /**
      * Парсить таблицю у мапу
@@ -56,12 +59,12 @@ public class GSheetTranslateKeyParser {
 
         List<GSheetTranslateKey> keys = new ArrayList<>();
         List<GoogleRow> rows = sheet.getRows();
-        GoogleSheetHeader sheetHeader = new GoogleSheetHeader(sheet);
+        TranslationSheetHeader sheetHeader = this.headerFactory.create(sheet);
 
         RangeA1NotationBuilder locationA1Builder = new RangeA1NotationBuilder();
         GSheetTranslateKeyBuilder keyBuilder = new GSheetTranslateKeyBuilder();
         // Чи є колонка FormattedText
-        boolean hasFormattedColumn = hasFormattedColumn(sheet, sheetHeader);
+        boolean hasFormattedColumn = sheetHeader.hasFormattedColumn();
 
         for (int i = 1; i < rows.size(); i++) {
             GoogleRow row = rows.get(i);
@@ -155,10 +158,6 @@ public class GSheetTranslateKeyParser {
 
             keys.add(keyBuilder.build()); // Додаємо до списку ключ перекладу
         }
-    }
-
-    private boolean hasFormattedColumn(GoogleSheet sheet, GoogleSheetHeader sheetHeader) {
-        return sheetHeader.getValueIfExists(sheet.getRow(0), "Formatted-Text") != null;
     }
 
     /**
