@@ -17,6 +17,7 @@ import java.util.Optional;
 public class StringTranslationApprovalsListQuery extends ListQuery<Approval, StringTranslationApprovalsListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
+
     private final long projectID;
     private String orderBy;
     private Long fileId;

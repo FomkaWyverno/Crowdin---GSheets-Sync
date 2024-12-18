@@ -19,6 +19,7 @@ import java.util.Optional;
 public class StringTranslationLanguageListQuery extends ListQuery<LanguageTranslations, StringTranslationLanguageListQuery> {
     private final HttpClient crowdinHttpClient;
     private final String crowdinBaseApiURL;
+
     private final long projectID;
     private String languageId;
     private String orderBy;
