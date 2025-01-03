@@ -54,7 +54,7 @@ public class TranslationComparator {
                         Location translation in sheet: %s
                         Crowdin Identifier: %s""",
                     crowdinTransLines.size(),
-                    sheetTransLines.size(),
+                    sheetOriginalLines.size(),
                     sheetTranslation.locationA1(),
                     sheetTranslation.identifier().toString());
             throw new NoMatchCountValuesException(errorMessage);

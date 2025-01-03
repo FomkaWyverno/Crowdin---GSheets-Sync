@@ -139,6 +139,8 @@ public class GSheetTranslateKeyParser {
                       .setIsApprove(true);
         } else if (Objects.nonNull(extractor.getTranslateText()) && !extractor.getTranslateText().isEmpty()) {
             keyBuilder.appendTranslateText(extractor.getTranslateText());
+        } else if (!keyBuilder.getTranslateText().toString().isEmpty()) {
+            keyBuilder.appendTranslateText("");
         }
     }
     /**
