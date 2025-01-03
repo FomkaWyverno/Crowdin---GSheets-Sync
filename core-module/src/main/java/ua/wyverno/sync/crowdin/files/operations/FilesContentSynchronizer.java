@@ -34,7 +34,7 @@ public class FilesContentSynchronizer {
             String sheetCSV = this.csvParser.parseSheet(sheet);
 
             if (!contentCSV.equals(sheetCSV)) {
-                logger.info("Sheet: {} must be synchronize with Crowdin file content.", sheet.getSheetName());
+                logger.warn("Sheet: {} must be synchronize with Crowdin file content.", sheet.getSheetName());
                 this.filesManager.updateContent(file, sheetCSV);
             } else {
                 logger.info("Sheet: {} not need synchronize with Crowdin file content.", sheet.getSheetName());

@@ -2,6 +2,9 @@ package ua.wyverno.localization.builder.parsers;
 
 import ua.wyverno.localization.config.KeyContextConfig;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 public class KeyContextBuilder {
     private final String contextActorField;
     private final String contextField;
@@ -17,6 +20,7 @@ public class KeyContextBuilder {
     private String voice;
     private String dub;
     private boolean hasFormattedColumn = false;
+    private String originalText;
 
     public KeyContextBuilder(KeyContextConfig keyContextConfig) {
         this.contextActorField = keyContextConfig.getContextActorField();
@@ -58,6 +62,11 @@ public class KeyContextBuilder {
         return this;
     }
 
+    public KeyContextBuilder originalText(String originalText) {
+        this.originalText = originalText;
+        return this;
+    }
+
     public String build() {
         StringBuilder contextBuilder = new StringBuilder();
         if (this.actor != null) {
@@ -80,6 +89,11 @@ public class KeyContextBuilder {
         if (this.hasFormattedColumn) {
             contextBuilder.append(this.contextFormattedTool).append(":\n")
                     .append(this.contextFormattedToolURL);
+            if (this.originalText != null && !this.originalText.isEmpty()) {
+                contextBuilder
+                        .append("?text=")
+                        .append(URLEncoder.encode(this.originalText, StandardCharsets.UTF_8));
+            }
         }
 
         return contextBuilder.toString();

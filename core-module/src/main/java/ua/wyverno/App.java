@@ -1,9 +1,6 @@
 package ua.wyverno;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +32,6 @@ public class App implements ApplicationRunner {
         this.appState = appState;
     }
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
     @Override
     public void run(ApplicationArguments args) throws IOException {
         logger.info("Run");
@@ -55,12 +50,5 @@ public class App implements ApplicationRunner {
         }
 
         logger.info("End");
-    }
-    public String toJSON(Object obj) {
-        try {
-            return this.writer.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

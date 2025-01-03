@@ -110,15 +110,15 @@ public class GSheetTranslateKeyParser {
         GSheetTranslateKeyBuilder keyBuilder = new GSheetTranslateKeyBuilder() // Створюємо нового білдера для ключа перекладу
                 .containerId(extractor.getContainerId()) // Встановлюємо контейнер айді
                 .key(extractor.getKey()); // Встановлюємо ключ перекладу
-
-        return keyBuilder.context(new KeyContextBuilder(this.keyContextConfig) // Створюємо контекст для ключа перекладу
+        KeyContextBuilder contextBuilder = new KeyContextBuilder(this.keyContextConfig) // Створюємо контекст для ключа перекладу
                 .actor(extractor.getActor())
                 .context(extractor.getContext())
                 .timing(extractor.getTiming())
                 .voice(extractor.getVoice())
                 .dub(extractor.getDub())
-                .hasFormattedColumn(hasFormattedColumn)
-                .build());
+                .hasFormattedColumn(hasFormattedColumn);
+        if (hasFormattedColumn) contextBuilder.originalText(extractor.getGameText());
+        return keyBuilder.context(contextBuilder.build());
     }
     private RangeA1NotationBuilder initializeNewLocationKey(String sheetName, int rowIndex) {
         return new RangeA1NotationBuilder() // Створюємо новий білдер локації ключа перекладу
