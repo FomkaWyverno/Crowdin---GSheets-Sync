@@ -93,7 +93,7 @@ public class SynchronizeSheetManager {
      */
     private void addSheetToMap(String sheetId, String sheetTitle, boolean isIgnore) throws IOException {
         this.sheetSkipMapBySheetId.put(sheetId, new SheetEntity(sheetId, sheetTitle, isIgnore));
-        logger.debug("Added to ignored sheet: {} Id: {}", sheetTitle, sheetId);
+        logger.debug("Added to ignored sheet: {} Id: {}, isIgnore: {}", sheetTitle, sheetId, isIgnore);
         this.updateFile();
     }
 
