@@ -77,7 +77,7 @@ public class GoogleSheetsAuth {
         LocalServerReceiver receiver = new LocalServerReceiver.Builder()
                 .setPort(8888)
                 .build();
-        return new WrapperAuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        return new AuthorizationCodeInstalledApp(flow, receiver, new DesktopBrowser()).authorize("user");
     }
 
     /**

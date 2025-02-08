@@ -1,9 +1,6 @@
 package ua.wyverno.google.sheets;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.java6.auth.oauth2.VerificationCodeReceiver;
 import com.google.api.client.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class WrapperAuthorizationCodeInstalledApp extends AuthorizationCodeInstalledApp {
-    private static final Logger logger = LoggerFactory.getLogger(WrapperAuthorizationCodeInstalledApp.class);
-
-    public WrapperAuthorizationCodeInstalledApp(AuthorizationCodeFlow flow, VerificationCodeReceiver receiver) {
-        super(flow, receiver);
-    }
-
-    public WrapperAuthorizationCodeInstalledApp(AuthorizationCodeFlow flow, VerificationCodeReceiver receiver, Browser browser) {
-        super(flow, receiver, browser);
-    }
+public class DesktopBrowser implements AuthorizationCodeInstalledApp.Browser {
+    private static final Logger logger = LoggerFactory.getLogger(DesktopBrowser.class);
 
     @Override
-    protected void onAuthorization(AuthorizationCodeRequestUrl authorizationUrl) throws IOException {
-        String url = authorizationUrl.build();
+    public void browse(String url) throws IOException {
         Preconditions.checkNotNull(url);
         try {
             String os = System.getProperty("os.name").toLowerCase();
@@ -39,7 +27,7 @@ public class WrapperAuthorizationCodeInstalledApp extends AuthorizationCodeInsta
                 System.out.println(url);
             }
         } catch (IOException e) {
-            logger.error("Browser could not be opened. Copy the URL and open it manually.");
+            logger.error("DesktopBrowser could not be opened. Copy the URL and open it manually.");
             System.out.println(url);
             throw e;
         }
