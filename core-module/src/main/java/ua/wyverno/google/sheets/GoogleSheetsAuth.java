@@ -1,7 +1,6 @@
 package ua.wyverno.google.sheets;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.TokenResponseException;
+import com.google.api.client.auth.oauth2.*;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -75,8 +74,10 @@ public class GoogleSheetsAuth {
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
                 .setAccessType("offline")
                 .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder()
+                .setPort(8888)
+                .build();
+        return new WrapperAuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
     /**
@@ -90,8 +91,7 @@ public class GoogleSheetsAuth {
         try {
             this.credential.refreshToken();
         } catch (TokenResponseException e) {
-            if (e.getStatusCode() == 400 && e.getStatusMessage().equals("Bad Request") &&
-                e.getContent().contains("\"error_description\" : \"Token has been expired or revoked.\"")) {
+            if (e.getStatusCode() == 400) {
                 logger.warn("Token refresh failed. Requesting new authorization...");
                 try {
                     this.clearStoredTokens();
