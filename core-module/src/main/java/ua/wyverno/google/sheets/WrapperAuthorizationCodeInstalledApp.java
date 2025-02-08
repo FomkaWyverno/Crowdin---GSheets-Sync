@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class WrapperAuthorizationCodeInstalledApp extends AuthorizationCodeInstalledApp {
     private static final Logger logger = LoggerFactory.getLogger(WrapperAuthorizationCodeInstalledApp.class);
@@ -28,7 +29,10 @@ public class WrapperAuthorizationCodeInstalledApp extends AuthorizationCodeInsta
         try {
             String os = System.getProperty("os.name").toLowerCase();
             if (os.contains("win")) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+                List<String> cmd = List.of("rundll32", "url.dll", "FileProtocolHandler", url);
+                new ProcessBuilder()
+                        .command(cmd)
+                        .start();
             } else {
                 // Якщо система не Windows, виводимо посилання для відкриття вручну
                 System.out.println("Неможливо автоматично відкрити браузер. Відкрийте наступний URL вручну:");
