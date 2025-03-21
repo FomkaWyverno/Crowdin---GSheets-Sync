@@ -63,6 +63,22 @@ public class GSheetTranslateKeyParser {
 
         RangeA1NotationBuilder locationA1Builder = new RangeA1NotationBuilder();
         GSheetTranslateKeyBuilder keyBuilder = new GSheetTranslateKeyBuilder();
+        // ПРИМІТКА ПРО РЕЙНДЖИ
+        // Останній рядок у якому є вміст ключа.
+        // Якщо у таблиці ключ після якого є порожні рядки
+        // Приклад:
+        // 1. English Text1
+        // 2. English Text2
+        // 3. English Text3
+        // 4. (порожній рядок)
+        // 5. (порожній рядок)
+        // Фактично 3-й рядок це є кінцевим рядком ключа, тому цей рейндж має закінчуватись на ньому (3), а не на п'ятому рядку (5)
+        // !Примітка: Якщо після порожнього рядка буде значення для поточного ключа це призведе до виключення у
+        // ua.wyverno.sync.google.sheets.operations.TranslationValueRangeProcessor у методі createColumnValueRange(...)
+        // Так як він буде дивитись скільки у рейнджі рядків, й скільки всього рядків у ключі перекладу, оскільки буде порожній рядок між рядками
+        // Ключ для перекладу буде містити на стільки менше рядків, скільки й самих порожніх рядків.
+        // Тому потрібно, щоб обов'язково після порожніх рядків був саме новий ключ!
+
         // Чи є колонка FormattedText
         boolean hasFormattedColumn = sheetHeader.hasFormattedColumn();
 
@@ -75,9 +91,9 @@ public class GSheetTranslateKeyParser {
             this.logRowDetails(rowExtractor);
 
             if (this.isValidKeyTranslate(rowExtractor.getKey(), rowExtractor.getContainerId())) { // Якщо ключ та контейнер не порожній, означає ми попали на початок нового ключа
-                this.saveKeyTranslate(keyBuilder, locationA1Builder, row.getIndex() - 1, row.getColumnCount() - 1, keys);
+                this.saveKeyTranslate(keyBuilder, locationA1Builder, keys);
                 // Оновлюємо інформацію про поточний ключ перекладу
-                locationA1Builder = this.initializeNewLocationKey(sheetName, row.getIndex());
+                locationA1Builder = this.initializeNewLocationKey(sheetName, row.getIndex(), sheet.getColumnCount() - 1);
                 keyBuilder = this.initializeNewKey(rowExtractor, hasFormattedColumn);
 
                 if (hasFormattedColumn) { // Якщо існує колонка з Formatted-Text тоді як вихідний рядок буде, ігровий текст з гри, з тегами, а не текст з Original-Text
@@ -92,9 +108,10 @@ public class GSheetTranslateKeyParser {
                 keyBuilder.appendOriginalText(rowExtractor.getOriginalText()); // Беремо текст з Original-Text без тегів
                 this.appendTranslationForKey(keyBuilder, rowExtractor);
             }
+            locationA1Builder.endRowIndex(i);
         }
 
-        this.saveKeyTranslate(keyBuilder, locationA1Builder, sheet.getLastRowIndexWithContent(), sheet.getColumnCount()-1, keys); // Зберігаємо останній ключ
+        this.saveKeyTranslate(keyBuilder, locationA1Builder, keys); // Зберігаємо останній ключ
 
         logger.debug("Finished parsing sheet: {}, found {} keys.", sheetName, keys.size());
         return keys;
@@ -120,10 +137,11 @@ public class GSheetTranslateKeyParser {
         if (hasFormattedColumn) contextBuilder.originalText(extractor.getGameText());
         return keyBuilder.context(contextBuilder.build());
     }
-    private RangeA1NotationBuilder initializeNewLocationKey(String sheetName, int rowIndex) {
+    private RangeA1NotationBuilder initializeNewLocationKey(String sheetName, int rowIndex, int endColumnIndex) {
         return new RangeA1NotationBuilder() // Створюємо новий білдер локації ключа перекладу
                 .sheetName(sheetName) // Встановлюємо назву аркуша
-                .startRowIndex(rowIndex); // Встановлюємо індекс початка рядка ключа перекладу
+                .startRowIndex(rowIndex) // Встановлюємо індекс початка рядка ключа перекладу
+                .endColumnIndex(endColumnIndex); // Встановлюємо індекс останньої колонки
     }
 
     /**
@@ -147,15 +165,11 @@ public class GSheetTranslateKeyParser {
      * Зберігаємо ключ перекладу
      * @param keyBuilder білдер ключа перекладу
      * @param locationA1Builder розташування в А1 нотації ключа перекладу в таблиці
-     * @param endRowIndex індекс кінцевого рядка де знаходиться ключ перекладу
-     * @param endColumnIndex індекс кінцевої колонки де знаходиться
      * @param keys лист з ключами перекладу
      */
-    private void saveKeyTranslate(GSheetTranslateKeyBuilder keyBuilder, RangeA1NotationBuilder locationA1Builder, int endRowIndex, int endColumnIndex, List<GSheetTranslateKey> keys) {
+    private void saveKeyTranslate(GSheetTranslateKeyBuilder keyBuilder, RangeA1NotationBuilder locationA1Builder, List<GSheetTranslateKey> keys) {
         if (this.isValidKeyTranslate(keyBuilder.getKey(), keyBuilder.getContainerId())) { // Якщо KeyBuilder має ключ та контейнер айді зберігаємо це як ключ перекладу
             keyBuilder.sheetLocationA1(locationA1Builder // Встановлюємо локацію у таблиці
-                    .endRowIndex(endRowIndex) // Встановлюємо індекс попереднього рядка як останній рядок де знаходиться ключ перекладу
-                    .endColumnIndex(endColumnIndex) // Встановлюємо останню колонку
                     .build());
 
             keys.add(keyBuilder.build()); // Додаємо до списку ключ перекладу

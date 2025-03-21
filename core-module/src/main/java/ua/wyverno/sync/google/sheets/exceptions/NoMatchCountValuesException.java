@@ -1,6 +1,6 @@
 package ua.wyverno.sync.google.sheets.exceptions;
 
-public class NoMatchCountValuesException extends IllegalStateException {
+public class NoMatchCountValuesException extends Exception {
     public NoMatchCountValuesException() {
     }
 

@@ -44,22 +44,7 @@ public class TranslationComparator {
      * @param sheetTranslation переклад з Таблиці
      * @return true якщо переклад однаковий, false якщо переклад має
      */
-    private boolean matchTranslations(List<String> crowdinTransLines, List<String> sheetTransLines, GSheetTranslateKey sheetTranslation) {
-        List<String> sheetOriginalLines = this.strTranslationToLines(sheetTranslation.originalText());
-        if (sheetOriginalLines.size() != crowdinTransLines.size()) {
-            String errorMessage = String.format("""
-                        The number of rows translated in Crowdin does not match the number of rows in Google Sheet.
-                        Crowdin translation count lines: %d
-                        Google Sheet translation count lines: %d
-                        Location translation in sheet: %s
-                        Crowdin Identifier: %s""",
-                    crowdinTransLines.size(),
-                    sheetOriginalLines.size(),
-                    sheetTranslation.locationA1(),
-                    sheetTranslation.identifier().toString());
-            throw new NoMatchCountValuesException(errorMessage);
-        }
-
+    private boolean matchTranslations(List<String> crowdinTransLines, List<String> sheetTransLines, GSheetTranslateKey sheetTranslation) throws NoMatchCountValuesException {
         boolean isMatching = sheetTransLines.equals(crowdinTransLines);
 
         if (!isMatching) {
@@ -78,6 +63,23 @@ public class TranslationComparator {
         return isMatching;
     }
 
+    private void isCorrectlyLinesTranslations(List<String> crowdinTransLines, GSheetTranslateKey sheetTranslation) throws NoMatchCountValuesException {
+        List<String> sheetOriginalLines = this.strTranslationToLines(sheetTranslation.originalText());
+        if (sheetOriginalLines.size() != crowdinTransLines.size()) {
+            String errorMessage = String.format("""
+                        The number of rows translated in Crowdin does not match the number of rows in Google Sheet.
+                        Crowdin translation count lines: %d
+                        Google Sheet translation count lines: %d
+                        Location translation in sheet: %s
+                        Crowdin Identifier: %s""",
+                    crowdinTransLines.size(),
+                    sheetOriginalLines.size(),
+                    sheetTranslation.locationA1(),
+                    sheetTranslation.identifier().toString());
+            throw new NoMatchCountValuesException(errorMessage);
+        }
+    }
+
     /**
      * Порівнює два перекладу з Кроудіна та Гугл Таблиці
      * @param crowdinTranslation Переклад з Кроудіна
@@ -87,7 +89,7 @@ public class TranslationComparator {
      */
     public List<ValueRange> compareTranslation(CrowdinTranslation crowdinTranslation,
                                                GSheetTranslateKey sheetTranslation,
-                                               TranslationSheetHeader sheetHeader) {
+                                               TranslationSheetHeader sheetHeader) throws NoMatchCountValuesException {
         // Перевіряємо чи існує переклад у Кроудіні
         if (crowdinTranslation == null) { // Якщо переклад не існує, то у Таблиці також нічого не має бути, тому видаляємо весь переклад
             logger.debug("Key Identifier: {} - no has translation in Crowdin.", sheetTranslation.identifier());
@@ -104,7 +106,13 @@ public class TranslationComparator {
         List<String> sheetTransLines = this.strTranslationToLines(sheetTranslation.translation());
         List<String> crowdinTransLines = this.strTranslationToLines(crowdinTranslation.getTranslation());
 
-        if (!this.matchTranslations(crowdinTransLines, sheetTransLines, sheetTranslation)) {
+        this.isCorrectlyLinesTranslations(crowdinTransLines, sheetTranslation);
+
+        if (sheetTranslation.isApprove() && !crowdinTranslation.isApprove() && !sheetHeader.hasFormattedColumn()) { // Якщо прибрано у Кроудіні прибираємо затверджений переклад у таблиці та оновлюємо значення у звичайного перекладу
+            logger.debug("Translation in Crowdin is no longer approved: {}, A1: {}", sheetTranslation.identifier(), sheetTranslation.locationA1());
+            valueRanges.add(this.valueRangeProcessor.removeApproveTranslation(sheetTranslation, sheetHeader));
+            valueRanges.addAll(this.valueRangeProcessor.insertTranslationData(crowdinTransLines, sheetHeader, sheetTranslation, crowdinTranslation));
+        } else if (!this.matchTranslations(crowdinTransLines, sheetTransLines, sheetTranslation)) {
             valueRanges.addAll(this.valueRangeProcessor.insertTranslationData(crowdinTransLines, sheetHeader, sheetTranslation, crowdinTranslation));
         } else if (crowdinTranslation.isApprove() && !sheetTranslation.isApprove() && !sheetHeader.hasFormattedColumn()) {
             logger.debug("Translation in Crowdin approved: {}, A1: {}", sheetTranslation.identifier(), sheetTranslation.locationA1());
@@ -112,10 +120,10 @@ public class TranslationComparator {
                     sheetHeader.getEditColumnIndex(),
                     sheetTranslation.locationA1());
             valueRanges.add(approveValueRange);
-        } else if (!crowdinTranslation.isApprove() && sheetTranslation.isApprove() && !sheetHeader.hasFormattedColumn()) {
+        } /*else if (!crowdinTranslation.isApprove() && sheetTranslation.isApprove() && !sheetHeader.hasFormattedColumn()) {
             logger.debug("Translation in Crowdin is no longer approved: {}, A1: {}", sheetTranslation.identifier(), sheetTranslation.locationA1());
             valueRanges.add(this.valueRangeProcessor.removeApproveTranslation(sheetTranslation, sheetHeader));
-        }
+        }*/
 
         return valueRanges;
     }

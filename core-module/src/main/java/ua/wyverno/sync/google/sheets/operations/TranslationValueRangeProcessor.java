@@ -26,7 +26,7 @@ public class TranslationValueRangeProcessor {
      * @param sheetHeader заголовок аркуша де міститься ключ перекладу
      * @return Лист з рейнджами для видалення перекладу
      */
-    protected List<ValueRange> removeTranslationData(GSheetTranslateKey sheetTranslation, TranslationSheetHeader sheetHeader) {
+    protected List<ValueRange> removeTranslationData(GSheetTranslateKey sheetTranslation, TranslationSheetHeader sheetHeader) throws NoMatchCountValuesException {
         if (sheetHeader.hasFormattedColumn()) {
             logger.trace("Creating value range for remove formatted translation: {}, A1: {}", sheetTranslation.identifier(), sheetTranslation.locationA1());
             return Collections.singletonList(this.removeFormattedTranslation(sheetTranslation, sheetHeader));
@@ -50,7 +50,7 @@ public class TranslationValueRangeProcessor {
      * @param sheetTranslation ключ перекладу в гугл таблиці
      * @return Повертає лист з {@link ValueRange} з новими значеннями для аркуша
      */
-    protected List<ValueRange> insertTranslationData(List<String> crowdinTransLines, TranslationSheetHeader header, GSheetTranslateKey sheetTranslation, CrowdinTranslation crowdinTranslation) {
+    protected List<ValueRange> insertTranslationData(List<String> crowdinTransLines, TranslationSheetHeader header, GSheetTranslateKey sheetTranslation, CrowdinTranslation crowdinTranslation) throws NoMatchCountValuesException {
         A1RangeNotation a1 = sheetTranslation.locationA1();
         if (header.hasFormattedColumn()) {
             logger.trace("Insert new formatted translation: {}", sheetTranslation.identifier());
@@ -77,7 +77,7 @@ public class TranslationValueRangeProcessor {
      * @param header заголовок аркуша де знаходиться ключ
      * @return Рейндж з порожніми значеннями для очищення звичайного перекладу для ключа перекладу
      */
-    protected ValueRange removeTranslation(GSheetTranslateKey sheetTranslation, TranslationSheetHeader header) {
+    protected ValueRange removeTranslation(GSheetTranslateKey sheetTranslation, TranslationSheetHeader header) throws NoMatchCountValuesException {
         A1RangeNotation a1 = sheetTranslation.locationA1();
         List<String> values = IntStream.range(0, a1.endRowIndex() - a1.startRowIndex() + 1)
                 .mapToObj(i -> "") // Створюємо лист з порожніми рядками
@@ -91,7 +91,7 @@ public class TranslationValueRangeProcessor {
      * @param header заголовок аркуша де знаходиться ключ
      * @return Рейндж з порожніми значеннями для очищення затвердженого перекладу для ключа перекладу
      */
-    protected ValueRange removeApproveTranslation(GSheetTranslateKey sheetTranslation, TranslationSheetHeader header) {
+    protected ValueRange removeApproveTranslation(GSheetTranslateKey sheetTranslation, TranslationSheetHeader header) throws NoMatchCountValuesException {
         A1RangeNotation a1 = sheetTranslation.locationA1();
         List<String> values = IntStream.range(0, a1.endRowIndex() - a1.startRowIndex() + 1)
                 .mapToObj(i -> "")
@@ -111,8 +111,8 @@ public class TranslationValueRangeProcessor {
      * @param a1RangeTranslateKey А1 Нотація Рейнджа ключа перекладу
      * @return об'єкт {@link ValueRange} відображає рейндж зі значеннями
      */
-    protected ValueRange createColumnValueRange(List<String> values, int columnIndex, A1RangeNotation a1RangeTranslateKey) {
-        int rowsRange = a1RangeTranslateKey.endRowIndex()    - a1RangeTranslateKey.startRowIndex() + 1;
+    protected ValueRange createColumnValueRange(List<String> values, int columnIndex, A1RangeNotation a1RangeTranslateKey) throws NoMatchCountValuesException {
+        int rowsRange = a1RangeTranslateKey.endRowIndex() - a1RangeTranslateKey.startRowIndex() + 1;
         if (rowsRange != values.size())
             throw new NoMatchCountValuesException("A1RangeTranslation the number of rows does not match the size of the values that were passed to the method. " +
                     "RowsRange: " + rowsRange + " Values count: " + values.size());
